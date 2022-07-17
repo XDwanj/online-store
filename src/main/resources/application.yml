@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: dev
+  # 解决 springfox 兼容性问题
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    username: XDwanj
+    password: 1234qwer.
+    url: jdbc:mysql://gz-cynosdbmysql-grp-e24eyf27.sql.tencentcdb.com:22800/online_store?useSSL=true&charterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+logging:
+  file:
+    path: ./logs
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
