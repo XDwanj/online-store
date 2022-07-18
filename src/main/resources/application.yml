@@ -8,7 +8,7 @@ spring:
   datasource:
     username: XDwanj
     password: 1234qwer.
-    url: jdbc:mysql://gz-cynosdbmysql-grp-e24eyf27.sql.tencentcdb.com:22800/online_store?useSSL=true&charterEncoding=utf-8
+    url: jdbc:mysql://gz-cynosdbmysql-grp-e24eyf27.sql.tencentcdb.com:22800/mmall?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
 logging:
   file:
