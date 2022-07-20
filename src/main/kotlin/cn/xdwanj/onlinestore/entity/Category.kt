@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
 import java.time.LocalDateTime
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -13,32 +12,32 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author XDwanj
- * @since 2022-07-16
+ * @since 2022-07-19
  */
 @TableName("mmall_category")
-@ApiModel(value = "Category对象", description = "")
+@Schema(name = "Category", description = "$!{table.comment}")
 class Category {
 
-        @ApiModelProperty("类别Id")
+    @Schema(description = "类别Id")
     @TableId(value = "id", type = IdType.AUTO)
     var id: Int? = null
 
-        @ApiModelProperty("父类别id当id=0时说明是根节点,一级类别")
+    @Schema(description = "父类别id当id=0时说明是根节点,一级类别")
     var parentId: Int? = null
 
-        @ApiModelProperty("类别名称")
+    @Schema(description = "类别名称")
     var name: String? = null
 
-        @ApiModelProperty("类别状态1-正常,2-已废弃")
+    @Schema(description = "类别状态1-正常,2-已废弃")
     var status: Boolean? = null
 
-        @ApiModelProperty("排序编号,同类展示顺序,数值相等则自然排序")
+    @Schema(description = "排序编号,同类展示顺序,数值相等则自然排序")
     var sortOrder: Int? = null
 
-        @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     var createTime: LocalDateTime? = null
 
-        @ApiModelProperty("更新时间")
+    @Schema(description = "更新时间")
     var updateTime: LocalDateTime? = null
 
     override fun toString(): String {

@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
 import java.time.LocalDateTime
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -13,10 +12,10 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author XDwanj
- * @since 2022-07-16
+ * @since 2022-07-19
  */
 @TableName("mmall_cart")
-@ApiModel(value = "Cart对象", description = "")
+@Schema(name = "Cart", description = "$!{table.comment}")
 class Cart {
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -24,19 +23,19 @@ class Cart {
 
     var userId: Int? = null
 
-        @ApiModelProperty("商品id")
+    @Schema(description = "商品id")
     var productId: Int? = null
 
-        @ApiModelProperty("数量")
+    @Schema(description = "数量")
     var quantity: Int? = null
 
-        @ApiModelProperty("是否选择,1=已勾选,0=未勾选")
+    @Schema(description = "是否选择,1=已勾选,0=未勾选")
     var checked: Int? = null
 
-        @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     var createTime: LocalDateTime? = null
 
-        @ApiModelProperty("更新时间")
+    @Schema(description = "更新时间")
     var updateTime: LocalDateTime? = null
 
     override fun toString(): String {

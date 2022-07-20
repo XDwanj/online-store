@@ -10,9 +10,22 @@ spring:
     password: 1234qwer.
     url: jdbc:mysql://gz-cynosdbmysql-grp-e24eyf27.sql.tencentcdb.com:22800/mmall?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
+  # spring cache
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=600s
 logging:
   file:
     path: ./logs
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+password:
+  # 通过对 “online-store” 进行 md5 摘要
+  salt: A428DC27C09FBE613F60D10C87DC78A3
+#springdoc:
+#  api-docs:
+#    enabled: true
+#  packages-to-scan: cn.xdwanj.onlinestore.controller
+#  paths-to-match: /

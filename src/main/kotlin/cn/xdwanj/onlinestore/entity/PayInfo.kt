@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
 import java.time.LocalDateTime
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -13,34 +12,34 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author XDwanj
- * @since 2022-07-16
+ * @since 2022-07-19
  */
 @TableName("mmall_pay_info")
-@ApiModel(value = "PayInfo对象", description = "")
+@Schema(name = "PayInfo", description = "$!{table.comment}")
 class PayInfo {
 
     @TableId(value = "id", type = IdType.AUTO)
     var id: Int? = null
 
-        @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
     var userId: Int? = null
 
-        @ApiModelProperty("订单号")
+    @Schema(description = "订单号")
     var orderNo: Long? = null
 
-        @ApiModelProperty("支付平台:1-支付宝,2-微信")
+    @Schema(description = "支付平台:1-支付宝,2-微信")
     var payPlatform: Int? = null
 
-        @ApiModelProperty("支付宝支付流水号")
+    @Schema(description = "支付宝支付流水号")
     var platformNumber: String? = null
 
-        @ApiModelProperty("支付宝支付状态")
+    @Schema(description = "支付宝支付状态")
     var platformStatus: String? = null
 
-        @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     var createTime: LocalDateTime? = null
 
-        @ApiModelProperty("更新时间")
+    @Schema(description = "更新时间")
     var updateTime: LocalDateTime? = null
 
     override fun toString(): String {

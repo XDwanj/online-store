@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -14,13 +13,13 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author XDwanj
- * @since 2022-07-16
+ * @since 2022-07-19
  */
 @TableName("mmall_order_item")
-@ApiModel(value = "OrderItem对象", description = "")
+@Schema(name = "OrderItem", description = "$!{table.comment}")
 class OrderItem {
 
-        @ApiModelProperty("订单子表id")
+    @Schema(description = "订单子表id")
     @TableId(value = "id", type = IdType.AUTO)
     var id: Int? = null
 
@@ -28,22 +27,22 @@ class OrderItem {
 
     var orderNo: Long? = null
 
-        @ApiModelProperty("商品id")
+    @Schema(description = "商品id")
     var productId: Int? = null
 
-        @ApiModelProperty("商品名称")
+    @Schema(description = "商品名称")
     var productName: String? = null
 
-        @ApiModelProperty("商品图片地址")
+    @Schema(description = "商品图片地址")
     var productImage: String? = null
 
-        @ApiModelProperty("生成订单时的商品单价，单位是元,保留两位小数")
+    @Schema(description = "生成订单时的商品单价，单位是元,保留两位小数")
     var currentUnitPrice: BigDecimal? = null
 
-        @ApiModelProperty("商品数量")
+    @Schema(description = "商品数量")
     var quantity: Int? = null
 
-        @ApiModelProperty("商品总价,单位是元,保留两位小数")
+    @Schema(description = "商品总价,单位是元,保留两位小数")
     var totalPrice: BigDecimal? = null
 
     var createTime: LocalDateTime? = null

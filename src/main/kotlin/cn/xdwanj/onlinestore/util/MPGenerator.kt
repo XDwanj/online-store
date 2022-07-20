@@ -14,6 +14,7 @@ class MPGenerator {
     ).globalConfig { builder ->
       builder.author("XDwanj")
         .enableSwagger()
+        // .enableSpringdoc()
         .outputDir("/home/xdwanj/TEMP")
         .enableKotlin()
     }.packageConfig { builder ->

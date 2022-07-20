@@ -15,9 +15,10 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
-        <kotlin.version>1.7.0</kotlin.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <mybatis-plus.generator.version>3.5.3</mybatis-plus.generator.version>
         <log4j.version>2.17.2</log4j.version>
+        <springdoc.version>1.6.9</springdoc.version>
     </properties>
 
     <dependencies>
@@ -32,12 +33,12 @@
             <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
-        <!-- <dependency> -->
-        <!--     <groupId>org.jetbrains.kotlin</groupId> -->
-        <!--     <artifactId>kotlin-test-junit</artifactId> -->
-        <!--     <version>${kotlin.version}</version> -->
-        <!--     <scope>test</scope> -->
-        <!-- </dependency> -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Spring Starter -->
         <dependency>
@@ -50,22 +51,27 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+
+        <!-- cache -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
-        <!-- <dependency> -->
-        <!--     <groupId>org.springframework.boot</groupId> -->
-        <!--     <artifactId>spring-boot-starter-security</artifactId> -->
-        <!-- </dependency> -->
 
+        <!-- api doc -->
         <!-- Swagger3 http://localhost:8080/swagger-ui/index.html -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -75,7 +81,18 @@
         <!-- <dependency> -->
         <!--     <groupId>org.springdoc</groupId> -->
         <!--     <artifactId>springdoc-openapi-ui</artifactId> -->
-        <!--     <version>1.6.9</version> -->
+        <!--     <version>${springdoc.version}</version> -->
+        <!-- </dependency> -->
+        <!-- <dependency> -->
+        <!--     <groupId>org.springdoc</groupId> -->
+        <!--     <artifactId>springdoc-openapi-kotlin</artifactId> -->
+        <!--     <version>${springdoc.version}</version> -->
+        <!-- </dependency> -->
+
+        <!-- security -->
+        <!-- <dependency> -->
+        <!--     <groupId>org.springframework.boot</groupId> -->
+        <!--     <artifactId>spring-boot-starter-security</artifactId> -->
         <!-- </dependency> -->
 
         <!-- MP -->
@@ -87,14 +104,13 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>${mybatis-plus.version}</version>
+            <version>${mybatis-plus.generator.version}</version>
         </dependency>
         <!-- <dependency> -->
         <!--     <groupId>com.baomidou</groupId> -->
         <!--     <artifactId>mybatis-plus-boot-starter-test</artifactId> -->
         <!--     <version>${mybatis-plus.version}</version> -->
         <!-- </dependency> -->
-
 
         <!-- jdbc -->
         <dependency>
@@ -106,18 +122,14 @@
         <!--     <artifactId>druid-spring-boot-starter</artifactId> -->
         <!--     <version>1.2.11</version> -->
         <!-- </dependency> -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
-        <!-- test -->
-        <!-- <dependency> -->
-        <!--     <groupId>junit</groupId> -->
-        <!--     <artifactId>junit</artifactId> -->
-        <!--     <version>4.13.2</version> -->
-        <!--     <scope>test</scope> -->
-        <!-- </dependency> -->
     </dependencies>
 
     <build>
-        <sourceDirectory>src/main/kotlin</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -137,6 +149,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- 关闭打包测试用例运行 -->
         </plugins>
     </build>

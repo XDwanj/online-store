@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -14,47 +13,47 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author XDwanj
- * @since 2022-07-16
+ * @since 2022-07-19
  */
 @TableName("mmall_product")
-@ApiModel(value = "Product对象", description = "")
+@Schema(name = "Product", description = "$!{table.comment}")
 class Product {
 
-        @ApiModelProperty("商品id")
+    @Schema(description = "商品id")
     @TableId(value = "id", type = IdType.AUTO)
     var id: Int? = null
 
-        @ApiModelProperty("分类id,对应mmall_category表的主键")
+    @Schema(description = "分类id,对应mmall_category表的主键")
     var categoryId: Int? = null
 
-        @ApiModelProperty("商品名称")
+    @Schema(description = "商品名称")
     var name: String? = null
 
-        @ApiModelProperty("商品副标题")
+    @Schema(description = "商品副标题")
     var subtitle: String? = null
 
-        @ApiModelProperty("产品主图,url相对地址")
+    @Schema(description = "产品主图,url相对地址")
     var mainImage: String? = null
 
-        @ApiModelProperty("图片地址,json格式,扩展用")
+    @Schema(description = "图片地址,json格式,扩展用")
     var subImages: String? = null
 
-        @ApiModelProperty("商品详情")
+    @Schema(description = "商品详情")
     var detail: String? = null
 
-        @ApiModelProperty("价格,单位-元保留两位小数")
+    @Schema(description = "价格,单位-元保留两位小数")
     var price: BigDecimal? = null
 
-        @ApiModelProperty("库存数量")
+    @Schema(description = "库存数量")
     var stock: Int? = null
 
-        @ApiModelProperty("商品状态.1-在售 2-下架 3-删除")
+    @Schema(description = "商品状态.1-在售 2-下架 3-删除")
     var status: Int? = null
 
-        @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     var createTime: LocalDateTime? = null
 
-        @ApiModelProperty("更新时间")
+    @Schema(description = "更新时间")
     var updateTime: LocalDateTime? = null
 
     override fun toString(): String {

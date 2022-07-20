@@ -1,16 +1,14 @@
 package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.common.EMAIL
-import cn.xdwanj.onlinestore.common.Role
-import cn.xdwanj.onlinestore.common.ServerResponse
-import cn.xdwanj.onlinestore.common.USERNAME
+import cn.xdwanj.onlinestore.common.*
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.mapper.UserMapper
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.util.encodeByMD5
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.time.LocalDateTime
+import java.util.*
 
 /**
  * <p>
@@ -21,7 +19,10 @@ import java.util.UUID
  * @since 2022-07-16
  */
 @Service
-open class UserServiceImpl : ServiceImpl<UserMapper, User>(), UserService {
+open class UserServiceImpl(
+  private val tokenCache: TokenCache,
+  private val userMapper: UserMapper
+) : ServiceImpl<UserMapper, User>(), UserService {
   override fun checkValid(str: String?, type: String?): ServerResponse<User> {
     if (type.isNullOrBlank()) {
       return ServerResponse.createByError("参数错误")
@@ -50,6 +51,23 @@ open class UserServiceImpl : ServiceImpl<UserMapper, User>(), UserService {
   override fun checkEmail(email: String?): Boolean {
     return ktQuery()
       .eq(User::email, email)
+      .exists()
+  }
+
+  override fun checkEmail(email: String?, userId: Int): Boolean {
+    return ktQuery()
+      .eq(User::id, userId)
+      .eq(User::email, email)
+      .exists()
+  }
+
+  /**
+   * 并没有进行MD5编码
+   */
+  override fun checkPassword(userId: Int, password: String): Boolean {
+    return ktQuery()
+      .eq(User::id, userId)
+      .eq(User::password, password)
       .exists()
   }
 
@@ -103,18 +121,89 @@ open class UserServiceImpl : ServiceImpl<UserMapper, User>(), UserService {
     return ServerResponse.createBySuccessData(question)
   }
 
-  override fun checkAnswer(username: String, question: String, answer: String): ServerResponse<String> {
-    ktQuery()
+  override fun checkAnswer(username: String, question: String, answer: String): ServerResponse<User> {
+    val exists = ktQuery()
       .eq(User::username, username)
       .eq(User::question, question)
       .eq(User::answer, answer)
-      .exists().let {
-        if (it) {
-          val forgetToken = UUID.randomUUID().toString()
-          TODO("tokenCache.setKey(TokenCache.TOKEN_PREFIX + username, forgetToken)")
-          // return ServerResponse.createBySuccessData(forgetToken)
-        }
+      .exists()
+
+    return if (exists) {
+      val forgetToken = UUID.randomUUID().toString()
+      tokenCache["${TOKEN_PREFIX}username"] = forgetToken
+      ServerResponse.createBySuccessMsg("答案正确")
+    } else {
+      ServerResponse.createByError("问题的答案错误")
+    }
+  }
+
+  override fun forgetResetPassword(username: String, passwordNew: String, forgetToken: String): ServerResponse<String> {
+    if (forgetToken.isBlank()) {
+      return ServerResponse.createByError("forgetToken 需要传递")
+    }
+    if (!checkUsername(username)) {
+      return ServerResponse.createByError("用户不存在")
+    }
+    if (passwordNew.isBlank()) {
+      return ServerResponse.createByError("密码不可为空")
+    }
+    val token = tokenCache[TOKEN_PREFIX + username]
+    if (token.isNullOrBlank()) {
+      return ServerResponse.createByError("token过期或者无效")
+    }
+    return if (token == forgetToken) {
+      val md5Pwd = passwordNew.encodeByMD5()
+      ktUpdate()
+        .eq(User::username, username)
+        .set(User::password, md5Pwd)
+        .set(User::updateTime, LocalDateTime.now())
+        .update()
+      ServerResponse.createBySuccessMsg("修改密码成功")
+    } else {
+      ServerResponse.createByError("token无效，请重新获取")
+    }
+  }
+
+  override fun resetPassword(user: User, passwordOld: String, passwordNew: String): ServerResponse<String> {
+    user.id?.let {
+      if (!checkPassword(it, passwordOld.encodeByMD5())) {
+        return ServerResponse.createByError("旧密码错误")
       }
-    TODO()
+      user.password = passwordNew.encodeByMD5()
+      if (updateById(user.apply { updateTime = LocalDateTime.now() })) {
+        return ServerResponse.createBySuccessMsg("密码更新成功")
+      }
+      return ServerResponse.createByError("密码更新失败")
+    }
+    return ServerResponse.createByError("用户不存在")
+  }
+
+  override fun updateInfo(user: User): ServerResponse<User> {
+    if (checkUsername(user.email)) {
+      return ServerResponse.createByError("email已存在，请更换email")
+    }
+    val isSuccess = ktUpdate()
+      .eq(User::id, user.id)
+      .set(User::email, user.email)
+      .set(User::phone, user.phone)
+      .set(User::question, user.question)
+      .set(User::answer, user.answer)
+      .set(User::updateTime, LocalDateTime.now())
+      .update()
+
+    return if (isSuccess) {
+      ServerResponse.createBySuccessMsg("更新个人信息成功")
+    } else {
+      ServerResponse.createByError("更新个人信息失败")
+    }
+  }
+
+  override fun getInfo(id: Int?): ServerResponse<User> {
+    val user = ktQuery()
+      .eq(User::id, id)
+      .one() ?: return ServerResponse.createByError("找不到当前用户")
+
+    user.password = ""
+    return ServerResponse.createBySuccessData(user)
   }
 }
