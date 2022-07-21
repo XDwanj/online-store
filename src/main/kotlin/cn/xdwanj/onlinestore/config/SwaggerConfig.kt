@@ -12,12 +12,12 @@ import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 
 @Configuration
-open class SwaggerConfig {
+open class SwaggerConfig { // http://localhost:8080/swagger-ui/index.html
   @Value("\${spring.profiles.active}")
   private lateinit var active: String
 
   @Bean
-  open fun restApi(): Docket = Docket(DocumentationType.SWAGGER_2)
+  open fun restApi(): Docket = Docket(DocumentationType.OAS_30)
     .enable(
       listOf("dev", "test").contains(active) // 通过配置文件判断是否开启Swagger
     )

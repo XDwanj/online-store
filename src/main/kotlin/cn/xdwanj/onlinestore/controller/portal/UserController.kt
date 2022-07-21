@@ -10,7 +10,6 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.web.bind.annotation.*
 import springfox.documentation.annotations.ApiIgnore
-import java.time.LocalDateTime
 import javax.servlet.http.HttpSession
 
 /**
@@ -22,7 +21,7 @@ import javax.servlet.http.HttpSession
  * @since 2022-07-16
  */
 @Slf4j
-@Api("用户模块")
+@Api(tags = ["用户模块"])
 @RestController
 @RequestMapping("/user")
 class UserController(
@@ -62,20 +61,6 @@ class UserController(
     type: String
   ): ServerResponse<User> {
     return userService.checkValid(value, type) // TODO: recode
-  }
-
-  @ApiOperation("返回用户数据")
-  @GetMapping("/info/current")
-  fun currentInfo(@ApiIgnore session: HttpSession): ServerResponse<User> {
-    // 两种都可以
-    session.getAttribute(CURRENT_USER)?.let {
-      return ServerResponse.createBySuccessData((it as User))
-    }
-    return ServerResponse.createByError("用户未登录")
-
-    // val user = session.getAttribute(CURRENT_USER) as User?
-    //   ?: return ServerResponse.createByError("用户未登录")
-    // return ServerResponse.createBySuccessData(user)
   }
 
   @ApiOperation("返回密码重置问题")
@@ -137,12 +122,26 @@ class UserController(
     }
   }
 
-  @ApiOperation("获取用户信息")
+  @ApiOperation("从数据库中返回用户信息")
   @GetMapping("/info/db")
   fun info(@ApiIgnore session: HttpSession): ServerResponse<User> {
     val user = session.getAttribute(CURRENT_USER) as User?
       ?: return ServerResponse.createByError("用户未登录", ResponseCode.NEED_LOGIN.code)
 
     return userService.getInfo(user.id)
+  }
+
+  @ApiOperation("从Session中返回用户信息")
+  @GetMapping("/info/current")
+  fun currentInfo(@ApiIgnore session: HttpSession): ServerResponse<User> {
+    // 两种都可以
+    session.getAttribute(CURRENT_USER)?.let {
+      return ServerResponse.createBySuccessData((it as User))
+    }
+    return ServerResponse.createByError("用户未登录")
+
+    // val user = session.getAttribute(CURRENT_USER) as User?
+    //   ?: return ServerResponse.createByError("用户未登录")
+    // return ServerResponse.createBySuccessData(user)
   }
 }

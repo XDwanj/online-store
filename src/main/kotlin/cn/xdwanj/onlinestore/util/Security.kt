@@ -12,7 +12,7 @@ class Security
 lateinit var salt: String
 
 fun String.encodeByMD5(): String = DigestUtils
-  .md5DigestAsHex("${this}${""}".toByteArray())
+  .md5DigestAsHex("${this}${salt}".toByteArray())
   .toString()
   .uppercase(Locale.getDefault())
 

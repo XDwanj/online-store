@@ -97,6 +97,8 @@ open class UserServiceImpl(
     }
     save(user.apply {
       role = Role.CUSTOMER.code
+      createTime = LocalDateTime.now()
+      updateTime = LocalDateTime.now()
       password = password?.encodeByMD5()
     }).let {
       if (!it) return ServerResponse.createByError("注册失败")

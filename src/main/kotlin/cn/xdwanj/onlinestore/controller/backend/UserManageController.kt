@@ -1,4 +1,4 @@
-package cn.xdwanj.onlinestore.controller.back
+package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.Role
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession
  * @since 2022-07-21
  */
 @Slf4j
-@Api("后台管理员模块")
+@Api(tags = ["后台管理员模块"])
 @RestController
 @RequestMapping("/manage/user")
 class UserManageController(
