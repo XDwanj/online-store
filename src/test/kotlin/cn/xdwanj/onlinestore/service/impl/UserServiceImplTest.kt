@@ -2,10 +2,8 @@ package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.util.Slf4j
-import cn.xdwanj.onlinestore.util.Slf4j.Companion.log
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 

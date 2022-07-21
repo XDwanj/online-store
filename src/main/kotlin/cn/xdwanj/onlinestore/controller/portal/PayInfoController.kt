@@ -1,4 +1,4 @@
-package cn.xdwanj.onlinestore.controller;
+package cn.xdwanj.onlinestore.controller.portal;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,5 +12,5 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-07-16
  */
 @RestController
-@RequestMapping("/category")
-class CategoryController
+@RequestMapping("/payInfo")
+class PayInfoController

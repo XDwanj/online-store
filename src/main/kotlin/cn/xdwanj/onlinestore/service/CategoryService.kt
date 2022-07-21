@@ -1,5 +1,6 @@
 package cn.xdwanj.onlinestore.service;
 
+import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -11,4 +12,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author XDwanj
  * @since 2022-07-16
  */
-interface CategoryService : IService<Category>
+interface CategoryService : IService<Category> {
+  /**
+   * 添加类别
+   *
+   * @param categoryName
+   * @param parentId
+   * @return
+   */
+  fun addCategory(categoryName: String, parentId: Int): ServerResponse<String>
+}

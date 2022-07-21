@@ -22,8 +22,8 @@ import javax.servlet.http.HttpSession
  * @author XDwanj
  * @since 2022-07-21
  */
-@Slf4j
 @Api(tags = ["后台管理员模块"])
+@Slf4j
 @RestController
 @RequestMapping("/manage/user")
 class UserManageController(

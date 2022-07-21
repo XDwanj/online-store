@@ -2,13 +2,10 @@ package cn.xdwanj.onlinestore.common
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
-import io.swagger.annotations.ApiModel
-import springfox.documentation.annotations.ApiIgnore
-
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 class ServerResponse<T> private constructor(
-  private val status: Int? = null,
+  val status: Int? = null,
   val msg: String? = null,
   val data: T? = null
 ) {
@@ -19,13 +16,22 @@ class ServerResponse<T> private constructor(
   }
 
   companion object { // 工厂方法
-    fun <T> createBySuccess() = ServerResponse<T>(ResponseCode.SUCCESS.code)
-    fun <T> createBySuccess(msg: String, data: T) = ServerResponse(ResponseCode.SUCCESS.code, msg, data)
-    fun <T> createBySuccessData(data: T): ServerResponse<T> = ServerResponse(ResponseCode.SUCCESS.code, data = data)
-    fun <T> createBySuccessMsg(msg: String) = ServerResponse<T>(ResponseCode.SUCCESS.code, msg = msg)
-    fun <T> createByError() = ServerResponse<T>(ResponseCode.ERROR.code, msg = ResponseCode.ERROR.desc)
-    fun <T> createByError(msg: String) = ServerResponse<T>(ResponseCode.ERROR.code, msg)
-    fun <T> createByError(msg: String, code: Int) = ServerResponse<T>(code, msg)
+    // fun <T> createBySuccess() = ServerResponse<T>(ResponseCode.SUCCESS.code)
+    fun <T> createBySuccess(msg: String? = null, data: T? = null, code: Int = ResponseCode.SUCCESS.code) =
+      ServerResponse(code, msg, data)
+
+    // fun <T> createBySuccessData(data: T): ServerResponse<T> = ServerResponse(ResponseCode.SUCCESS.code, data = data)
+    // fun <T> createBySuccessMsg(msg: String) = ServerResponse<T>(ResponseCode.SUCCESS.code, msg = msg)
+    // fun <T> createByError() = ServerResponse<T>(ResponseCode.ERROR.code, msg = ResponseCode.ERROR.desc)
+    // fun <T> createByError(msg: String) = ServerResponse<T>(ResponseCode.ERROR.code, msg)
+    fun <T> createByError(msg: String? = null, code: Int =
+      ResponseCode.ERROR.code) = ServerResponse<T>(code, msg)
+
+    // fun <T> buildSuccess(msg: String? = null, data: T? = null, code: Int = ResponseCode.SUCCESS.code) =
+    //   ServerResponse<T>(status = code, msg = msg, data = data)
+    //
+    // fun <T> buildError(msg: String? = null, code: Int = ResponseCode.ERROR.code) =
+    //   ServerResponse<T>(status = code, msg = msg)
   }
 }
 

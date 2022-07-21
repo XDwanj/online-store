@@ -20,8 +20,7 @@ import java.util.*
  */
 @Service
 open class UserServiceImpl(
-  private val tokenCache: TokenCache,
-  private val userMapper: UserMapper
+  private val tokenCache: TokenCache
 ) : ServiceImpl<UserMapper, User>(), UserService {
   override fun checkValid(str: String?, type: String?): ServerResponse<User> {
     if (type.isNullOrBlank()) {
@@ -39,7 +38,7 @@ open class UserServiceImpl(
       else -> return ServerResponse.createByError("参数错误")
     }
 
-    return ServerResponse.createBySuccessMsg("校验成功")
+    return ServerResponse.createBySuccess("校验成功")
   }
 
   override fun checkUsername(username: String?): Boolean {
@@ -92,19 +91,16 @@ open class UserServiceImpl(
     if (checkEmail(user.email)) {
       return ServerResponse.createByError("邮箱已存在")
     }
-    if (user.password.isNullOrEmpty()) {
-      return ServerResponse.createByError("密码不可为空")
-    }
     save(user.apply {
       role = Role.CUSTOMER.code
+      password = password?.encodeByMD5()
       createTime = LocalDateTime.now()
       updateTime = LocalDateTime.now()
-      password = password?.encodeByMD5()
     }).let {
       if (!it) return ServerResponse.createByError("注册失败")
     }
 
-    return ServerResponse.createBySuccessMsg("注册成功")
+    return ServerResponse.createBySuccess("注册成功")
   }
 
   override fun getQuestion(username: String): ServerResponse<String> {
@@ -120,10 +116,10 @@ open class UserServiceImpl(
     if (question.isNullOrEmpty())
       return ServerResponse.createByError("找回密码的问题是空的")
 
-    return ServerResponse.createBySuccessData(question)
+    return ServerResponse.createBySuccess(data = question)
   }
 
-  override fun checkAnswer(username: String, question: String, answer: String): ServerResponse<User> {
+  override fun checkAnswer(username: String, question: String, answer: String): ServerResponse<String> {
     val exists = ktQuery()
       .eq(User::username, username)
       .eq(User::question, question)
@@ -132,8 +128,8 @@ open class UserServiceImpl(
 
     return if (exists) {
       val forgetToken = UUID.randomUUID().toString()
-      tokenCache["${TOKEN_PREFIX}username"] = forgetToken
-      ServerResponse.createBySuccessMsg("答案正确")
+      tokenCache[TOKEN_PREFIX + username] = forgetToken
+      ServerResponse.createBySuccess("答案正确", forgetToken)
     } else {
       ServerResponse.createByError("问题的答案错误")
     }
@@ -160,7 +156,7 @@ open class UserServiceImpl(
         .set(User::password, md5Pwd)
         .set(User::updateTime, LocalDateTime.now())
         .update()
-      ServerResponse.createBySuccessMsg("修改密码成功")
+      ServerResponse.createBySuccess("修改密码成功")
     } else {
       ServerResponse.createByError("token无效，请重新获取")
     }
@@ -173,7 +169,7 @@ open class UserServiceImpl(
       }
       user.password = passwordNew.encodeByMD5()
       if (updateById(user.apply { updateTime = LocalDateTime.now() })) {
-        return ServerResponse.createBySuccessMsg("密码更新成功")
+        return ServerResponse.createBySuccess("密码更新成功")
       }
       return ServerResponse.createByError("密码更新失败")
     }
@@ -194,7 +190,7 @@ open class UserServiceImpl(
       .update()
 
     return if (isSuccess) {
-      ServerResponse.createBySuccessMsg("更新个人信息成功")
+      ServerResponse.createBySuccess("更新个人信息成功")
     } else {
       ServerResponse.createByError("更新个人信息失败")
     }
@@ -206,6 +202,6 @@ open class UserServiceImpl(
       .one() ?: return ServerResponse.createByError("找不到当前用户")
 
     user.password = ""
-    return ServerResponse.createBySuccessData(user)
+    return ServerResponse.createBySuccess(data = user)
   }
 }
