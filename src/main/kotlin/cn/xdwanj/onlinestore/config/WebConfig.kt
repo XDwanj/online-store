@@ -13,7 +13,7 @@ open class WebConfig(
   private val checkAdminInterceptor: CheckAdminInterceptor
 ) : WebMvcConfigurer {
   override fun addInterceptors(registry: InterceptorRegistry) {
-    registry.run {
+    registry.apply {
       // 登录拦截器
       addInterceptor(loginInterceptor)
         .addPathPatterns(

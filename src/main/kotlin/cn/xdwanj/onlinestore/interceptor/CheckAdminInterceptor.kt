@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class CheckAdminInterceptor(
   private val objectMapper: ObjectMapper,
-  private val userService: UserService
 ) : HandlerInterceptor {
   override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
     log.info("检查用户权限是否为管理员")

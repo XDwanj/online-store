@@ -16,22 +16,16 @@ class ServerResponse<T> private constructor(
   }
 
   companion object { // 工厂方法
-    // fun <T> createBySuccess() = ServerResponse<T>(ResponseCode.SUCCESS.code)
-    fun <T> createBySuccess(msg: String? = null, data: T? = null, code: Int = ResponseCode.SUCCESS.code) =
-      ServerResponse(code, msg, data)
+    fun <T> createBySuccess(
+      msg: String? = null,
+      data: T? = null,
+      code: Int = ResponseCode.SUCCESS.code
+    ) = ServerResponse(code, msg, data)
 
-    // fun <T> createBySuccessData(data: T): ServerResponse<T> = ServerResponse(ResponseCode.SUCCESS.code, data = data)
-    // fun <T> createBySuccessMsg(msg: String) = ServerResponse<T>(ResponseCode.SUCCESS.code, msg = msg)
-    // fun <T> createByError() = ServerResponse<T>(ResponseCode.ERROR.code, msg = ResponseCode.ERROR.desc)
-    // fun <T> createByError(msg: String) = ServerResponse<T>(ResponseCode.ERROR.code, msg)
-    fun <T> createByError(msg: String? = null, code: Int =
-      ResponseCode.ERROR.code) = ServerResponse<T>(code, msg)
-
-    // fun <T> buildSuccess(msg: String? = null, data: T? = null, code: Int = ResponseCode.SUCCESS.code) =
-    //   ServerResponse<T>(status = code, msg = msg, data = data)
-    //
-    // fun <T> buildError(msg: String? = null, code: Int = ResponseCode.ERROR.code) =
-    //   ServerResponse<T>(status = code, msg = msg)
+    fun <T> createByError(
+      msg: String? = null,
+      code: Int = ResponseCode.ERROR.code
+    ) = ServerResponse<T>(code, msg)
   }
 }
 
