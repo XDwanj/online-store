@@ -16,16 +16,20 @@ class ServerResponse<T> private constructor(
   }
 
   companion object { // 工厂方法
-    fun <T> createBySuccess(
+    fun <T> success(
       msg: String? = null,
       data: T? = null,
       code: Int = ResponseCode.SUCCESS.code
     ) = ServerResponse(code, msg, data)
 
-    fun <T> createByError(
+    fun <T> error(
       msg: String? = null,
       code: Int = ResponseCode.ERROR.code
     ) = ServerResponse<T>(code, msg)
+
+    fun <T> errorByException(
+      e: BizException
+    ) = ServerResponse<T>(e.errorCode, e.errorMsg)
   }
 }
 

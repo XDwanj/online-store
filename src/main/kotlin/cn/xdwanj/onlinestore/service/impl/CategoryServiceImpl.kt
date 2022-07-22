@@ -26,10 +26,10 @@ open class CategoryServiceImpl : ServiceImpl<CategoryMapper, Category>(), Catego
       createTime = LocalDateTime.now()
       updateTime = LocalDateTime.now()
     }).let {
-      if (!it) return ServerResponse.createByError("添加品类失败")
+      if (!it) return ServerResponse.error("添加品类失败")
     }
 
-    return ServerResponse.createBySuccess("添加成功")
+    return ServerResponse.success("添加成功")
   }
 
 }

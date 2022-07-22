@@ -4,6 +4,7 @@ import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.service.CategoryService
 import cn.xdwanj.onlinestore.util.Slf4j
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -25,13 +26,14 @@ class CategoryController(
   private val categoryService: CategoryService
 ) {
 
+  @ApiOperation("添加类别")
   @PostMapping
   fun addCategory(
-    categoryName: String?,
+    categoryName: String,
     @RequestParam(defaultValue = "0") parentId: Int,
   ): ServerResponse<String> {
-    if (categoryName.isNullOrBlank()) {
-      return ServerResponse.createByError("分类名不可为空")
+    if (categoryName.isBlank()) {
+      return ServerResponse.error("分类名不可为空")
     }
     return categoryService.addCategory(categoryName, parentId)
   }

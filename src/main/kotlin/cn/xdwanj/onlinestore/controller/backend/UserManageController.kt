@@ -44,7 +44,7 @@ class UserManageController(
     }
 
     if (response.data?.role != Role.ADMIN.code) {
-      return ServerResponse.createByError("登录的用户并非管理员")
+      return ServerResponse.error("登录的用户并非管理员")
     }
 
     session.setAttribute(CURRENT_USER, response.data)
