@@ -21,4 +21,13 @@ interface CategoryService : IService<Category> {
    * @return
    */
   fun addCategory(categoryName: String, parentId: Int): ServerResponse<String>
+
+  /**
+   * 更新类别
+   *
+   * @param categoryId
+   * @param categoryName
+   * @return
+   */
+  fun updateCategory(categoryId: Int, categoryName: String): ServerResponse<String>
 }

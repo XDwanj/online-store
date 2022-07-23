@@ -8,10 +8,9 @@ import springfox.documentation.oas.annotations.EnableOpenApi
 @SpringBootApplication
 @EnableOpenApi
 @MapperScan("cn.xdwanj.onlinestore.mapper")
-open class OnlineStoreApplication
+class OnlineStoreApplication
 
 fun main(args: Array<String>) {
-  // MPGenerator().generator()
   runApplication<OnlineStoreApplication>(*args)
 }
 

@@ -1,4 +1,4 @@
-package cn.xdwanj.onlinestore.controller.backend;
+package cn.xdwanj.onlinestore.controller.portal;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

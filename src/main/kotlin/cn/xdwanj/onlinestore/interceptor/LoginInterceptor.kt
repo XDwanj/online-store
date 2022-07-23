@@ -18,10 +18,7 @@ class LoginInterceptor : HandlerInterceptor {
   override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
     log.info("开始检查是否登录")
     request.session.getAttribute(CURRENT_USER) as User?
-      ?: let {
-        log.info("用户未登录")
-        throw BizException("用户未登录，请先登录", ResponseCode.ILLEGAL_ARGUMENT.code)
-      }
+      ?: throw BizException("用户未登录，请先登录", ResponseCode.ILLEGAL_ARGUMENT.code)
 
     log.info("用户已登录")
     return true

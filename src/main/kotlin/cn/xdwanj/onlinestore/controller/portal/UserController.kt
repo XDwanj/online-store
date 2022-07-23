@@ -6,9 +6,11 @@ import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import springfox.documentation.annotations.ApiIgnore
 import javax.servlet.http.HttpSession
+import javax.validation.constraints.NotBlank
 
 /**
  * <p>
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpSession
  * @since 2022-07-16
  */
 @Api(tags = ["用户模块"])
+@Validated
 @RestController
 @RequestMapping("/user")
 class UserController(
@@ -27,13 +30,10 @@ class UserController(
   @ApiOperation("登录")
   @PostMapping("/login")
   fun login(
-    username: String,
-    password: String,
+    @NotBlank username: String,
+    @NotBlank password: String,
     @ApiIgnore session: HttpSession
   ): ServerResponse<User> {
-    if (username.isBlank() || password.isBlank()) {
-      return ServerResponse.error("账号或者密码不可为空")
-    }
     val response = userService.login(username, password)
     if (response.isSuccess()) {
       session.setAttribute(CURRENT_USER, response.data)
@@ -64,7 +64,7 @@ class UserController(
   @GetMapping("/checkValid/{value}")
   fun checkValid(
     @PathVariable value: String,
-    type: String
+    @NotBlank type: String
   ): ServerResponse<User> {
     return userService.checkValid(value, type) // TODO: recode
   }
@@ -72,20 +72,20 @@ class UserController(
   @ApiOperation("返回密码重置问题")
   @GetMapping("/question")
   fun question(
-    username: String
+    @NotBlank username: String
   ): ServerResponse<String> {
-    if (username.isBlank()) {
-      return ServerResponse.error("用户名不可为空")
-    }
+    // if (username.isBlank()) {
+    //   return ServerResponse.error("用户名不可为空")
+    // }
     return userService.getQuestion(username)
   }
 
   @ApiOperation("回答密码重置问题")
   @PostMapping("/question")
   fun question(
-    username: String,
-    question: String,
-    answer: String
+    @NotBlank username: String,
+    @NotBlank question: String,
+    @NotBlank answer: String
   ): ServerResponse<String> {
     if (
       username.isBlank() ||
@@ -100,9 +100,9 @@ class UserController(
   @ApiOperation("重置密码")
   @PatchMapping("/password/forget")
   fun resetPassword(
-    username: String,
-    passwordNew: String,
-    forgetToken: String
+    @NotBlank username: String,
+    @NotBlank passwordNew: String,
+    @NotBlank forgetToken: String
   ): ServerResponse<String> {
     if (
       username.isBlank() ||
@@ -117,8 +117,8 @@ class UserController(
   @PatchMapping("/password/reset")
   fun resetPassword(
     @ApiIgnore session: HttpSession,
-    passwordOld: String,
-    passwordNew: String
+    @NotBlank passwordOld: String,
+    @NotBlank passwordNew: String
   ): ServerResponse<String> {
     if (
       passwordNew.isBlank() ||
@@ -138,10 +138,10 @@ class UserController(
     val currentUser = session.getAttribute(CURRENT_USER) as User
     userNew.id = currentUser.id
     userNew.username = currentUser.username
-    return userService.updateInfo(userNew).also {
-      if (it.isSuccess()) {
-        it.data?.username = currentUser.username
-        session.setAttribute(CURRENT_USER, it.data)
+    return userService.updateInfo(userNew).apply {
+      if (isSuccess()) { // 如果更新成功，将新的用户信息传入 session
+        data?.username = currentUser.username
+        session.setAttribute(CURRENT_USER, data)
       }
     }
   }

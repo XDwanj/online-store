@@ -135,6 +135,10 @@ open class UserServiceImpl(
     }
   }
 
+  override fun checkAdmin(user: User): Boolean {
+    return user.role == Role.ADMIN.code
+  }
+
   override fun forgetResetPassword(username: String, passwordNew: String, forgetToken: String): ServerResponse<String> {
     if (forgetToken.isBlank()) {
       return ServerResponse.error("forgetToken 需要传递")

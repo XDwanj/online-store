@@ -57,6 +57,14 @@ interface UserService : IService<User> {
   fun checkPassword(userId: Int, password: String): Boolean
 
   /**
+   * 判断用户是否是管理员
+   *
+   * @param user
+   * @return
+   */
+  fun checkAdmin(user: User): Boolean
+
+  /**
    * 登录
    *
    * @param username
@@ -126,4 +134,6 @@ interface UserService : IService<User> {
    * @return
    */
   fun getInfo(id: Int?): ServerResponse<User>
+
+
 }

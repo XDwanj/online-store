@@ -6,7 +6,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 
-const val TOKEN_PREFIX = "_token"
+const val TOKEN_PREFIX = "token_"
 
 @Slf4j
 @Component

@@ -13,6 +13,7 @@
     <groupId>cn.xdwanj.onlinestore</groupId>
     <artifactId>online-store</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <properties>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
@@ -40,14 +41,14 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Starter -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
+        <!-- web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -117,6 +118,10 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
         <!-- <dependency> -->
         <!--     <groupId>com.alibaba</groupId> -->
         <!--     <artifactId>druid-spring-boot-starter</artifactId> -->
@@ -148,6 +153,19 @@
                         </goals>
                     </execution>
                 </executions>
+                <!-- 如果不指定 allopen 插件生效范围，spring validation 会报错，所以 allopen 插件是必要的 -->
+                <configuration>
+                    <compilerPlugins>
+                        <plugin>spring</plugin>
+                    </compilerPlugins>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
             <!-- 关闭打包测试用例运行 -->
