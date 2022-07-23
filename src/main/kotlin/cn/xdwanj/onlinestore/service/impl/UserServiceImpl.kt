@@ -19,7 +19,7 @@ import java.util.*
  * @since 2022-07-16
  */
 @Service
-open class UserServiceImpl(
+class UserServiceImpl(
   private val tokenCache: TokenCache
 ) : ServiceImpl<UserMapper, User>(), UserService {
   override fun checkValid(str: String?, type: String?): ServerResponse<User> {

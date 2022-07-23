@@ -1,9 +1,7 @@
-package cn.xdwanj.onlinestore.exceptionHandler
+package cn.xdwanj.onlinestore.common
 
-import cn.xdwanj.onlinestore.common.BizException
-import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.util.Slf4j
-import cn.xdwanj.onlinestore.util.Slf4j.Companion.log
+import cn.xdwanj.onlinestore.util.Slf4j.Companion.logger
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -15,7 +13,7 @@ class GlobalExceptionHandler {
 
   @ExceptionHandler(NullPointerException::class)
   fun nullPointer(e: NullPointerException): ServerResponse<String> {
-    log.error("出现 NPE 异常：", e)
+    logger.error("出现 NPE 异常：", e)
     return ServerResponse.error("数据格式错误")
   }
 
@@ -27,8 +25,14 @@ class GlobalExceptionHandler {
    */
   @ExceptionHandler(MethodArgumentNotValidException::class)
   fun methodArgumentNotValid(e: MethodArgumentNotValidException): ServerResponse<String> {
-    log.error("传入参数校验错误：", e)
-    return ServerResponse.error("传入参数格式非法")
+    logger.error("传入参数校验错误：", e)
+    val bindingResult = e.bindingResult
+
+    val errorMsg = bindingResult.fieldErrors.map {
+      "错误字段 -> ${it.field} -> 错误值 -> ${it.rejectedValue} -> 原因 -> ${it.defaultMessage}"
+    }.joinToString(separator = "\n") { it }
+
+    return ServerResponse.error(errorMsg)
   }
 
   /**
@@ -39,19 +43,22 @@ class GlobalExceptionHandler {
    */
   @ExceptionHandler(ConstraintViolationException::class)
   fun constrainViolation(e: ConstraintViolationException): ServerResponse<String> {
-    log.error("传入参数非法：", e)
-    return ServerResponse.error(e.toString())
+    logger.error("传入参数非法：", e)
+    val errorMsg = e.constraintViolations.map {
+      "${it.propertyPath}: ${it.message}"
+    }.joinToString(separator = "\n") { it }
+    return ServerResponse.error(errorMsg)
   }
 
   @ExceptionHandler(BizException::class)
   fun biz(e: BizException): ServerResponse<String> {
-    log.error("出现业务异常，原因是：{}", e.errorMsg)
+    logger.error("出现业务异常，原因是：{}", e.errorMsg)
     return ServerResponse.errorByException(e)
   }
 
   @ExceptionHandler(Exception::class)
   fun all(e: Exception): ServerResponse<String> {
-    log.error("未知异常，原因：", e)
+    logger.error("未知异常，原因：", e)
     return ServerResponse.error(e.toString())
   }
 }

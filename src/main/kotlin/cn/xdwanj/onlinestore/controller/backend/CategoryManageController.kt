@@ -1,15 +1,12 @@
 package cn.xdwanj.onlinestore.controller.backend;
 
 import cn.xdwanj.onlinestore.common.ServerResponse
+import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.service.CategoryService
 import cn.xdwanj.onlinestore.util.Slf4j
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.validation.constraints.NotBlank
 
 /**
@@ -44,5 +41,17 @@ class CategoryManageController(
     @NotBlank categoryName: String
   ): ServerResponse<String> {
     return categoryService.updateCategory(categoryId, categoryName)
+  }
+
+  @ApiOperation("查询类别")
+  @GetMapping("/{parentId}")
+  fun getCategory(@PathVariable parentId: Int): ServerResponse<List<Category>> {
+    return categoryService.getCategory(parentId)
+  }
+
+  @ApiOperation("递归查询类别")
+  @GetMapping("/deep/{parentId}")
+  fun deepCategory(@PathVariable parentId: Int): ServerResponse<List<Int>> {
+    return categoryService.deepCategory(parentId)
   }
 }

@@ -51,4 +51,32 @@ class Category {
         ", updateTime=" + updateTime +
         "}"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Category
+
+        if (id != other.id) return false
+        if (parentId != other.parentId) return false
+        if (name != other.name) return false
+        if (status != other.status) return false
+        if (sortOrder != other.sortOrder) return false
+        if (createTime != other.createTime) return false
+        if (updateTime != other.updateTime) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id ?: 0
+        result = 31 * result + (parentId ?: 0)
+        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + (status?.hashCode() ?: 0)
+        result = 31 * result + (sortOrder ?: 0)
+        result = 31 * result + (createTime?.hashCode() ?: 0)
+        result = 31 * result + (updateTime?.hashCode() ?: 0)
+        return result
+    }
 }

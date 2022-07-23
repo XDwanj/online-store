@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.common
 
 import cn.xdwanj.onlinestore.util.Slf4j
-import cn.xdwanj.onlinestore.util.Slf4j.Companion.log
+import cn.xdwanj.onlinestore.util.Slf4j.Companion.logger
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
@@ -31,7 +31,7 @@ class TokenCache {
     return try {
       cache.get(key)
     } catch (e: Exception) {
-      log.error("get key=$key error")
+      logger.error("get key=$key error")
       e.printStackTrace()
       null
     }

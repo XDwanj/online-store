@@ -30,4 +30,20 @@ interface CategoryService : IService<Category> {
    * @return
    */
   fun updateCategory(categoryId: Int, categoryName: String): ServerResponse<String>
+
+  /**
+   * 通过 CategoryParentId 查询
+   *
+   * @param categoryId
+   * @return
+   */
+  fun getCategory(parentId: Int): ServerResponse<List<Category>>
+
+  /**
+   * 递归查询类别
+   *
+   * @param categoryId
+   * @return
+   */
+  fun deepCategory(categoryId: Int): ServerResponse<List<Int>>
 }

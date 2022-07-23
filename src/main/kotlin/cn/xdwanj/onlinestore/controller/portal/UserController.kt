@@ -6,6 +6,7 @@ import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import springfox.documentation.annotations.ApiIgnore
@@ -101,8 +102,10 @@ class UserController(
   @PatchMapping("/password/forget")
   fun resetPassword(
     @NotBlank username: String,
-    @NotBlank passwordNew: String,
-    @NotBlank forgetToken: String
+    @ApiParam(required = true) @NotBlank
+    passwordNew: String,
+    @ApiParam(required = true) @NotBlank
+    forgetToken: String
   ): ServerResponse<String> {
     if (
       username.isBlank() ||
