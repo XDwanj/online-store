@@ -6,12 +6,12 @@ import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.util.Slf4j
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import springfox.documentation.annotations.ApiIgnore
 import javax.servlet.http.HttpSession
 
 /**
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession
  * @author XDwanj
  * @since 2022-07-21
  */
-@Api(tags = ["后台管理员模块"])
+@Tag(name = "后台管理员模块")
 @Slf4j
 @RestController
 @RequestMapping("/manage/user")
@@ -30,12 +30,12 @@ class UserManageController(
   private val userService: UserService
 ) {
 
-  @ApiOperation("后台用户登录")
+  @Operation(summary = "后台用户登录")
   @PostMapping("/login")
   fun login(
     username: String,
     password: String,
-    @ApiIgnore session: HttpSession
+    @Parameter(hidden = true) session: HttpSession
   ): ServerResponse<User> {
     val response = userService.login(username, password)
 

@@ -4,11 +4,11 @@
 
 ## 技术栈
 
-1. springboot 2.7.1
-2. kotlin 1.6.21
+1. springboot v2.7.1
+2. kotlin v1.6.21
 3. logback + SLF4J 日志系统
 4. Maven 构建工具
-5. Swagger3 API文档
+5. Swagger3 API文档(springdoc v1.6.9)
 
 ## 架构
 

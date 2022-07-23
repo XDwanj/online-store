@@ -2,9 +2,9 @@ spring:
   profiles:
     active: dev
   # 解决 springfox 兼容性问题
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
   datasource:
     username: XDwanj
     password: 1234qwer.
@@ -24,8 +24,9 @@ mybatis-plus:
 password:
   # 通过对 “online-store” 进行 md5 摘要
   salt: A428DC27C09FBE613F60D10C87DC78A3
-#springdoc:
-#  api-docs:
-#    enabled: true
-#  packages-to-scan: cn.xdwanj.onlinestore.controller
-#  paths-to-match: /
+# springdoc 配置
+springdoc:
+  api-docs:
+    enabled: true
+  packages-to-scan: cn.xdwanj.onlinestore.controller
+  paths-to-match: /**

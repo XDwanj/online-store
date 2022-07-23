@@ -72,23 +72,17 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- api doc -->
-        <!-- Swagger3 http://localhost:8080/swagger-ui/index.html -->
+        <!-- Swagger3 http://127.0.0.1:8080/swagger-ui/index.html -->
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
-        <!-- <dependency> -->
-        <!--     <groupId>org.springdoc</groupId> -->
-        <!--     <artifactId>springdoc-openapi-ui</artifactId> -->
-        <!--     <version>${springdoc.version}</version> -->
-        <!-- </dependency> -->
-        <!-- <dependency> -->
-        <!--     <groupId>org.springdoc</groupId> -->
-        <!--     <artifactId>springdoc-openapi-kotlin</artifactId> -->
-        <!--     <version>${springdoc.version}</version> -->
-        <!-- </dependency> -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-kotlin</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
 
         <!-- security -->
         <!-- <dependency> -->

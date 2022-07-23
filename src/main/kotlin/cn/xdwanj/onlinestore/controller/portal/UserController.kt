@@ -4,12 +4,11 @@ import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import springfox.documentation.annotations.ApiIgnore
 import javax.servlet.http.HttpSession
 import javax.validation.constraints.NotBlank
 
@@ -21,19 +20,19 @@ import javax.validation.constraints.NotBlank
  * @author XDwanj
  * @since 2022-07-16
  */
-@Api(tags = ["用户模块"])
+@Tag(name = "用户模块")
 @Validated
 @RestController
 @RequestMapping("/user")
 class UserController(
   private val userService: UserService
 ) {
-  @ApiOperation("登录")
+  @Operation(summary = "登录")
   @PostMapping("/login")
   fun login(
     @NotBlank username: String,
     @NotBlank password: String,
-    @ApiIgnore session: HttpSession
+    @Parameter(hidden = true) session: HttpSession
   ): ServerResponse<User> {
     val response = userService.login(username, password)
     if (response.isSuccess()) {
@@ -42,14 +41,14 @@ class UserController(
     return response
   }
 
-  @ApiOperation("注销")
+  @Operation(summary = "注销")
   @GetMapping("/logout")
-  fun logout(@ApiIgnore session: HttpSession): ServerResponse<User> {
+  fun logout(@Parameter(hidden = true) session: HttpSession): ServerResponse<User> {
     session.removeAttribute(CURRENT_USER)
     return ServerResponse.success()
   }
 
-  @ApiOperation("注册")
+  @Operation(summary = "注册")
   @PostMapping("/register")
   fun register(user: User): ServerResponse<User> {
     if (
@@ -61,7 +60,7 @@ class UserController(
     return userService.register(user)
   }
 
-  @ApiOperation("检查数据是否存在")
+  @Operation(summary = "检查数据是否存在")
   @GetMapping("/checkValid/{value}")
   fun checkValid(
     @PathVariable value: String,
@@ -70,7 +69,7 @@ class UserController(
     return userService.checkValid(value, type) // TODO: recode
   }
 
-  @ApiOperation("返回密码重置问题")
+  @Operation(summary = "返回密码重置问题")
   @GetMapping("/question")
   fun question(
     @NotBlank username: String
@@ -81,7 +80,7 @@ class UserController(
     return userService.getQuestion(username)
   }
 
-  @ApiOperation("回答密码重置问题")
+  @Operation(summary = "回答密码重置问题")
   @PostMapping("/question")
   fun question(
     @NotBlank username: String,
@@ -98,14 +97,12 @@ class UserController(
     return userService.checkAnswer(username, question, answer)
   }
 
-  @ApiOperation("重置密码")
+  @Operation(summary = "重置密码")
   @PatchMapping("/password/forget")
   fun resetPassword(
     @NotBlank username: String,
-    @ApiParam(required = true) @NotBlank
-    passwordNew: String,
-    @ApiParam(required = true) @NotBlank
-    forgetToken: String
+    @NotBlank passwordNew: String,
+    @NotBlank forgetToken: String
   ): ServerResponse<String> {
     if (
       username.isBlank() ||
@@ -116,10 +113,10 @@ class UserController(
     return userService.forgetResetPassword(username, passwordNew, forgetToken)
   }
 
-  @ApiOperation("登录状态下重置密码")
+  @Operation(summary = "登录状态下重置密码")
   @PatchMapping("/password/reset")
   fun resetPassword(
-    @ApiIgnore session: HttpSession,
+    @Parameter(hidden = true) session: HttpSession,
     @NotBlank passwordOld: String,
     @NotBlank passwordNew: String
   ): ServerResponse<String> {
@@ -132,10 +129,10 @@ class UserController(
     return userService.resetPassword(user, passwordOld, passwordNew)
   }
 
-  @ApiOperation("更新用户信息")
+  @Operation(summary = "更新用户信息")
   @PatchMapping("/info")
   fun info(
-    @ApiIgnore session: HttpSession,
+    @Parameter(hidden = true) session: HttpSession,
     userNew: User
   ): ServerResponse<User> {
     val currentUser = session.getAttribute(CURRENT_USER) as User
@@ -149,16 +146,16 @@ class UserController(
     }
   }
 
-  @ApiOperation("从数据库中返回用户信息")
+  @Operation(summary = "从数据库中返回用户信息")
   @GetMapping("/info/db")
-  fun info(@ApiIgnore session: HttpSession): ServerResponse<User> {
+  fun info(@Parameter(hidden = true) session: HttpSession): ServerResponse<User> {
     val user = session.getAttribute(CURRENT_USER) as User
     return userService.getInfo(user.id)
   }
 
-  @ApiOperation("从Session中返回用户信息")
+  @Operation(summary = "从Session中返回用户信息")
   @GetMapping("/info/current")
-  fun currentInfo(@ApiIgnore session: HttpSession): ServerResponse<User> {
+  fun currentInfo(@Parameter(hidden = true) session: HttpSession): ServerResponse<User> {
     val user = session.getAttribute(CURRENT_USER) as User
     return ServerResponse.success(data = user)
   }
