@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class SwaggerConfig { // http://localhost:8080/swagger-ui/index.html
+class SwaggerConfig { // http://127.0.0.1:8080/swagger-ui.html
   @Value("\${spring.profiles.active}")
   private lateinit var active: String
 

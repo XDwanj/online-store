@@ -45,7 +45,7 @@ class UserController(
   @GetMapping("/logout")
   fun logout(@Parameter(hidden = true) session: HttpSession): ServerResponse<User> {
     session.removeAttribute(CURRENT_USER)
-    return ServerResponse.success()
+    return ServerResponse.success("注销成功")
   }
 
   @Operation(summary = "注册")

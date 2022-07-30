@@ -3,9 +3,8 @@ package cn.xdwanj.onlinestore.common
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.Hidden
-import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(hidden = true)
+@Hidden
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 class ServerResponse<T> private constructor(
   val status: Int? = null,
