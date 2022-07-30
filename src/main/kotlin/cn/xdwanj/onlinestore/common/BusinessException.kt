@@ -6,7 +6,7 @@ package cn.xdwanj.onlinestore.common
  * @property errorMsg 错误信息
  * @property errorCode 错误code
  */
-data class BizException(
+data class BusinessException(
   val errorMsg: String,
   val errorCode: Int = ResponseCode.ERROR.code
 ) : RuntimeException()

@@ -8,7 +8,7 @@ enum class Role(
   val code: Int,
   val desc: String
 ) {
-  CUSTOMER(0, "普通用户"),
-  ADMIN(1, "管理员")
+  ADMIN(0, "管理员"),
+  CUSTOMER(1, "普通用户")
 }
 

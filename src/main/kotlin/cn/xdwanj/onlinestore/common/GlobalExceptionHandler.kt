@@ -50,8 +50,8 @@ class GlobalExceptionHandler {
     return ServerResponse.error(errorMsg)
   }
 
-  @ExceptionHandler(BizException::class)
-  fun biz(e: BizException): ServerResponse<String> {
+  @ExceptionHandler(BusinessException::class)
+  fun biz(e: BusinessException): ServerResponse<String> {
     logger.error("出现业务异常，原因是：{}", e.errorMsg)
     return ServerResponse.errorByException(e)
   }

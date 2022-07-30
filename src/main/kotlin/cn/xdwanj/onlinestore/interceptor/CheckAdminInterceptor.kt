@@ -1,5 +1,6 @@
 package cn.xdwanj.onlinestore.interceptor
 
+import cn.xdwanj.onlinestore.common.BusinessException
 import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
@@ -19,6 +20,13 @@ class CheckAdminInterceptor(
     logger.info("检查用户权限是否为管理员")
     val user = request.session.getAttribute(CURRENT_USER) as User
 
-    return userService.checkAdmin(user)
+    return userService.checkAdmin(user).apply {
+      if (this)
+        logger.info("用户权限为管理员")
+      else {
+        logger.error("{} 用户并非管理员", user.username)
+        throw BusinessException("${user.username} 用户并非管理员")
+      }
+    }
   }
 }

@@ -32,7 +32,7 @@ interface CategoryService : IService<Category> {
   fun updateCategory(categoryId: Int, categoryName: String): ServerResponse<String>
 
   /**
-   * 通过 CategoryParentId 查询
+   * 通过 CategoryParentId 查询，结果是集合
    *
    * @param categoryId
    * @return

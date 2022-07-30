@@ -1,6 +1,6 @@
 package cn.xdwanj.onlinestore.interceptor
 
-import cn.xdwanj.onlinestore.common.BizException
+import cn.xdwanj.onlinestore.common.BusinessException
 import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.entity.User
@@ -18,7 +18,7 @@ class LoginInterceptor : HandlerInterceptor {
   override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
     logger.info("开始检查是否登录")
     request.session.getAttribute(CURRENT_USER) as User?
-      ?: throw BizException("用户未登录，请先登录", ResponseCode.ILLEGAL_ARGUMENT.code)
+      ?: throw BusinessException("用户未登录，请先登录", ResponseCode.NEED_LOGIN.code)
 
     logger.info("用户已登录")
     return true

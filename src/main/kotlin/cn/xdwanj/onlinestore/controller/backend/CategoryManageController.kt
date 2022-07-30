@@ -1,4 +1,4 @@
-package cn.xdwanj.onlinestore.controller.backend;
+package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category
@@ -28,17 +28,17 @@ class CategoryManageController(
   @Operation(summary = "添加类别")
   @PostMapping
   fun addCategory(
-    @NotBlank categoryName: String,
+    categoryName: String,
     @RequestParam(defaultValue = "0") parentId: Int,
   ): ServerResponse<String> {
     return categoryService.addCategory(categoryName, parentId)
   }
 
   @Operation(summary = "更新类别")
-  @PatchMapping
+  @PutMapping
   fun updateCategory(
     categoryId: Int,
-    @NotBlank categoryName: String
+    categoryName: String
   ): ServerResponse<String> {
     return categoryService.updateCategory(categoryId, categoryName)
   }

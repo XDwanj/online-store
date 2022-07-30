@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpSession
-import javax.validation.constraints.NotBlank
 
 /**
  * <p>
@@ -30,10 +29,15 @@ class UserController(
   @Operation(summary = "登录")
   @PostMapping("/login")
   fun login(
-    @NotBlank username: String,
-    @NotBlank password: String,
+    username: String,
+    password: String,
     @Parameter(hidden = true) session: HttpSession
   ): ServerResponse<User> {
+    if (
+      username.isBlank() ||
+      password.isBlank()
+    ) return ServerResponse.error("数据不可为空")
+
     val response = userService.login(username, password)
     if (response.isSuccess()) {
       session.setAttribute(CURRENT_USER, response.data)
@@ -43,7 +47,7 @@ class UserController(
 
   @Operation(summary = "注销")
   @GetMapping("/logout")
-  fun logout(@Parameter(hidden = true) session: HttpSession): ServerResponse<User> {
+  fun logout(@Parameter(hidden = true) session: HttpSession): ServerResponse<String> {
     session.removeAttribute(CURRENT_USER)
     return ServerResponse.success("注销成功")
   }
@@ -64,28 +68,32 @@ class UserController(
   @GetMapping("/checkValid/{value}")
   fun checkValid(
     @PathVariable value: String,
-    @NotBlank type: String
+    type: String
   ): ServerResponse<User> {
+    if (
+      value.isBlank() ||
+      type.isBlank()
+    ) return ServerResponse.error("数据不可为空")
     return userService.checkValid(value, type) // TODO: recode
   }
 
   @Operation(summary = "返回密码重置问题")
   @GetMapping("/question")
   fun question(
-    @NotBlank username: String
+    username: String
   ): ServerResponse<String> {
-    // if (username.isBlank()) {
-    //   return ServerResponse.error("用户名不可为空")
-    // }
+     if (username.isBlank()) {
+       return ServerResponse.error("用户名不可为空")
+     }
     return userService.getQuestion(username)
   }
 
   @Operation(summary = "回答密码重置问题")
   @PostMapping("/question")
   fun question(
-    @NotBlank username: String,
-    @NotBlank question: String,
-    @NotBlank answer: String
+    username: String,
+    question: String,
+    answer: String
   ): ServerResponse<String> {
     if (
       username.isBlank() ||
@@ -100,9 +108,9 @@ class UserController(
   @Operation(summary = "重置密码")
   @PatchMapping("/password/forget")
   fun resetPassword(
-    @NotBlank username: String,
-    @NotBlank passwordNew: String,
-    @NotBlank forgetToken: String
+    username: String,
+    passwordNew: String,
+    forgetToken: String
   ): ServerResponse<String> {
     if (
       username.isBlank() ||
@@ -117,8 +125,8 @@ class UserController(
   @PatchMapping("/password/reset")
   fun resetPassword(
     @Parameter(hidden = true) session: HttpSession,
-    @NotBlank passwordOld: String,
-    @NotBlank passwordNew: String
+    passwordOld: String,
+    passwordNew: String
   ): ServerResponse<String> {
     if (
       passwordNew.isBlank() ||
@@ -130,7 +138,7 @@ class UserController(
   }
 
   @Operation(summary = "更新用户信息")
-  @PatchMapping("/info")
+  @PutMapping("/info")
   fun info(
     @Parameter(hidden = true) session: HttpSession,
     userNew: User

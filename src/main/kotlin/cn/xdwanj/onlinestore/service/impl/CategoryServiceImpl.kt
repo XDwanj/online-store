@@ -1,5 +1,6 @@
 package cn.xdwanj.onlinestore.service.impl;
 
+import cn.xdwanj.onlinestore.common.BusinessException
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category;
 import cn.xdwanj.onlinestore.mapper.CategoryMapper;
@@ -60,13 +61,13 @@ class CategoryServiceImpl : ServiceImpl<CategoryMapper, Category>(), CategorySer
 
   override fun deepCategory(categoryId: Int): ServerResponse<List<Int>> {
     val categorySet = mutableSetOf<Category>()
+
     findChildCategory(categorySet, categoryId)
-    val categoryIdList = mutableListOf<Int>()
-    categorySet.forEach { category ->
-      category.id?.let { categoryIdList += it }
+    val categoryList = categorySet.toMutableList().map {
+      it.id ?: throw BusinessException("类别id不可为空")
     }
 
-    return ServerResponse.success(data = categoryIdList)
+    return ServerResponse.success(data = categoryList.sorted())
   }
 
   private fun findChildCategory(categorySet: MutableSet<Category>, categoryId: Int): MutableSet<Category> {

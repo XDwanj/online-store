@@ -30,7 +30,7 @@ class ServerResponse<T> private constructor(
     ) = ServerResponse<T>(code, msg)
 
     fun <T> errorByException(
-      e: BizException
+      e: BusinessException
     ) = ServerResponse<T>(e.errorCode, e.errorMsg)
   }
 }
