@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession
 @Tag(name = "后台管理员模块")
 @Slf4j
 @RestController
-@RequestMapping("/manage/user")
+@RequestMapping("/manage")
 class UserManageController(
   private val userService: UserService
 ) {

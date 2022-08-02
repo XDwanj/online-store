@@ -90,7 +90,7 @@
         <!--     <artifactId>spring-boot-starter-security</artifactId> -->
         <!-- </dependency> -->
 
-        <!-- MP -->
+        <!-- mybatis-plus -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -101,11 +101,11 @@
             <artifactId>mybatis-plus-generator</artifactId>
             <version>${mybatis-plus.generator.version}</version>
         </dependency>
-        <!-- <dependency> -->
-        <!--     <groupId>com.baomidou</groupId> -->
-        <!--     <artifactId>mybatis-plus-boot-starter-test</artifactId> -->
-        <!--     <version>${mybatis-plus.version}</version> -->
-        <!-- </dependency> -->
+         <dependency>
+             <groupId>com.baomidou</groupId>
+             <artifactId>mybatis-plus-boot-starter-test</artifactId>
+             <version>${mybatis-plus.version}</version>
+         </dependency>
 
         <!-- jdbc -->
         <dependency>

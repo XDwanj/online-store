@@ -1,7 +1,10 @@
 package cn.xdwanj.onlinestore.service;
 
+import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Product;
+import cn.xdwanj.onlinestore.vo.ProductListVo
+import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -44,5 +47,24 @@ interface ProductService : IService<Product> {
    * @param productId
    * @return
    */
-  fun getDetail(productId: Int): ServerResponse<Product>
+  fun getDetail(productId: Int): ServerResponse<ProductDetailVo>
+
+  /**
+   * 获取商品分页列表
+   *
+   * @param pageNum
+   * @param pageSize
+   * @return
+   */
+  fun listProduct(pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>>
+
+  /**
+   * 查询商品列表
+   *
+   * @param productName
+   * @param pageNum
+   * @param pageSize
+   * @return
+   */
+  fun searchProduct(productName: String, pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>>
 }

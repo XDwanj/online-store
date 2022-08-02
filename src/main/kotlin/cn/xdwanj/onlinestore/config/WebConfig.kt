@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
-open class WebConfig(
+class WebConfig(
   private val loginInterceptor: LoginInterceptor,
   private val checkAdminInterceptor: CheckAdminInterceptor
 ) : WebMvcConfigurer {

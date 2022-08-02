@@ -65,9 +65,9 @@ class UserController(
   }
 
   @Operation(summary = "检查数据是否存在")
-  @GetMapping("/checkValid/{value}")
+  @PostMapping("/checkValid")
   fun checkValid(
-    @PathVariable value: String,
+    value: String,
     type: String
   ): ServerResponse<User> {
     if (
@@ -82,9 +82,9 @@ class UserController(
   fun question(
     username: String
   ): ServerResponse<String> {
-     if (username.isBlank()) {
-       return ServerResponse.error("用户名不可为空")
-     }
+    if (username.isBlank()) {
+      return ServerResponse.error("用户名不可为空")
+    }
     return userService.getQuestion(username)
   }
 
@@ -106,7 +106,7 @@ class UserController(
   }
 
   @Operation(summary = "重置密码")
-  @PatchMapping("/password/forget")
+  @PutMapping("/password/forget")
   fun resetPassword(
     username: String,
     passwordNew: String,
@@ -122,7 +122,7 @@ class UserController(
   }
 
   @Operation(summary = "登录状态下重置密码")
-  @PatchMapping("/password/reset")
+  @PutMapping("/password/reset")
   fun resetPassword(
     @Parameter(hidden = true) session: HttpSession,
     passwordOld: String,

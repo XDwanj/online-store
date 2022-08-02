@@ -1,10 +1,6 @@
 spring:
   profiles:
     active: dev
-  # 解决 springfox 兼容性问题
-#  mvc:
-#    pathmatch:
-#      matching-strategy: ant_path_matcher
   datasource:
     username: XDwanj
     password: 1234qwer.
@@ -21,12 +17,16 @@ logging:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-password:
-  # 通过对 “online-store” 进行 md5 摘要
-  salt: A428DC27C09FBE613F60D10C87DC78A3
 # springdoc 配置
 springdoc:
   api-docs:
     enabled: true
-  packages-to-scan: cn.xdwanj.onlinestore.controller
+#  packages-to-scan: cn.xdwanj.onlinestore.controller
   paths-to-match: /**
+password:
+  # 通过对 “online-store” 进行 md5 摘要 并全大写
+  salt: A428DC27C09FBE613F60D10C87DC78A3
+ftp:
+  server:
+    http:
+      prefix: ftp://1234.com
