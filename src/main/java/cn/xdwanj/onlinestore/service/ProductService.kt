@@ -42,7 +42,15 @@ interface ProductService : IService<Product> {
   fun setSaleStatus(productId: Int, status: Int): ServerResponse<String>
 
   /**
-   * 获取商品详情
+   * 管理员获取商品详情
+   *
+   * @param productId
+   * @return
+   */
+  fun getDetailByManage(productId: Int): ServerResponse<ProductDetailVo>
+
+  /**
+   * 用户获取商品详情
    *
    * @param productId
    * @return
@@ -50,21 +58,22 @@ interface ProductService : IService<Product> {
   fun getDetail(productId: Int): ServerResponse<ProductDetailVo>
 
   /**
-   * 获取商品分页列表
+   * 获取商品分页列表，附带查询功能
    *
    * @param pageNum
    * @param pageSize
    * @return
    */
-  fun listProduct(pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>>
+  fun listProductByManage(pageNum: Int, pageSize: Int, productName: String = "", categoryId: Int = -1): ServerResponse<IPage<ProductListVo>>
 
   /**
-   * 查询商品列表
+   * 通过关键字和类别查询商品详情列表
    *
-   * @param productName
+   * @param keyword
+   * @param categoryId
    * @param pageNum
    * @param pageSize
-   * @return
    */
-  fun searchProduct(productName: String, pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>>
+  fun listProduct(pageNum: Int, pageSize: Int, keyword: String = "", categoryId: Int = -1)
+
 }

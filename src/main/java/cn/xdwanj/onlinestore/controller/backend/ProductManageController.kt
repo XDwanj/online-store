@@ -1,7 +1,10 @@
 package cn.xdwanj.onlinestore.controller.backend
 
+import cn.xdwanj.onlinestore.common.FTP_HOST
 import cn.xdwanj.onlinestore.common.ServerResponse
+import cn.xdwanj.onlinestore.common.UPLOAD_PATH
 import cn.xdwanj.onlinestore.entity.Product
+import cn.xdwanj.onlinestore.service.FileService
 import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.util.Slf4j
 import cn.xdwanj.onlinestore.vo.ProductDetailVo
@@ -20,12 +23,13 @@ import org.springframework.web.multipart.MultipartFile
  * @author XDwanj
  * @since 2022-07-16
  */
-@Tag(name = "商品管理")
+@Tag(name = "后台商品管理")
 @Slf4j
 @RestController
 @RequestMapping("/manage/product")
 class ProductManageController(
-  private val productService: ProductService
+  private val productService: ProductService,
+  private val fileService: FileService
 ) {
 
   @Operation(summary = "商品保存")
@@ -50,27 +54,39 @@ class ProductManageController(
   @Operation(summary = "获取商品详情")
   @GetMapping("/{productId}")
   fun getProduct(@PathVariable productId: Int): ServerResponse<ProductDetailVo> {
-    return productService.getDetail(productId)
+    return productService.getDetailByManage(productId)
   }
 
-  @Operation(summary = "获取商品列表")
-  @GetMapping("/list")
-  fun listProduct(pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>> {
+  @Operation(summary = "获取商品列表，带搜索功能")
+  @GetMapping("/list", "/search")
+  fun listProduct(
+    @RequestParam(required = false) keyword: String,
+    @RequestParam(defaultValue = "1") pageNum: Int,
+    @RequestParam(defaultValue = "5") pageSize: Int
+  ): ServerResponse<IPage<ProductListVo>> {
     if (pageNum < 1) return ServerResponse.error("页码不可小于1")
     if (pageSize < 1) return ServerResponse.error("总页数不可小于1")
-    return productService.listProduct(pageNum, pageSize)
-  }
 
-  @Operation(summary = "商品搜索")
-  @GetMapping("/search")
-  fun searchProduct(productName: String, pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>> {
-    if (productName.isBlank()) return productService.listProduct(pageNum, pageSize)
-    return productService.searchProduct(productName, pageNum, pageSize)
+    return productService.listProductByManage(pageNum, pageSize, keyword)
   }
 
   @Operation(summary = "文件上传")
-  @PostMapping("/upload")
-  fun upload(@RequestPart file: MultipartFile): ServerResponse<String> {
-    TODO()
+  @PostMapping("/upload/file")
+  fun upload(@RequestPart file: MultipartFile): ServerResponse<Map<String, String>> {
+    val uri = fileService.upload(file, UPLOAD_PATH)
+    val url = "$FTP_HOST/$uri"
+    val resultMap = mapOf(
+      "uri" to uri,
+      "url" to url
+    )
+    return ServerResponse.success(data = resultMap)
   }
+
+  @Operation(summary = "富文本上传")
+  @PostMapping("/upload/rich-text")
+  fun uploadRichText(): ServerResponse<String> {
+    TODO("回头实现富文本上传，这里要考虑当今最流行的富文本框架有什么")
+  }
+
+
 }

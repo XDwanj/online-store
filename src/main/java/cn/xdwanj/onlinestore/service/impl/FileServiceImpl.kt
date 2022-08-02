@@ -17,15 +17,19 @@ class FileServiceImpl : FileService {
     val uploadFileName = UUID.randomUUID().toString() + ".$fileExtensionName"
 
     logger.info("文件开始上传，文件名：$fileName，文件类型：$fileExtensionName，上传文件名：$uploadFileName")
-    File(path).run {
-      if (!exists()) {
-        setWritable(true)
-        mkdirs()
-      }
+    val fileDir = File(path)
+    if (!fileDir.exists()) {
+      fileDir.setWritable(true)
+      fileDir.mkdirs()
     }
 
     val targetFile = File(path, uploadFileName)
 
-    TODO()
+    // save file
+    file.transferTo(targetFile)
+
+    // upload file
+    TODO("上传文件暂时不实现，这个有点麻烦")
+
   }
 }

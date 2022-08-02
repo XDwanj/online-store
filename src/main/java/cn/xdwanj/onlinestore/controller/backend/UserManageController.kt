@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.common.CURRENT_USER
-import cn.xdwanj.onlinestore.common.Role
+import cn.xdwanj.onlinestore.common.RoleEnum
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
@@ -43,7 +43,7 @@ class UserManageController(
       return response
     }
 
-    if (response.data?.role != Role.ADMIN.code) {
+    if (response.data?.role != RoleEnum.ADMIN.code) {
       return ServerResponse.error("登录的用户并非管理员")
     }
 

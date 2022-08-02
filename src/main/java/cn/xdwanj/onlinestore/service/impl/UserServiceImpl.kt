@@ -92,7 +92,7 @@ class UserServiceImpl(
       return ServerResponse.error("邮箱已存在")
     }
     save(user.apply {
-      role = Role.CUSTOMER.code
+      role = RoleEnum.CUSTOMER.code
       password = password?.encodeByMD5()
       createTime = LocalDateTime.now()
       updateTime = LocalDateTime.now()
@@ -136,7 +136,7 @@ class UserServiceImpl(
   }
 
   override fun checkAdmin(user: User): Boolean {
-    return user.role == Role.ADMIN.code
+    return user.role == RoleEnum.ADMIN.code
   }
 
   override fun forgetResetPassword(username: String, passwordNew: String, forgetToken: String): ServerResponse<String> {

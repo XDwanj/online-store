@@ -2,7 +2,8 @@ package cn.xdwanj.onlinestore.service.impl;
 
 import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.common.BusinessException
-import cn.xdwanj.onlinestore.common.IMAGE_HOST
+import cn.xdwanj.onlinestore.common.FTP_HOST
+import cn.xdwanj.onlinestore.common.ProductStatusEnum
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.entity.Product
@@ -11,7 +12,6 @@ import cn.xdwanj.onlinestore.mapper.ProductMapper
 import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.util.formatString
 import cn.xdwanj.onlinestore.vo.ProductListVo
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
@@ -59,11 +59,22 @@ class ProductServiceImpl(
     return ServerResponse.error("状态更新失败")
   }
 
-  override fun getDetail(productId: Int): ServerResponse<ProductDetailVo> {
-
-    val product = getById(productId) ?: throw BusinessException("产品已下架或者删除")
+  override fun getDetailByManage(productId: Int): ServerResponse<ProductDetailVo> {
+    val product = getById(productId) ?: throw BusinessException("产品不存在")
     return ServerResponse.success(data = assembleDetailVo(product))
   }
+
+  override fun getDetail(productId: Int): ServerResponse<ProductDetailVo> {
+    val product = getById(productId) ?: throw BusinessException("产品不存在")
+
+    if (product.status != ProductStatusEnum.ON_SALE.code) {
+      return ServerResponse.error("商品已下架")
+    }
+
+    val productDetailVo = assembleDetailVo(product)
+    return ServerResponse.success(data = productDetailVo)
+  }
+
 
   private fun assembleDetailVo(product: Product) = ProductDetailVo(
     id = product.id,
@@ -78,14 +89,16 @@ class ProductServiceImpl(
     stock = product.stock,
     createTime = product.createTime?.formatString(),
     updateTime = product.updateTime?.formatString(),
-    imageHost = IMAGE_HOST,
+    imageHost = FTP_HOST,
   ).apply {
     val category: Category? = categoryMapper.selectById(product.id)
     this.categoryId = if (category == null) 0 else category.id
   }
 
-  override fun listProduct(pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>> {
+  override fun listProductByManage(pageNum: Int, pageSize: Int, productName: String, categoryId: Int): ServerResponse<IPage<ProductListVo>> {
     val page = ktQuery()
+      .like(productName.isNotBlank(), Product::name, productName)
+      .eq(categoryId != -1, Product::categoryId, categoryId)
       .page(Page(pageNum.toLong(), pageSize.toLong()))
       .convert { assembleProductListVo(it) }
 
@@ -100,14 +113,11 @@ class ProductServiceImpl(
     mainImage = product.mainImage,
     price = product.price,
     status = product.status,
-    imageHost = IMAGE_HOST
+    imageHost = FTP_HOST
   )
 
-  override fun searchProduct(productName: String, pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>> {
-    val page = ktQuery()
-      .like(Product::name, productName)
-      .page(Page(pageNum.toLong(), pageSize.toLong()))
-      .convert { assembleProductListVo(it) }
-    return ServerResponse.success(data = page)
+  override fun listProduct(pageNum: Int, pageSize: Int, keyword: String, categoryId: Int) {
+    TODO("用户的，不太可能与管理员的操作一致，需要思考")
   }
+
 }
