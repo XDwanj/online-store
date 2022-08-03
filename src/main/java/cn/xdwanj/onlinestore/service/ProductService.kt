@@ -67,13 +67,15 @@ interface ProductService : IService<Product> {
   fun listProductByManage(pageNum: Int, pageSize: Int, productName: String = "", categoryId: Int = -1): ServerResponse<IPage<ProductListVo>>
 
   /**
-   * 通过关键字和类别查询商品详情列表
+   * 通过关键字和类别 排序查询商品详情列表
    *
-   * @param keyword
-   * @param categoryId
    * @param pageNum
    * @param pageSize
+   * @param keyword
+   * @param categoryId
+   * @param orderBy
+   * @return
    */
-  fun listProduct(pageNum: Int, pageSize: Int, keyword: String = "", categoryId: Int = -1)
+  fun listProduct(pageNum: Int, pageSize: Int, keyword: String = "", categoryId: Int, orderBy: String): ServerResponse<IPage<ProductListVo>>
 
 }

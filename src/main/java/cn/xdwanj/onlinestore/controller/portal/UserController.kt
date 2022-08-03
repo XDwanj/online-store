@@ -66,10 +66,7 @@ class UserController(
 
   @Operation(summary = "检查数据是否存在")
   @PostMapping("/checkValid")
-  fun checkValid(
-    value: String,
-    type: String
-  ): ServerResponse<User> {
+  fun checkValid(value: String, type: String): ServerResponse<User> {
     if (
       value.isBlank() ||
       type.isBlank()

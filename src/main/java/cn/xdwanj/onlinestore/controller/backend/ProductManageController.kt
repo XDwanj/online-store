@@ -1,6 +1,7 @@
 package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.common.FTP_HOST
+import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.common.UPLOAD_PATH
 import cn.xdwanj.onlinestore.entity.Product
@@ -60,12 +61,15 @@ class ProductManageController(
   @Operation(summary = "获取商品列表，带搜索功能")
   @GetMapping("/list", "/search")
   fun listProduct(
-    @RequestParam(required = false) keyword: String,
+    // 这里有一个问题，使用 defaultValue="" 还是使用 required=false
+    // 我的建议是使用 kotlin 特性，这样在 swagger 不会有多余的介绍
+    // kotlin默认值是没有 springdoc 功能的
+    keyword: String = "",
     @RequestParam(defaultValue = "1") pageNum: Int,
     @RequestParam(defaultValue = "5") pageSize: Int
   ): ServerResponse<IPage<ProductListVo>> {
-    if (pageNum < 1) return ServerResponse.error("页码不可小于1")
-    if (pageSize < 1) return ServerResponse.error("总页数不可小于1")
+    if (pageNum < 1 || pageSize < 1)
+      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     return productService.listProductByManage(pageNum, pageSize, keyword)
   }
@@ -87,6 +91,4 @@ class ProductManageController(
   fun uploadRichText(): ServerResponse<String> {
     TODO("回头实现富文本上传，这里要考虑当今最流行的富文本框架有什么")
   }
-
-
 }

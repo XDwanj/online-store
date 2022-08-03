@@ -1,5 +1,6 @@
 package cn.xdwanj.onlinestore.controller.portal
 
+import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.util.Slf4j
@@ -7,6 +8,7 @@ import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.vo.ProductListVo
 import com.baomidou.mybatisplus.core.metadata.IPage
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 
@@ -34,8 +36,17 @@ class ProductController(
 
   @Operation(summary = "获取商品集合")
   @GetMapping("/list", "/search")
-  fun listDetail(pageNum: Int, pageSize: Int): ServerResponse<IPage<ProductListVo>> {
-    return productService.listProductByManage(pageNum, pageSize)
+  fun listDetail(
+    pageNum: Int,
+    pageSize: Int,
+    keyword: String = "",
+    categoryId: Int,
+    @Parameter(description = "格式：'排序规则_排序字段'，默认不排序") orderBy: String = ""
+  ): ServerResponse<IPage<ProductListVo>> {
+    if (pageNum < 1 || pageSize < 1)
+      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+
+    return productService.listProduct(pageNum, pageSize, keyword, categoryId, orderBy)
   }
 
 }

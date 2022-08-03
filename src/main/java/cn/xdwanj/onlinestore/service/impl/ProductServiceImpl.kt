@@ -1,6 +1,5 @@
-package cn.xdwanj.onlinestore.service.impl;
+package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.common.BusinessException
 import cn.xdwanj.onlinestore.common.FTP_HOST
 import cn.xdwanj.onlinestore.common.ProductStatusEnum
@@ -9,10 +8,13 @@ import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.mapper.CategoryMapper
 import cn.xdwanj.onlinestore.mapper.ProductMapper
+import cn.xdwanj.onlinestore.service.CategoryService
 import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.util.formatString
+import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.vo.ProductListVo
 import com.baomidou.mybatisplus.core.metadata.IPage
+import com.baomidou.mybatisplus.extension.kotlin.KtQueryChainWrapper
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import org.springframework.stereotype.Service
@@ -27,7 +29,8 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ProductServiceImpl(
-  private val categoryMapper: CategoryMapper
+  private val categoryMapper: CategoryMapper,
+  private val categoryService: CategoryService
 ) : ServiceImpl<ProductMapper, Product>(), ProductService {
   override fun saveProduct(product: Product): ServerResponse<String> {
     if (save(product)) {
@@ -116,8 +119,62 @@ class ProductServiceImpl(
     imageHost = FTP_HOST
   )
 
-  override fun listProduct(pageNum: Int, pageSize: Int, keyword: String, categoryId: Int) {
-    TODO("用户的，不太可能与管理员的操作一致，需要思考")
+  override fun listProduct(pageNum: Int, pageSize: Int, keyword: String, categoryId: Int, orderBy: String): ServerResponse<IPage<ProductListVo>> {
+    if (categoryId < 0) return ServerResponse.error("类别非法")
+
+    categoryMapper.selectById(categoryId)
+      ?: let {
+        val page = Page.of<ProductListVo>(pageNum.toLong(), pageSize.toLong())
+        return ServerResponse.success(data = page)
+      }
+
+    val categoryIdList = categoryService.deepCategory(categoryId).data
+
+    var orderByRule: Triple<Boolean, Boolean, String> = Triple(false, false, "")
+    if (orderBy.isNotBlank()) {
+      val split = orderBy.split("_")
+      if (split.size != 2) return ServerResponse.error("排序规则错误")
+
+      val isAsc = when (split[0]) {
+        "asc" -> true
+        "desc" -> false
+        else -> throw BusinessException("排序规则错误")
+      }
+
+      orderByRule = Triple(true, isAsc, split[1])
+    }
+
+    val page = ktQuery()
+      .`in`(Product::categoryId, categoryIdList)
+      .orderByFromTripe(orderByRule)
+      .page(Page(pageNum.toLong(), pageSize.toLong()))
+      .convert {
+        assembleProductListVo(it)
+      }
+
+    return ServerResponse.success(data = page)
   }
+
+  /**
+   * 排序规则转换，TODO：可能还有优化空间
+   *
+   * @param T 排序实体
+   * @param orderByRule 排序规则：1.是否排序，2.是否是升序.排序字段
+   * @return
+   */
+  private fun <T : Any> KtQueryChainWrapper<T>.orderByFromTripe(
+    orderByRule: Triple<Boolean, Boolean, String>
+  ): KtQueryChainWrapper<T> = this.apply {
+    if (orderByRule.first)
+      when (orderByRule.third) {
+        "id" -> orderBy(true, orderByRule.second, Product::id)
+        "categoryId" -> orderBy(true, orderByRule.second, Product::categoryId)
+        "name" -> orderBy(true, orderByRule.second, Product::name)
+        "price" -> orderBy(true, orderByRule.second, Product::price)
+        "stock" -> orderBy(true, orderByRule.second, Product::stock)
+        else -> throw BusinessException("排序规则错误")
+      }
+  }
+
 
 }
