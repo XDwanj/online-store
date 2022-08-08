@@ -36,26 +36,46 @@ class ProductManageController(
   @Operation(summary = "商品保存")
   @PostMapping
   fun save(product: Product): ServerResponse<String> {
-    product.id = null
-    return productService.saveProduct(product)
+    if (productService.save(product)) {
+      return ServerResponse.success("保存成功")
+    }
+    return ServerResponse.error("保存失败")
   }
 
   @Operation(summary = "商品更新")
   @PutMapping
   fun update(product: Product): ServerResponse<String> {
-    return productService.updateProduct(product)
+    productService.ktUpdate()
+      .eq(Product::id, product.id)
+      .setEntity(product)
+      .update()
+      .let {
+        if (it) return ServerResponse.success("更新成功")
+      }
+
+    return ServerResponse.error("更新失败")
   }
 
   @Operation(summary = "设置商品销售状态")
   @PutMapping("/sale-status")
   fun setSaleStatus(productId: Int, status: Int): ServerResponse<String> {
-    return productService.setSaleStatus(productId, status)
+    productService.ktUpdate()
+      .eq(Product::id, productId)
+      .set(Product::status, status)
+      .update()
+      .let {
+        if (it) return ServerResponse.success("更新成功")
+      }
+
+    return ServerResponse.error("更新失败")
   }
 
   @Operation(summary = "获取商品详情")
   @GetMapping("/{productId}")
   fun getProduct(@PathVariable productId: Int): ServerResponse<ProductDetailVo> {
-    return productService.getDetailByManage(productId)
+    val productDetailVo = productService.getDetailByManage(productId)
+      ?: return ServerResponse.error("商品不存在")
+    return ServerResponse.success(data = productDetailVo)
   }
 
   @Operation(summary = "获取商品列表，带搜索功能")
@@ -71,7 +91,8 @@ class ProductManageController(
     if (pageNum < 1 || pageSize < 1)
       return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
 
-    return productService.listProductByManage(pageNum, pageSize, keyword)
+    val page = productService.listProductByManage(pageNum, pageSize, keyword)
+    return ServerResponse.success(data = page)
   }
 
   @Operation(summary = "文件上传")

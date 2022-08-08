@@ -31,7 +31,10 @@ class ProductController(
   @Operation(summary = "获取商品详情")
   @GetMapping("/detail/{productId}")
   fun getDetail(@PathVariable productId: Int): ServerResponse<ProductDetailVo> {
-    return productService.getDetail(productId)
+    val productVo = productService.getDetail(productId)
+      ?: return ServerResponse.error("商品已下架")
+
+    return ServerResponse.success(data = productVo)
   }
 
   @Operation(summary = "获取商品集合")
@@ -43,10 +46,11 @@ class ProductController(
     categoryId: Int,
     @Parameter(description = "格式：'排序规则_排序字段'，默认不排序") orderBy: String = ""
   ): ServerResponse<IPage<ProductListVo>> {
-    if (pageNum < 1 || pageSize < 1)
+    if (pageNum < 1 || pageSize < 1 || categoryId < 0)
       return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
 
-    return productService.listProduct(pageNum, pageSize, keyword, categoryId, orderBy)
+    val page = productService.listProduct(pageNum, pageSize, keyword, categoryId, orderBy)
+    return ServerResponse.success(data = page)
   }
 
 }

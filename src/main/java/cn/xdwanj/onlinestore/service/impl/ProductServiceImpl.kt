@@ -32,54 +32,54 @@ class ProductServiceImpl(
   private val categoryMapper: CategoryMapper,
   private val categoryService: CategoryService
 ) : ServiceImpl<ProductMapper, Product>(), ProductService {
-  override fun saveProduct(product: Product): ServerResponse<String> {
-    if (save(product)) {
-      return ServerResponse.success("保存成功")
-    }
+//  override fun saveProduct(product: Product): ServerResponse<String> {
+//    if (save(product)) {
+//      return ServerResponse.success("保存成功")
+//    }
+//
+//    return ServerResponse.error("保存失败")
+//  }
 
-    return ServerResponse.error("保存失败")
+//  override fun updateProduct(product: Product): ServerResponse<String> {
+//    ktUpdate()
+//      .eq(Product::id, product.id)
+//      .setEntity(product)
+//      .update().let {
+//        if (it) return ServerResponse.success("更新成功")
+//      }
+//
+//    return ServerResponse.error("更新失败")
+//  }
+
+//  override fun setSaleStatus(productId: Int, status: Int): ServerResponse<String> {
+//    ktUpdate()
+//      .eq(Product::id, productId)
+//      .set(Product::status, status)
+//      .update().let {
+//        if (it) return ServerResponse.success("状态更新成功")
+//      }
+//
+//    return ServerResponse.error("状态更新失败")
+//  }
+
+  override fun getDetailByManage(productId: Int): ProductDetailVo? {
+    val product = getById(productId)
+      ?: return null
+    return assembleDetailVo(product)
   }
 
-  override fun updateProduct(product: Product): ServerResponse<String> {
-    ktUpdate()
-      .eq(Product::id, product.id)
-      .setEntity(product)
-      .update().let {
-        if (it) return ServerResponse.success("更新成功")
-      }
-
-    return ServerResponse.error("更新失败")
-  }
-
-  override fun setSaleStatus(productId: Int, status: Int): ServerResponse<String> {
-    ktUpdate()
-      .eq(Product::id, productId)
-      .set(Product::status, status)
-      .update().let {
-        if (it) return ServerResponse.success("状态更新成功")
-      }
-
-    return ServerResponse.error("状态更新失败")
-  }
-
-  override fun getDetailByManage(productId: Int): ServerResponse<ProductDetailVo> {
-    val product = getById(productId) ?: throw BusinessException("产品不存在")
-    return ServerResponse.success(data = assembleDetailVo(product))
-  }
-
-  override fun getDetail(productId: Int): ServerResponse<ProductDetailVo> {
+  override fun getDetail(productId: Int): ProductDetailVo? {
     val product = getById(productId) ?: throw BusinessException("产品不存在")
 
     if (product.status != ProductStatusEnum.ON_SALE.code) {
-      return ServerResponse.error("商品已下架")
+      return null
     }
 
-    val productDetailVo = assembleDetailVo(product)
-    return ServerResponse.success(data = productDetailVo)
+    return assembleDetailVo(product)
   }
 
 
-  private fun assembleDetailVo(product: Product) = ProductDetailVo(
+  fun assembleDetailVo(product: Product) = ProductDetailVo(
     id = product.id,
     subtitle = product.subtitle,
     price = product.price,
@@ -98,14 +98,12 @@ class ProductServiceImpl(
     this.categoryId = if (category == null) 0 else category.id
   }
 
-  override fun listProductByManage(pageNum: Int, pageSize: Int, productName: String, categoryId: Int): ServerResponse<IPage<ProductListVo>> {
-    val page = ktQuery()
+  override fun listProductByManage(pageNum: Int, pageSize: Int, productName: String, categoryId: Int): IPage<ProductListVo> {
+    return ktQuery()
       .like(productName.isNotBlank(), Product::name, productName)
       .eq(categoryId != -1, Product::categoryId, categoryId)
       .page(Page(pageNum.toLong(), pageSize.toLong()))
       .convert { assembleProductListVo(it) }
-
-    return ServerResponse.success(data = page)
   }
 
   fun assembleProductListVo(product: Product) = ProductListVo(
@@ -119,21 +117,20 @@ class ProductServiceImpl(
     imageHost = FTP_HOST
   )
 
-  override fun listProduct(pageNum: Int, pageSize: Int, keyword: String, categoryId: Int, orderBy: String): ServerResponse<IPage<ProductListVo>> {
-    if (categoryId < 0) return ServerResponse.error("类别非法")
+  override fun listProduct(pageNum: Int, pageSize: Int, keyword: String, categoryId: Int, orderBy: String): IPage<ProductListVo> {
 
     categoryMapper.selectById(categoryId)
       ?: let {
-        val page = Page.of<ProductListVo>(pageNum.toLong(), pageSize.toLong())
-        return ServerResponse.success(data = page)
+        return Page.of(pageNum.toLong(), pageSize.toLong())
       }
 
     val categoryIdList = categoryService.deepCategory(categoryId).data
 
+    // TODO: review?
     var orderByRule: Triple<Boolean, Boolean, String> = Triple(false, false, "")
     if (orderBy.isNotBlank()) {
       val split = orderBy.split("_")
-      if (split.size != 2) return ServerResponse.error("排序规则错误")
+      if (split.size != 2) throw BusinessException("排序规则错误")
 
       val isAsc = when (split[0]) {
         "asc" -> true
@@ -152,7 +149,7 @@ class ProductServiceImpl(
         assembleProductListVo(it)
       }
 
-    return ServerResponse.success(data = page)
+    return page
   }
 
   /**
