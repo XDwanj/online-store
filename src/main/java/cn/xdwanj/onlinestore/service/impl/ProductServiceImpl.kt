@@ -3,7 +3,6 @@ package cn.xdwanj.onlinestore.service.impl
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.common.FTP_HOST
 import cn.xdwanj.onlinestore.common.ProductStatusEnum
-import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.mapper.CategoryMapper
@@ -124,7 +123,7 @@ class ProductServiceImpl(
         return Page.of(pageNum.toLong(), pageSize.toLong())
       }
 
-    val categoryIdList = categoryService.deepCategory(categoryId).data
+    val categoryIdList = categoryService.deepCategory(categoryId)
 
     // TODO: review?
     var orderByRule: Triple<Boolean, Boolean, String> = Triple(false, false, "")

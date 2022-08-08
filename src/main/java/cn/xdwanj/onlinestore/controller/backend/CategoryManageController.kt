@@ -4,6 +4,7 @@ import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.service.CategoryService
 import cn.xdwanj.onlinestore.annotation.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
@@ -30,7 +31,15 @@ class CategoryManageController(
     categoryName: String,
     @RequestParam(defaultValue = "0") parentId: Int,
   ): ServerResponse<String> {
-    return categoryService.addCategory(categoryName, parentId)
+    categoryService.save(Category().also {
+      it.name = categoryName
+      it.parentId = parentId
+      it.status = true
+    }).let {
+      if (it) return ServerResponse.success("添加成功")
+    }
+
+    return ServerResponse.error("添加品类失败")
   }
 
   @Operation(summary = "更新类别")
@@ -39,18 +48,35 @@ class CategoryManageController(
     categoryId: Int,
     categoryName: String
   ): ServerResponse<String> {
-    return categoryService.updateCategory(categoryId, categoryName)
+    categoryService.ktUpdate()
+      .eq(Category::id, categoryId)
+      .set(Category::name, categoryName)
+      .update()
+      .let {
+        if (it) return ServerResponse.success("更新品类名称成功")
+      }
+
+    return ServerResponse.error("更新失败")
   }
 
   @Operation(summary = "查询类别")
   @GetMapping("/{parentId}")
   fun getCategory(@PathVariable parentId: Int): ServerResponse<List<Category>> {
-    return categoryService.getCategory(parentId)
+    val categories = categoryService.ktQuery()
+      .eq(Category::parentId, parentId)
+      .list()
+
+    if (categories.isEmpty()) {
+      logger.info("未找到当前分类的子分类")
+    }
+
+    return ServerResponse.success(data = categories)
   }
 
   @Operation(summary = "递归查询类别")
   @GetMapping("/deep/{parentId}")
   fun deepCategory(@PathVariable parentId: Int): ServerResponse<List<Int>> {
-    return categoryService.deepCategory(parentId)
+    val categoryList = categoryService.deepCategory(parentId)
+    return ServerResponse.success(data = categoryList)
   }
 }
