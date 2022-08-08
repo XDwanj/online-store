@@ -1,6 +1,6 @@
 package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.common.BusinessException
+import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.common.FTP_HOST
 import cn.xdwanj.onlinestore.common.ProductStatusEnum
 import cn.xdwanj.onlinestore.common.ServerResponse

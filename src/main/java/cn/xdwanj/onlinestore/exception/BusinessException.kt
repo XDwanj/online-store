@@ -1,4 +1,6 @@
-package cn.xdwanj.onlinestore.common
+package cn.xdwanj.onlinestore.exception
+
+import cn.xdwanj.onlinestore.common.ResponseCode
 
 /**
  * 不要滥用这个类，请一定要在出现业务错误是使用，过多的使用异常机制，会影响性能

@@ -5,7 +5,7 @@ import cn.xdwanj.onlinestore.common.RoleEnum
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
-import cn.xdwanj.onlinestore.util.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag

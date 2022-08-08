@@ -21,9 +21,8 @@ class WebConfig(
           "/user/logout",
           "/user/password/reset",
         )
-        .addPathPatterns(
-          "/manage/**"
-        )
+        .addPathPatterns("/cart/**")
+        .addPathPatterns("/manage/**")
         .excludePathPatterns("/manage/login")
 
       // 用户角色拦截器

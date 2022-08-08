@@ -1,9 +1,13 @@
 package cn.xdwanj.onlinestore.util
 
+import com.baomidou.mybatisplus.annotation.FieldFill
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import com.baomidou.mybatisplus.generator.FastAutoGenerator
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine
+import com.baomidou.mybatisplus.generator.fill.Column
+import com.baomidou.mybatisplus.generator.fill.Property
+import org.apache.ibatis.annotations.Mapper
 
 class MPGenerator {
   fun generator() {
@@ -13,8 +17,8 @@ class MPGenerator {
       "1234qwer."
     ).globalConfig { builder ->
       builder.author("XDwanj")
-        .enableSwagger()
-        // .enableSpringdoc()
+        // .enableSwagger()
+        .enableSpringdoc()
         .outputDir("/home/xdwanj/TEMP")
         .enableKotlin()
     }.packageConfig { builder ->
@@ -25,7 +29,7 @@ class MPGenerator {
 
         .mapperBuilder()
         .formatMapperFileName("%sMapper")
-        .enableMapperAnnotation()
+        .mapperAnnotation(Mapper::class.java)
         .superClass(BaseMapper::class.java)
 
         .serviceBuilder()
@@ -36,7 +40,8 @@ class MPGenerator {
         .disableSerialVersionUID()
         .naming(NamingStrategy.underline_to_camel)
         .columnNaming(NamingStrategy.underline_to_camel)
-        // .enableTableFieldAnnotation()
+        .addTableFills(Property("createTime", FieldFill.INSERT))
+        .addTableFills(Property("updateTime", FieldFill.INSERT_UPDATE))
 
         .controllerBuilder()
         .formatFileName("%sController")

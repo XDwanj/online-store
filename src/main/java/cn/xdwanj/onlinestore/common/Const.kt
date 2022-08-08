@@ -11,10 +11,10 @@ const val UPLOAD_PATH = "./"
 @Component
 class Const(
   @Value("\${ftp.server.http.prefix}")
-  private val _imageHost: String
+  private val _ftpHost: String
 ) {
   init {
-    FTP_HOST = _imageHost
+    FTP_HOST = _ftpHost
   }
 }
 
@@ -34,4 +34,18 @@ enum class ProductStatusEnum(
 ) {
   ON_SALE(1, "在线")
 }
+
+//enum class CartCheckEnum(val code: Int) {
+//  CHECKED(1),
+//  UN_CHECKED(0)
+//}
+
+object CartConst {
+  const val CHECKED = 1
+  const val UN_CHECKED = 0
+
+  const val LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL"
+  const val LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS"
+}
+
 

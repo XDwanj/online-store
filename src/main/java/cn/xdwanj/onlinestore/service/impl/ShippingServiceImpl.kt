@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2022-07-16
  */
 @Service
-open class ShippingServiceImpl : ServiceImpl<ShippingMapper, Shipping>(), ShippingService {
+class ShippingServiceImpl : ServiceImpl<ShippingMapper, Shipping>(), ShippingService {
 
 }

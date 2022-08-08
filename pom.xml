@@ -85,10 +85,15 @@
         </dependency>
 
         <!-- security -->
-        <!-- <dependency> -->
-        <!--     <groupId>org.springframework.boot</groupId> -->
-        <!--     <artifactId>spring-boot-starter-security</artifactId> -->
-        <!-- </dependency> -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-test</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
         <!-- mybatis-plus -->
         <dependency>
@@ -101,11 +106,11 @@
             <artifactId>mybatis-plus-generator</artifactId>
             <version>${mybatis-plus.generator.version}</version>
         </dependency>
-         <dependency>
-             <groupId>com.baomidou</groupId>
-             <artifactId>mybatis-plus-boot-starter-test</artifactId>
-             <version>${mybatis-plus.version}</version>
-         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter-test</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
 
         <!-- jdbc -->
         <dependency>
@@ -141,7 +146,7 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>compile</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>

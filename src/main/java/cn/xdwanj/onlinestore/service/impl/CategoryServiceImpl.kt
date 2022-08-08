@@ -1,15 +1,14 @@
 package cn.xdwanj.onlinestore.service.impl;
 
-import cn.xdwanj.onlinestore.common.BusinessException
+import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category;
 import cn.xdwanj.onlinestore.mapper.CategoryMapper;
 import cn.xdwanj.onlinestore.service.CategoryService;
-import cn.xdwanj.onlinestore.util.Slf4j
-import cn.xdwanj.onlinestore.util.Slf4j.Companion.logger
+import cn.xdwanj.onlinestore.annotation.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime
 
 /**
  * <p>
@@ -27,8 +26,6 @@ class CategoryServiceImpl : ServiceImpl<CategoryMapper, Category>(), CategorySer
       it.name = categoryName
       it.parentId = parentId
       it.status = true
-      it.createTime = LocalDateTime.now()
-      it.updateTime = LocalDateTime.now()
     }).let {
       if (!it) return ServerResponse.error("添加品类失败")
     }
@@ -40,7 +37,6 @@ class CategoryServiceImpl : ServiceImpl<CategoryMapper, Category>(), CategorySer
     ktUpdate()
       .eq(Category::id, categoryId)
       .set(Category::name, categoryName)
-      .set(Category::updateTime, LocalDateTime.now())
       .update().let {
         if (!it) return ServerResponse.error("更新失败")
       }

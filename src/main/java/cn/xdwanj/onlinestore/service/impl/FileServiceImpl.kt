@@ -1,8 +1,8 @@
 package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.service.FileService
-import cn.xdwanj.onlinestore.util.Slf4j
-import cn.xdwanj.onlinestore.util.Slf4j.Companion.logger
+import cn.xdwanj.onlinestore.annotation.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File

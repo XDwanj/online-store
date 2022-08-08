@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.common
 
-import cn.xdwanj.onlinestore.util.Slf4j
-import cn.xdwanj.onlinestore.util.Slf4j.Companion.logger
+import cn.xdwanj.onlinestore.annotation.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit

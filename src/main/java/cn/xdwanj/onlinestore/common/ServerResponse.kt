@@ -1,5 +1,6 @@
 package cn.xdwanj.onlinestore.common
 
+import cn.xdwanj.onlinestore.exception.BusinessException
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.Hidden

@@ -1,11 +1,11 @@
 package cn.xdwanj.onlinestore.interceptor
 
-import cn.xdwanj.onlinestore.common.BusinessException
+import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.entity.User
-import cn.xdwanj.onlinestore.util.Slf4j
-import cn.xdwanj.onlinestore.util.Slf4j.Companion.logger
+import cn.xdwanj.onlinestore.annotation.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 import javax.servlet.http.HttpServletRequest

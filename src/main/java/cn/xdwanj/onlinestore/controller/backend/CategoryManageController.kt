@@ -3,11 +3,10 @@ package cn.xdwanj.onlinestore.controller.backend
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.service.CategoryService
-import cn.xdwanj.onlinestore.util.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
-import javax.validation.constraints.NotBlank
 
 /**
  * <p>
@@ -17,7 +16,7 @@ import javax.validation.constraints.NotBlank
  * @author XDwanj
  * @since 2022-07-16
  */
-@Tag(name = "分类管理")
+@Tag(name = "后台分类管理")
 @Slf4j
 @RestController
 @RequestMapping("/manage/category")

@@ -7,7 +7,7 @@ import cn.xdwanj.onlinestore.common.UPLOAD_PATH
 import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.service.FileService
 import cn.xdwanj.onlinestore.service.ProductService
-import cn.xdwanj.onlinestore.util.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.vo.ProductListVo
 import com.baomidou.mybatisplus.core.metadata.IPage

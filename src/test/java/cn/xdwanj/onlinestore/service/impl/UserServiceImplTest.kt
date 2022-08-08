@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.service.UserService
-import cn.xdwanj.onlinestore.util.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j
 import org.junit.jupiter.api.Test
 
 import org.springframework.beans.factory.annotation.Autowired

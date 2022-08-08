@@ -3,7 +3,7 @@ package cn.xdwanj.onlinestore.controller.portal
 import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.service.ProductService
-import cn.xdwanj.onlinestore.util.Slf4j
+import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.vo.ProductListVo
 import com.baomidou.mybatisplus.core.metadata.IPage

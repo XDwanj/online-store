@@ -1,8 +1,6 @@
 package cn.xdwanj.onlinestore.entity
 
-import com.baomidou.mybatisplus.annotation.IdType
-import com.baomidou.mybatisplus.annotation.TableId
-import com.baomidou.mybatisplus.annotation.TableName
+import com.baomidou.mybatisplus.annotation.*
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,9 +49,11 @@ class Product {
     var status: Int? = null
 
     @Schema(description = "创建时间")
+    @TableField(fill = FieldFill.INSERT)
     var createTime: LocalDateTime? = null
 
     @Schema(description = "更新时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     var updateTime: LocalDateTime? = null
 
     override fun toString(): String {
