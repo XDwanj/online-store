@@ -37,19 +37,15 @@ class UserManageController(
     password: String,
     @Parameter(hidden = true) session: HttpSession
   ): ServerResponse<User> {
-    val response = userService.login(username, password)
+    val user = userService.login(username, password)
+      ?: return ServerResponse.error("登录失败")
 
-    if (!response.isSuccess()) {
-      return response
-    }
-
-    if (response.data?.role != RoleEnum.ADMIN.code) {
+    if (user.role != RoleEnum.ADMIN.code) {
       return ServerResponse.error("登录的用户并非管理员")
     }
 
-    session.setAttribute(CURRENT_USER, response.data)
-    return response
-
+    session.setAttribute(CURRENT_USER, user)
+    return ServerResponse.success(data = user)
   }
 
 }

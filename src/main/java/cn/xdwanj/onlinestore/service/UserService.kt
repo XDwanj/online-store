@@ -71,69 +71,62 @@ interface UserService : IService<User> {
    * @param password
    * @return
    */
-  fun login(username: String, password: String): ServerResponse<User>
+  fun login(username: String, password: String): User?
 
-  /**
-   * 注册
-   *
-   * @param user
-   * @return
-   */
-  fun register(user: User): ServerResponse<User>
 
-  /**
-   * 返回忘记密码的问题
-   *
-   * @param username
-   * @return
-   */
-  fun getQuestion(username: String): ServerResponse<String>
+//  /**
+//   * 返回忘记密码的问题
+//   *
+//   * @param username
+//   * @return
+//   */
+//  fun getQuestion(username: String): ServerResponse<String>
 
-  /**
-   * 校验答案
-   *
-   * @param username
-   * @param question
-   * @param answer
-   * @return
-   */
-  fun checkAnswer(username: String, question: String, answer: String): ServerResponse<String>
+//  /**
+//   * 校验答案
+//   *
+//   * @param username
+//   * @param question
+//   * @param answer
+//   * @return
+//   */
+//  fun checkAnswer(username: String, question: String, answer: String): ServerResponse<String>
 
-  /**
-   * 忘记密码的情况下重置密码
-   *
-   * @param username
-   * @param passwordNew
-   * @param forgetToken
-   * @return
-   */
-  fun forgetResetPassword(username: String, passwordNew: String, forgetToken: String): ServerResponse<String>
+//  /**
+//   * 忘记密码的情况下重置密码
+//   *
+//   * @param username
+//   * @param passwordNew
+//   * @param forgetToken
+//   * @return
+//   */
+//  fun forgetResetPassword(username: String, passwordNew: String, forgetToken: String): ServerResponse<String>
 
-  /**
-   * 登录状态下重置密码
-   *
-   * @param user
-   * @param passwordOld
-   * @param passwordNew
-   * @return
-   */
-  fun resetPassword(user: User, passwordOld: String, passwordNew: String): ServerResponse<String>
+//  /**
+//   * 登录状态下重置密码
+//   *
+//   * @param user
+//   * @param passwordOld
+//   * @param passwordNew
+//   * @return
+//   */
+//  fun resetPassword(user: User, passwordOld: String, passwordNew: String): ServerResponse<String>
 
-  /**
-   * TODO更新用户信息
-   *
-   * @param user
-   * @return
-   */
-  fun updateInfo(user: User): ServerResponse<User>
+//  /**
+//   * TODO更新用户信息
+//   *
+//   * @param user
+//   * @return
+//   */
+//  fun updateInfo(user: User): ServerResponse<User>
 
-  /**
-   * 获取用户信息
-   *
-   * @param id
-   * @return
-   */
-  fun getInfo(id: Int?): ServerResponse<User>
+//  /**
+//   * 获取用户信息
+//   *
+//   * @param id
+//   * @return
+//   */
+//  fun getInfo(id: Int?): ServerResponse<User>
 
 
 }

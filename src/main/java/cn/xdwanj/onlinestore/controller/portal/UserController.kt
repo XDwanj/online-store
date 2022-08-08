@@ -1,14 +1,17 @@
 package cn.xdwanj.onlinestore.controller.portal
 
-import cn.xdwanj.onlinestore.common.CURRENT_USER
-import cn.xdwanj.onlinestore.common.ServerResponse
+import cn.xdwanj.onlinestore.common.*
 import cn.xdwanj.onlinestore.entity.User
+import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.service.UserService
+import cn.xdwanj.onlinestore.util.encodeByMD5
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
+import java.util.*
 import javax.servlet.http.HttpSession
 
 /**
@@ -24,7 +27,8 @@ import javax.servlet.http.HttpSession
 @RestController
 @RequestMapping("/user")
 class UserController(
-  private val userService: UserService
+  private val userService: UserService,
+  private val tokenCache: TokenCache
 ) {
   @Operation(summary = "登录")
   @PostMapping("/login")
@@ -38,11 +42,15 @@ class UserController(
       password.isBlank()
     ) return ServerResponse.error("数据不可为空")
 
-    val response = userService.login(username, password)
-    if (response.isSuccess()) {
-      session.setAttribute(CURRENT_USER, response.data)
+    val user = userService.login(username, password)?.apply {
+      session.setAttribute(CURRENT_USER, this)
     }
-    return response
+
+    return if (user == null) {
+      ServerResponse.error("用户登录失败")
+    } else {
+      ServerResponse.success(data = user)
+    }
   }
 
   @Operation(summary = "注销")
@@ -61,7 +69,23 @@ class UserController(
       user.email.isNullOrBlank()
     ) return ServerResponse.error("参数不可为空")
 
-    return userService.register(user)
+    if (userService.checkUsername(user.username)) {
+      return ServerResponse.error("用户名已存在")
+    }
+
+    if (userService.checkEmail(user.email)) {
+      return ServerResponse.error("邮箱已存在")
+    }
+
+    user.apply {
+      role = RoleEnum.CUSTOMER.code
+      password = password?.encodeByMD5() ?: throw BusinessException("MD5编码失败")
+    }
+    userService.save(user).let {
+      if (it) return ServerResponse.error("注册失败")
+    }
+
+    return ServerResponse.success("注册成功")
   }
 
   @Operation(summary = "检查数据是否存在")
@@ -82,7 +106,18 @@ class UserController(
     if (username.isBlank()) {
       return ServerResponse.error("用户名不可为空")
     }
-    return userService.getQuestion(username)
+
+    if (!userService.checkUsername(username))
+      return ServerResponse.error("用户名不存在")
+
+    val question = userService.ktQuery()
+      .eq(User::username, username)
+      .select(User::question)
+      .one()
+      .question
+      ?: return ServerResponse.error("找回密码的问题是空的")
+
+    return ServerResponse.success(data = question)
   }
 
   @Operation(summary = "回答密码重置问题")
@@ -98,8 +133,19 @@ class UserController(
       answer.isBlank()
     ) return ServerResponse.error("参数不可为空")
 
+    val exists = userService.ktQuery()
+      .eq(User::username, username)
+      .eq(User::question, question)
+      .eq(User::answer, answer)
+      .exists()
 
-    return userService.checkAnswer(username, question, answer)
+    return if (exists) {
+      val forgetToken = UUID.randomUUID().toString()
+      tokenCache[TOKEN_PREFIX + username] = forgetToken
+      ServerResponse.success("答案正确", forgetToken)
+    } else {
+      ServerResponse.error("问题的答案错误")
+    }
   }
 
   @Operation(summary = "重置密码")
@@ -115,7 +161,26 @@ class UserController(
       forgetToken.isBlank()
     ) return ServerResponse.error("参数不可为空")
 
-    return userService.forgetResetPassword(username, passwordNew, forgetToken)
+    if (!userService.checkUsername(username)) {
+      return ServerResponse.error("用户不存在")
+    }
+
+    val token = tokenCache[TOKEN_PREFIX + username]
+    if (token.isNullOrBlank()) {
+      return ServerResponse.error("token过期或者无效")
+    }
+
+    return if (token == forgetToken) {
+      val md5Pwd = passwordNew.encodeByMD5()
+      userService.ktUpdate()
+        .eq(User::username, username)
+        .set(User::password, md5Pwd)
+        .set(User::updateTime, LocalDateTime.now())
+        .update()
+      ServerResponse.success("修改密码成功")
+    } else {
+      ServerResponse.error("token无效，请重新获取")
+    }
   }
 
   @Operation(summary = "登录状态下重置密码")
@@ -131,7 +196,21 @@ class UserController(
     ) return ServerResponse.error("参数不可为空")
 
     val user = session.getAttribute(CURRENT_USER) as User
-    return userService.resetPassword(user, passwordOld, passwordNew)
+
+    val userId = user.id ?: return ServerResponse.error("用户ID不可为空")
+    if (!userService.checkPassword(userId, passwordOld.encodeByMD5())) {
+      return ServerResponse.error("旧密码错误")
+    }
+
+    userService.ktUpdate()
+      .eq(User::id, userId)
+      .set(User::password, passwordNew.encodeByMD5())
+      .update()
+      .let {
+        if (!it) return ServerResponse.error("密码更新失败")
+      }
+
+    return ServerResponse.success("密码更新成功")
   }
 
   @Operation(summary = "更新用户信息")
@@ -140,22 +219,44 @@ class UserController(
     @Parameter(hidden = true) session: HttpSession,
     userNew: User
   ): ServerResponse<User> {
+    if (userService.checkUsername(userNew.email)) {
+      return ServerResponse.error("email已存在，请更换email")
+    }
+
     val currentUser = session.getAttribute(CURRENT_USER) as User
     userNew.id = currentUser.id
     userNew.username = currentUser.username
-    return userService.updateInfo(userNew).apply {
-      if (isSuccess()) { // 如果更新成功，将新的用户信息传入 session
-        data?.username = currentUser.username
-        session.setAttribute(CURRENT_USER, data)
-      }
-    }
+
+    userService.ktUpdate()
+      .eq(User::id, userNew.id)
+      .set(User::email, userNew.email)
+      .set(User::phone, userNew.phone)
+      .set(User::question, userNew.question)
+      .set(User::answer, userNew.answer)
+      .set(User::updateTime, LocalDateTime.now())
+      .update()
+      .let { if (!it) return ServerResponse.error("更新个人信息失败") }
+
+
+    return ServerResponse.success("更新个人信息成功", userNew)
+
   }
 
   @Operation(summary = "从数据库中返回用户信息")
   @GetMapping("/info/db")
   fun info(@Parameter(hidden = true) session: HttpSession): ServerResponse<User> {
-    val user = session.getAttribute(CURRENT_USER) as User
-    return userService.getInfo(user.id)
+    val currentUser = session.getAttribute(CURRENT_USER) as User
+
+    val user = userService.ktQuery()
+      .eq(User::id, currentUser.id)
+      .one()
+      ?: let {
+        session.removeAttribute(CURRENT_USER)
+        return ServerResponse.error("找不到当前用户")
+      }
+
+    user.password = ""
+    return ServerResponse.success(data = user)
   }
 
   @Operation(summary = "从Session中返回用户信息")
