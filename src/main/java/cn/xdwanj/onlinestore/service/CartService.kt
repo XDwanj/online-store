@@ -1,6 +1,5 @@
 package cn.xdwanj.onlinestore.service;
 
-import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Cart;
 import cn.xdwanj.onlinestore.vo.CartVo
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -22,7 +21,7 @@ interface CartService : IService<Cart> {
    * @param count
    * @return
    */
-  fun add(userId: Int, productId: Int, count: Int): ServerResponse<CartVo>
+  fun add(userId: Int, productId: Int, count: Int): CartVo?
 
   /**
    * 更新购物车
@@ -32,5 +31,5 @@ interface CartService : IService<Cart> {
    * @param count
    * @return
    */
-  fun updateCart(userId: Int, productId: Int, count: Int): ServerResponse<CartVo>
+  fun updateCart(userId: Int, productId: Int, count: Int): CartVo?
 }

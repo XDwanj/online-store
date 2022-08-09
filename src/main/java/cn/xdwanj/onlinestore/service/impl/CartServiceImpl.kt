@@ -26,10 +26,11 @@ class CartServiceImpl(
   private val productService: ProductService
 ) : ServiceImpl<CartMapper, Cart>(), CartService {
 
-  override fun add(userId: Int, productId: Int, count: Int): ServerResponse<CartVo> {
+  override fun add(userId: Int, productId: Int, count: Int): CartVo? {
     val product: Product = productService.ktQuery()
       .eq(Product::id, productId)
-      .one() ?: return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+      .one()
+      ?: throw BusinessException(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     val cartFromDB: Cart? = ktQuery()
       .eq(Cart::userId, userId)
@@ -54,12 +55,11 @@ class CartServiceImpl(
         .update()
     }
 
-    val cartVo = getCartVoLimit(userId)
-    return ServerResponse.success(data = cartVo)
+    return getCartVoLimit(userId)
 
   }
 
-  override fun updateCart(userId: Int, productId: Int, count: Int): ServerResponse<CartVo> {
+  override fun updateCart(userId: Int, productId: Int, count: Int): CartVo? {
     TODO()
   }
 

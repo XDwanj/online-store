@@ -40,8 +40,8 @@ class MPGenerator {
         .disableSerialVersionUID()
         .naming(NamingStrategy.underline_to_camel)
         .columnNaming(NamingStrategy.underline_to_camel)
-        .addTableFills(Property("createTime", FieldFill.INSERT))
-        .addTableFills(Property("updateTime", FieldFill.INSERT_UPDATE))
+        .addTableFills(Column("create_time", FieldFill.INSERT))
+        .addTableFills(Column("update_time", FieldFill.INSERT_UPDATE))
 
         .controllerBuilder()
         .formatFileName("%sController")

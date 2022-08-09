@@ -45,7 +45,10 @@ class CartController(
     val user = session.getAttribute(CURRENT_USER) as User
     val userId = user.id ?: throw BusinessException("用户ID不可为空")
 
-    return cartService.add(userId, productId, count)
+    val cartVo = cartService.add(userId, productId, count)
+      ?: return ServerResponse.error("添加失败")
+
+    return ServerResponse.success(data = cartVo)
   }
 
   @Operation(summary = "更新购物车")
@@ -54,13 +57,15 @@ class CartController(
     @Parameter(hidden = true) session: HttpSession,
     productId: Int,
     count: Int
-  ):ServerResponse<CartVo> {
+  ): ServerResponse<CartVo> {
     if (productId < 1 || count < 1)
       return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     val user = session.getAttribute(CURRENT_USER) as User
-    val userId = user.id?: throw BusinessException("用户ID不可为空")
+    val userId = user.id
+      ?: throw BusinessException("用户ID不可为空")
 
-    return cartService.updateCart(userId, productId, count)
+    val cartVo = cartService.updateCart(userId, productId, count)
+    return ServerResponse.success(data = cartVo)
   }
 }

@@ -3,6 +3,7 @@ package cn.xdwanj.onlinestore.common
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
+import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -52,9 +53,15 @@ class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(BusinessException::class)
-  fun biz(e: BusinessException): ServerResponse<String> {
-    logger.error("出现业务异常，原因是：{}", e.errorMsg)
-    return ServerResponse.errorByException(e)
+  fun business(e: BusinessException): ServerResponse<String> {
+    when (e.logLevelEnum) {
+      LogLevelEnum.INFO -> logger.info("出现业务异常，原因是：{}", e.errorMsg)
+      LogLevelEnum.TRANCE -> logger.trace("出现业务异常，原因是：{}", e.errorMsg)
+      LogLevelEnum.DEBUG -> logger.debug("出现业务异常，原因是：{}", e.errorMsg)
+      LogLevelEnum.WARN -> logger.warn("出现业务异常，原因是：{}", e.errorMsg)
+      LogLevelEnum.ERROR -> logger.error("出现业务异常，原因是：{}", e.errorMsg)
+    }
+    return ServerResponse.error(e.errorMsg, e.errorCode)
   }
 
   @ExceptionHandler(Exception::class)

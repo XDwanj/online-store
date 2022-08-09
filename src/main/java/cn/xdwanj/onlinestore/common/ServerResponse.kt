@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.Hidden
 
-@Hidden
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 class ServerResponse<T> private constructor(
   val status: Int? = null,
@@ -30,9 +29,6 @@ class ServerResponse<T> private constructor(
       code: Int = ResponseCode.ERROR.code
     ) = ServerResponse<T>(code, msg)
 
-    fun <T> errorByException(
-      e: BusinessException
-    ) = ServerResponse<T>(e.errorCode, e.errorMsg)
   }
 }
 

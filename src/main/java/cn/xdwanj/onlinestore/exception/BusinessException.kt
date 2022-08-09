@@ -3,12 +3,22 @@ package cn.xdwanj.onlinestore.exception
 import cn.xdwanj.onlinestore.common.ResponseCode
 
 /**
- * 不要滥用这个类，请一定要在出现业务错误是使用，过多的使用异常机制，会影响性能
+ * 业务异常类
  *
  * @property errorMsg 错误信息
  * @property errorCode 错误code
  */
 data class BusinessException(
   val errorMsg: String,
-  val errorCode: Int = ResponseCode.ERROR.code
+  val errorCode: Int = ResponseCode.ERROR.code,
+  val logLevelEnum: LogLevelEnum = LogLevelEnum.INFO
 ) : RuntimeException()
+
+/**
+ * 日志等级枚举
+ *
+ */
+enum class LogLevelEnum {
+  INFO, TRANCE, DEBUG, WARN, ERROR
+}
+
