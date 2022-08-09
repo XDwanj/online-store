@@ -24,12 +24,19 @@ interface CartService : IService<Cart> {
   fun add(userId: Int, productId: Int, count: Int): CartVo?
 
   /**
-   * 更新购物车
+   * 获取当前购物车
    *
    * @param userId
-   * @param productId
-   * @param count
    * @return
    */
-  fun updateCart(userId: Int, productId: Int, count: Int): CartVo?
+  fun getCartVoLimit(userId: Int): CartVo
+
+  /**
+   * 全选商品或者反选商品
+   *
+   * @param userId
+   * @param checked
+   * @return
+   */
+  fun selectOrUnselectAll(userId: Int, checked: Int): Boolean
 }

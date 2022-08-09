@@ -54,7 +54,7 @@ class GlobalExceptionHandler {
 
   @ExceptionHandler(BusinessException::class)
   fun business(e: BusinessException): ServerResponse<String> {
-    when (e.logLevelEnum) {
+    when (e.logLevel) {
       LogLevelEnum.INFO -> logger.info("出现业务异常，原因是：{}", e.errorMsg)
       LogLevelEnum.TRANCE -> logger.trace("出现业务异常，原因是：{}", e.errorMsg)
       LogLevelEnum.DEBUG -> logger.debug("出现业务异常，原因是：{}", e.errorMsg)

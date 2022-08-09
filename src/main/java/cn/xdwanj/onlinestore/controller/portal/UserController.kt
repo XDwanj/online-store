@@ -186,7 +186,9 @@ class UserController(
   @Operation(summary = "登录状态下重置密码")
   @PutMapping("/password/reset")
   fun resetPassword(
-    @Parameter(hidden = true) session: HttpSession,
+    @Parameter(hidden = true)
+    @SessionAttribute(CURRENT_USER)
+    user: User,
     passwordOld: String,
     passwordNew: String
   ): ServerResponse<String> {
@@ -195,9 +197,9 @@ class UserController(
       passwordOld.isBlank()
     ) return ServerResponse.error("参数不可为空")
 
-    val user = session.getAttribute(CURRENT_USER) as User
+    val userId = user.id
+      ?: return ServerResponse.error("用户ID不可为空")
 
-    val userId = user.id ?: return ServerResponse.error("用户ID不可为空")
     if (!userService.checkPassword(userId, passwordOld.encodeByMD5())) {
       return ServerResponse.error("旧密码错误")
     }
@@ -216,14 +218,15 @@ class UserController(
   @Operation(summary = "更新用户信息")
   @PutMapping("/info")
   fun info(
-    @Parameter(hidden = true) session: HttpSession,
+    @Parameter(hidden = true)
+    @SessionAttribute(CURRENT_USER)
+    currentUser: User,
     userNew: User
   ): ServerResponse<User> {
     if (userService.checkUsername(userNew.email)) {
       return ServerResponse.error("email已存在，请更换email")
     }
 
-    val currentUser = session.getAttribute(CURRENT_USER) as User
     userNew.id = currentUser.id
     userNew.username = currentUser.username
 

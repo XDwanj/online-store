@@ -1,5 +1,6 @@
 package cn.xdwanj.onlinestore.service.impl
 
+import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.common.*
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.Product
@@ -21,6 +22,7 @@ import java.math.BigDecimal
  * @author XDwanj
  * @since 2022-07-16
  */
+@Slf4j
 @Service
 class CartServiceImpl(
   private val productService: ProductService
@@ -59,11 +61,7 @@ class CartServiceImpl(
 
   }
 
-  override fun updateCart(userId: Int, productId: Int, count: Int): CartVo? {
-    TODO()
-  }
-
-  private fun getCartVoLimit(userId: Int): CartVo {
+  override fun getCartVoLimit(userId: Int): CartVo {
     val cartVo = CartVo()
     var cartTotalPrice = BigDecimal.ZERO
     val cartProductVoList = mutableListOf<CartProductVo>()
@@ -134,6 +132,13 @@ class CartServiceImpl(
       it.allChecked = getAllCheckedStatus(userId)
       it.imageHost = FTP_HOST
     }
+  }
+
+  override fun selectOrUnselectAll(userId: Int, checked: Int): Boolean {
+    return ktUpdate()
+      .eq(Cart::userId, userId)
+      .set(Cart::checked, checked)
+      .update()
   }
 
   private fun getAllCheckedStatus(userId: Int): Boolean = ktQuery()

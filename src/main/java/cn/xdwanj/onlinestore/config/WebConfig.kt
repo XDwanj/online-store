@@ -22,6 +22,8 @@ class WebConfig(
           "/user/password/reset",
         )
         .addPathPatterns("/cart/**")
+        .addPathPatterns("/shipping/**")
+
         .addPathPatterns("/manage/**")
         .excludePathPatterns("/manage/login")
 
