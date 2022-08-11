@@ -1,9 +1,7 @@
 package cn.xdwanj.onlinestore.common
 
-import cn.xdwanj.onlinestore.exception.BusinessException
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
-import io.swagger.v3.oas.annotations.Hidden
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 class ServerResponse<T> private constructor(
@@ -19,7 +17,7 @@ class ServerResponse<T> private constructor(
 
   companion object { // 工厂方法
     fun <T> success(
-      msg: String? = null,
+      msg: String? = ResponseCode.SUCCESS.msg,
       data: T? = null,
       code: Int = ResponseCode.SUCCESS.code
     ) = ServerResponse(code, msg, data)
@@ -34,7 +32,7 @@ class ServerResponse<T> private constructor(
 
 enum class ResponseCode(
   val code: Int,
-  val desc: String
+  val msg: String
 ) {
   SUCCESS(0, "SUCCESS"),
   ERROR(1, "ERROR"),

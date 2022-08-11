@@ -1,6 +1,5 @@
 package cn.xdwanj.onlinestore.controller.portal;
 
-import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.common.ServerResponse
@@ -10,7 +9,6 @@ import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import cn.xdwanj.onlinestore.common.CartConst
 import cn.xdwanj.onlinestore.entity.Cart
-import cn.xdwanj.onlinestore.service.CategoryService
 import cn.xdwanj.onlinestore.vo.CartVo
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -43,7 +41,7 @@ class CartController(
     count: Int
   ): ServerResponse<CartVo> {
     if (productId < 1 || count < 1)
-      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     val cartVo = cartService.add(user.id!!, productId, count)
       ?: return ServerResponse.error("添加失败")
@@ -61,7 +59,7 @@ class CartController(
     count: Int
   ): ServerResponse<CartVo> {
     if (productId < 1 || count < 1)
-      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     val cart = cartService.ktQuery()
       .eq(Cart::productId, productId)
@@ -89,14 +87,14 @@ class CartController(
     @Parameter(description = "商品id数组，用','分割") productIds: String
   ): ServerResponse<CartVo> {
     if (productIds.isBlank())
-      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     productIds.split(",")
       .filter { it.isNotBlank() }
       .map { it.toInt() }
       .also {
         if (it.isEmpty())
-          return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+          return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
       }.forEach { productId ->
         cartService.ktUpdate()
           .eq(Cart::productId, productId)
@@ -128,7 +126,7 @@ class CartController(
   ): ServerResponse<CartVo> {
     listOf(CartConst.CHECKED, CartConst.UN_CHECKED).contains(checked)
       .let {
-        if (!it) return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+        if (!it) return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
       }
 
     cartService.ktUpdate()
@@ -154,7 +152,7 @@ class CartController(
   ): ServerResponse<CartVo> {
     listOf(CartConst.CHECKED, CartConst.UN_CHECKED).contains(checked)
       .let {
-        if (!it) return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+        if (!it) return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
       }
 
     cartService.ktUpdate()

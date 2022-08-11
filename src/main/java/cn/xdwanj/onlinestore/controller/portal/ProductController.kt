@@ -47,7 +47,7 @@ class ProductController(
     @Parameter(description = "格式：'排序规则_排序字段'，默认不排序") orderBy: String = ""
   ): ServerResponse<IPage<ProductListVo>> {
     if (pageNum < 1 || pageSize < 1 || categoryId < 0)
-      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     val page = productService.listProduct(pageNum, pageSize, keyword, categoryId, orderBy)
     return ServerResponse.success(data = page)

@@ -60,7 +60,7 @@ class ShippingController(
     shippingId: Int
   ): ServerResponse<String> {
     if (shippingId < 1)
-      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     val isSuccess = shippingService.ktUpdate()
       .eq(Shipping::userId, user.id)
@@ -131,7 +131,7 @@ class ShippingController(
     @RequestParam(defaultValue = "10") pageSize: Int,
   ): ServerResponse<IPage<Shipping>> {
     if (pageNum < 1 || pageSize < 1)
-      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+      return ServerResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     val page = shippingService.ktQuery()
       .eq(Shipping::userId, user.id)

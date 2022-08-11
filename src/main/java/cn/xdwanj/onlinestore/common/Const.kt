@@ -35,11 +35,6 @@ enum class ProductStatusEnum(
   ON_SALE(1, "在线")
 }
 
-//enum class CartCheckEnum(val code: Int) {
-//  CHECKED(1),
-//  UN_CHECKED(0)
-//}
-
 object CartConst {
   const val CHECKED = 1
   const val UN_CHECKED = 0

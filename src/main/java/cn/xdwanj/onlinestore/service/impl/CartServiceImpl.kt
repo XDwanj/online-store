@@ -32,7 +32,7 @@ class CartServiceImpl(
     val product: Product = productService.ktQuery()
       .eq(Product::id, productId)
       .one()
-      ?: throw BusinessException(ResponseCode.ILLEGAL_ARGUMENT.desc, ResponseCode.ILLEGAL_ARGUMENT.code)
+      ?: throw BusinessException(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
 
     val cartFromDB: Cart? = ktQuery()
       .eq(Cart::userId, userId)

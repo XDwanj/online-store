@@ -1,8 +1,9 @@
-package cn.xdwanj.onlinestore.common
+package cn.xdwanj.onlinestore.advice
 
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
+import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -54,10 +55,11 @@ class GlobalExceptionHandler {
 
   @ExceptionHandler(BusinessException::class)
   fun business(e: BusinessException): ServerResponse<String> {
-    when (e.logLevel) {
-      LogLevelEnum.INFO -> logger.info("出现业务异常，原因是：{}", e.errorMsg)
+    when (e.logLevel) { // 优先级由低到高
+      LogLevelEnum.NOT_LOG -> {}
       LogLevelEnum.TRANCE -> logger.trace("出现业务异常，原因是：{}", e.errorMsg)
       LogLevelEnum.DEBUG -> logger.debug("出现业务异常，原因是：{}", e.errorMsg)
+      LogLevelEnum.INFO -> logger.info("出现业务异常，原因是：{}", e.errorMsg)
       LogLevelEnum.WARN -> logger.warn("出现业务异常，原因是：{}", e.errorMsg)
       LogLevelEnum.ERROR -> logger.error("出现业务异常，原因是：{}", e.errorMsg)
     }
