@@ -1,7 +1,10 @@
 package cn.xdwanj.onlinestore.common
 
+import cn.xdwanj.onlinestore.exception.BusinessException
+import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import javax.servlet.ServletContext
 
 const val CURRENT_USER = "currentUser"
 const val USERNAME = "username"
@@ -11,14 +14,21 @@ const val UPLOAD_PATH = "./"
 @Component
 class Const(
   @Value("\${ftp.server.http.prefix}")
-  private val _ftpHost: String
+  private val _ftpHost: String,
+  @Value("\${password.salt}")
+  private val _salt: String,
+  private val servletContext: ServletContext
 ) {
   init {
     FTP_HOST = _ftpHost
+    PASSWORD_SALT = _salt
+    SERVER_HOST = servletContext.contextPath
   }
 }
 
 lateinit var FTP_HOST: String
+lateinit var PASSWORD_SALT: String
+lateinit var SERVER_HOST: String
 
 enum class RoleEnum(
   val code: Int,
@@ -32,7 +42,48 @@ enum class ProductStatusEnum(
   val code: Int,
   val desc: String
 ) {
-  ON_SALE(1, "在线")
+  ON_SALE(1, "在线");
+}
+
+enum class OrderStatusEnum(
+  val code: Int,
+  val desc: String
+) {
+  CANCELED(0, "已取消"),
+  NO_PAY(10, "未支付"),
+  PAID(20, "已付款"),
+  SHIPPED(40, "已发货"),
+  ORDER_SUCCESS(50, "订单完成"),
+  ORDER_CLOSE(60, "订单关闭");
+
+  companion object {
+    fun codeOf(code: Int): OrderStatusEnum {
+      for (orderStatusEnum in values()) {
+        if (orderStatusEnum.code == code)
+          return orderStatusEnum
+      }
+
+      throw BusinessException("订单状态错误")
+    }
+  }
+}
+
+enum class PaymentTypeEnum(
+  val code: Int,
+  val desc: String
+) {
+  ONLINE_PAY(1, "在线支付");
+
+  companion object {
+    fun codeOf(code: Int): PaymentTypeEnum {
+      for (paymentTypeEnum in values()) {
+        if (paymentTypeEnum.code == code)
+          return paymentTypeEnum
+      }
+
+      throw BusinessException("没有一个支付状态正确", logLevel = LogLevelEnum.ERROR)
+    }
+  }
 }
 
 object CartConst {

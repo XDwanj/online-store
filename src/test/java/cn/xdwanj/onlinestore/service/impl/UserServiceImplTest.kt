@@ -33,9 +33,4 @@ internal class UserServiceImplTest {
   fun register() {
   }
 
-  @Test
-  fun getQuestion() {
-    println(userService.getQuestion("xdwanj").data)
-
-  }
 }

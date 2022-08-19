@@ -2,7 +2,7 @@ package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.RoleEnum
-import cn.xdwanj.onlinestore.common.ServerResponse
+import cn.xdwanj.onlinestore.common.CommonResponse
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.annotation.Slf4j
@@ -36,16 +36,16 @@ class UserManageController(
     username: String,
     password: String,
     @Parameter(hidden = true) session: HttpSession
-  ): ServerResponse<User> {
+  ): CommonResponse<User> {
     val user = userService.login(username, password)
-      ?: return ServerResponse.error("登录失败")
+      ?: return CommonResponse.error("登录失败")
 
     if (user.role != RoleEnum.ADMIN.code) {
-      return ServerResponse.error("登录的用户并非管理员")
+      return CommonResponse.error("登录的用户并非管理员")
     }
 
     session.setAttribute(CURRENT_USER, user)
-    return ServerResponse.success(data = user)
+    return CommonResponse.success(data = user)
   }
 
 }

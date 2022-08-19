@@ -1,5 +1,6 @@
 package cn.xdwanj.onlinestore.util
 
+import cn.xdwanj.onlinestore.exception.BusinessException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletResponse
@@ -13,6 +14,9 @@ fun HttpServletResponse.returnJson(json: String) {
   }
 }
 
-fun LocalDateTime.formatString(): String {
+fun LocalDateTime?.formatString(): String {
+  if (this == null) {
+    throw BusinessException("时间格式化不可为空")
+  }
   return this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 }

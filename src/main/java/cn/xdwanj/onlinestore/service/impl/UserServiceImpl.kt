@@ -2,14 +2,11 @@ package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.common.*
 import cn.xdwanj.onlinestore.entity.User
-import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.mapper.UserMapper
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.util.encodeByMD5
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
-import java.util.*
 
 /**
  * <p>
@@ -23,23 +20,23 @@ import java.util.*
 class UserServiceImpl(
   private val tokenCache: TokenCache
 ) : ServiceImpl<UserMapper, User>(), UserService {
-  override fun checkValid(str: String?, type: String?): ServerResponse<User> {
+  override fun checkValid(str: String?, type: String?): CommonResponse<User> {
     if (type.isNullOrBlank()) {
-      return ServerResponse.error("参数错误")
+      return CommonResponse.error("参数错误")
     }
     when (type) {
       EMAIL -> if (checkEmail(str)) {
-        return ServerResponse.error("邮箱不存在")
+        return CommonResponse.error("邮箱不存在")
       }
 
       USERNAME -> if (!checkUsername(str)) {
-        return ServerResponse.error("用户名不存在")
+        return CommonResponse.error("用户名不存在")
       }
 
-      else -> return ServerResponse.error("参数错误")
+      else -> return CommonResponse.error("参数错误")
     }
 
-    return ServerResponse.success("校验成功")
+    return CommonResponse.success("校验成功")
   }
 
   override fun checkUsername(username: String?): Boolean {

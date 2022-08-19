@@ -31,35 +31,6 @@ class ProductServiceImpl(
   private val categoryMapper: CategoryMapper,
   private val categoryService: CategoryService
 ) : ServiceImpl<ProductMapper, Product>(), ProductService {
-//  override fun saveProduct(product: Product): ServerResponse<String> {
-//    if (save(product)) {
-//      return ServerResponse.success("保存成功")
-//    }
-//
-//    return ServerResponse.error("保存失败")
-//  }
-
-//  override fun updateProduct(product: Product): ServerResponse<String> {
-//    ktUpdate()
-//      .eq(Product::id, product.id)
-//      .setEntity(product)
-//      .update().let {
-//        if (it) return ServerResponse.success("更新成功")
-//      }
-//
-//    return ServerResponse.error("更新失败")
-//  }
-
-//  override fun setSaleStatus(productId: Int, status: Int): ServerResponse<String> {
-//    ktUpdate()
-//      .eq(Product::id, productId)
-//      .set(Product::status, status)
-//      .update().let {
-//        if (it) return ServerResponse.success("状态更新成功")
-//      }
-//
-//    return ServerResponse.error("状态更新失败")
-//  }
 
   override fun getDetailByManage(productId: Int): ProductDetailVo? {
     val product = getById(productId)

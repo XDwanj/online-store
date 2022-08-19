@@ -7,15 +7,15 @@ import org.springframework.context.annotation.Configuration
 import java.util.concurrent.TimeUnit
 
 @Configuration
-open class CacheConfig {
+class CacheConfig {
   @Bean
-  open fun caffeine() = Caffeine.newBuilder()
+  fun caffeine() = Caffeine.newBuilder()
     .expireAfterWrite(12, TimeUnit.HOURS)
     .initialCapacity(1000)
     .maximumSize(10000)
 
   @Bean
-  open fun cacheManager(
+  fun cacheManager(
     caffeine: Caffeine<Any, Any>
   ) = CaffeineCacheManager().apply {
     setCaffeine(caffeine)

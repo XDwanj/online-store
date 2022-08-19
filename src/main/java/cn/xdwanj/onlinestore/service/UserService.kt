@@ -1,6 +1,6 @@
 package cn.xdwanj.onlinestore.service;
 
-import cn.xdwanj.onlinestore.common.ServerResponse
+import cn.xdwanj.onlinestore.common.CommonResponse
 import cn.xdwanj.onlinestore.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,7 +20,7 @@ interface UserService : IService<User> {
    * @param type
    * @return
    */
-  fun checkValid(str: String?, type: String?): ServerResponse<User>
+  fun checkValid(str: String?, type: String?): CommonResponse<User>
 
   /**
    * 校验用户名

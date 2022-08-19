@@ -1,7 +1,6 @@
 package cn.xdwanj.onlinestore.service.impl;
 
 import cn.xdwanj.onlinestore.exception.BusinessException
-import cn.xdwanj.onlinestore.common.ServerResponse
 import cn.xdwanj.onlinestore.entity.Category;
 import cn.xdwanj.onlinestore.mapper.CategoryMapper;
 import cn.xdwanj.onlinestore.service.CategoryService;

@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "alipay.config.gatewayHost",
+      "type": "java.lang.String",
+      "description": "Description for alipay.config.gatewayHost."
+    },
+    {
+      "name": "alipay.config.notifyUrl",
+      "type": "java.lang.String",
+      "description": "Description for alipay.config.notifyUrl."
+    },
+    {
+      "name": "alipay.config.gatewayHost",
+      "type": "java.lang.String",
+      "description": "Description for alipay.config.gatewayHost."
+    }
+  ] }
