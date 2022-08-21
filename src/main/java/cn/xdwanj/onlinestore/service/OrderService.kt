@@ -34,7 +34,7 @@ interface OrderService : IService<Order> {
   fun pay(orderNo: Long, userId: Int): String
 
   /**
-   * 清理购物车
+   * 清理库存
    *
    * @param orderItemList
    */

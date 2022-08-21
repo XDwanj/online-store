@@ -6,7 +6,6 @@ import cn.xdwanj.onlinestore.common.CartConst
 import cn.xdwanj.onlinestore.common.CommonResponse
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.User
-import cn.xdwanj.onlinestore.service.AlipayService
 import cn.xdwanj.onlinestore.service.CartService
 import cn.xdwanj.onlinestore.service.OrderService
 import cn.xdwanj.onlinestore.vo.OrderVo
@@ -32,8 +31,7 @@ import org.springframework.web.bind.annotation.SessionAttribute
 @RequestMapping("/order")
 class OrderController(
   private val orderService: OrderService,
-  private val cartService: CartService,
-  private val alipayService: AlipayService
+  private val cartService: CartService
 ) {
   @Operation(summary = "创建订单")
   @PostMapping("/create")
@@ -55,8 +53,10 @@ class OrderController(
       return errorResponse
     }
 
+    // 计算总价
     val totalPrice = orderService.getOrderTotalPrice(orderItemList)
 
+    // 获取订单
     val order = orderService.assembleOrder(user.id!!, shippingId, totalPrice)
 
     // 保存订单

@@ -14,6 +14,7 @@ import cn.xdwanj.onlinestore.vo.OrderVo
 import cn.xdwanj.onlinestore.vo.ShippingVo
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import kotlin.random.Random
@@ -31,10 +32,8 @@ import kotlin.random.Random
 class OrderServiceImpl(
   private val objectMapper: ObjectMapper,
   private val alipayService: AlipayService,
-  private val cartService: CartService,
   private val productService: ProductService,
-  private val shippingService: ShippingService,
-  private val orderItemService: OrderItemService
+  private val shippingService: ShippingService
 ) : ServiceImpl<OrderMapper, Order>(), OrderService {
 
   override fun pay(orderNo: Long, userId: Int): String {
@@ -158,7 +157,7 @@ class OrderServiceImpl(
       product.stock = if (product.stock!! >= orderItem.quantity!!) {
         product.stock!! - orderItem.quantity!!
       } else {
-        throw BusinessException("库存不足无法生成订单")
+        throw BusinessException("库存不足无法生成订单", logLevel = LogLevelEnum.INFO)
       }
 
       productService.ktUpdate()
