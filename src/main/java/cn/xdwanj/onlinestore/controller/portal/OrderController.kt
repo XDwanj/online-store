@@ -7,6 +7,7 @@ import cn.xdwanj.onlinestore.common.CommonResponse
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.CartService
+import cn.xdwanj.onlinestore.service.OrderItemService
 import cn.xdwanj.onlinestore.service.OrderService
 import cn.xdwanj.onlinestore.vo.OrderVo
 import io.swagger.v3.oas.annotations.Operation
@@ -31,7 +32,8 @@ import org.springframework.web.bind.annotation.SessionAttribute
 @RequestMapping("/order")
 class OrderController(
   private val orderService: OrderService,
-  private val cartService: CartService
+  private val cartService: CartService,
+  private val orderItemService: OrderItemService
 ) {
   @Operation(summary = "创建订单")
   @PostMapping("/create")
@@ -59,8 +61,8 @@ class OrderController(
     // 获取订单
     val order = orderService.assembleOrder(user.id!!, shippingId, totalPrice)
 
-    // 保存订单
-    if (orderService.save(order)) {
+    // 保存订单项列表
+    if (orderItemService.saveBatch(orderItemList)) {
       return errorResponse
     }
 
@@ -72,6 +74,11 @@ class OrderController(
 
     // 转换 OrderVo
     val orderVo = orderService.assembleOrderVo(order, orderItemList)
+
+    // 保存 订单
+    if (orderService.save(order)) {
+      return errorResponse
+    }
 
     return CommonResponse.success(data = orderVo)
   }
