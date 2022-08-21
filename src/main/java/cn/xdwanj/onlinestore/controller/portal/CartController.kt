@@ -1,14 +1,14 @@
 package cn.xdwanj.onlinestore.controller.portal;
 
-import cn.xdwanj.onlinestore.common.CURRENT_USER
-import cn.xdwanj.onlinestore.common.ResponseCode
-import cn.xdwanj.onlinestore.common.CommonResponse
-import cn.xdwanj.onlinestore.entity.User
-import cn.xdwanj.onlinestore.service.CartService
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
+import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.CartConst
+import cn.xdwanj.onlinestore.common.CommonResponse
+import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.entity.Cart
+import cn.xdwanj.onlinestore.entity.User
+import cn.xdwanj.onlinestore.service.CartService
 import cn.xdwanj.onlinestore.vo.CartVo
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -78,7 +78,7 @@ class CartController(
     return CommonResponse.success(data = cartVo)
   }
 
-  @Operation(summary = "删除购物车")
+  @Operation(summary = "删除购物车列表")
   @DeleteMapping
   fun delete(
     @Parameter(hidden = true)

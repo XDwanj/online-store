@@ -2,8 +2,8 @@ package cn.xdwanj.onlinestore.controller.portal
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.common.CURRENT_USER
-import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.common.CommonResponse
+import cn.xdwanj.onlinestore.common.ResponseCode
 import cn.xdwanj.onlinestore.entity.Shipping
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.ShippingService
@@ -52,12 +52,12 @@ class ShippingController(
   }
 
   @Operation(summary = "删除地址")
-  @DeleteMapping
+  @DeleteMapping("/{shippingId}")
   fun delete(
     @Parameter(hidden = true)
     @SessionAttribute(CURRENT_USER)
     user: User,
-    shippingId: Int
+    @PathVariable shippingId: Int
   ): CommonResponse<Any> {
     if (shippingId < 1)
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
@@ -82,13 +82,13 @@ class ShippingController(
     user: User,
     shipping: Shipping
   ): CommonResponse<Any> {
-    shippingService.ktQuery()
+    val exists = shippingService.ktQuery()
       .eq(Shipping::id, shipping.id)
       .eq(Shipping::userId, user.id)
       .exists()
-      .let {
-        if (!it) return CommonResponse.error("该地址不存在")
-      }
+    if (exists) {
+      return CommonResponse.error("该地址不存在")
+    }
 
     shipping.id = null
     shipping.userId = user.id

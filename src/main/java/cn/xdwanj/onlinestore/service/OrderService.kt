@@ -26,14 +26,6 @@ interface OrderService : IService<Order> {
   fun assembleOrder(userId: Int, shippingId: Int, payment: BigDecimal): Order
 
   /**
-   * 订单付款
-   *
-   * @param orderNo
-   * @param userId
-   */
-  fun pay(orderNo: Long, userId: Int): String
-
-  /**
    * 清理库存
    *
    * @param orderItemList
@@ -54,7 +46,7 @@ interface OrderService : IService<Order> {
    * @param cartList
    * @return
    */
-  fun getOrderItemByCart(userId: Int, cartList: List<Cart>): List<OrderItem>
+  fun listOrderItemByCartList(userId: Int, cartList: List<Cart>): List<OrderItem>
 
   /**
    * 获取订单总价
@@ -62,5 +54,5 @@ interface OrderService : IService<Order> {
    * @param orderItemList
    * @return
    */
-  fun getOrderTotalPrice(orderItemList: List<OrderItem>): BigDecimal
+  fun getTotalPrice(orderItemList: List<OrderItem>): BigDecimal
 }

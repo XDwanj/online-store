@@ -31,60 +31,9 @@ import kotlin.random.Random
 @Service
 class OrderServiceImpl(
   private val objectMapper: ObjectMapper,
-  private val alipayService: AlipayService,
   private val productService: ProductService,
   private val shippingService: ShippingService
 ) : ServiceImpl<OrderMapper, Order>(), OrderService {
-
-  override fun pay(orderNo: Long, userId: Int): String {
-    val order = ktQuery()
-      .eq(Order::orderNo, orderNo)
-      .eq(Order::userId, userId)
-      .one()
-      ?: throw BusinessException("用户订单不存在")
-
-    val subject = objectMapper.writeValueAsString(order)
-    val money = order.payment
-      ?: throw BusinessException("总价不可为空", logLevel = LogLevelEnum.ERROR)
-
-    return alipayService.toPay(subject, money).apply {
-      if (isEmpty())
-        throw BusinessException("支付网页生成失败")
-    }
-  }
-
-//  override fun createOrder(userId: Int, shippingId: Int): OrderVo? {
-//    val cartList = cartService.ktQuery()
-//      .eq(Cart::userId, userId)
-//      .eq(Cart::checked, CartConst.CHECKED)
-//      .list()
-//
-//    val orderItemList = getOrderItemByCart(userId, cartList)
-//    if (orderItemList.isEmpty()) {
-//      return null
-//    }
-//
-//    val totalPrice = getOrderTotalPrice(orderItemList)
-//
-//    val order = assembleOrder(userId, shippingId, totalPrice)
-//      ?: throw BusinessException("生成订单错误")
-//
-//    for (orderItem in orderItemList) {
-//      orderItem.orderNo = order.orderNo
-//    }
-//
-//    // 保存订单
-//    orderItemService.saveBatch(orderItemList)
-//
-//    // 减少库存
-//    reduceProductStock(orderItemList)
-//
-//    // 清理购物车
-//    cartService.removeBatchByIds(cartList)
-//
-//    // 返回订单
-//    return assembleOrderVo(order, orderItemList)
-//  }
 
   override fun assembleOrderVo(order: Order, orderItemList: List<OrderItem>): OrderVo {
 
@@ -184,7 +133,7 @@ class OrderServiceImpl(
     return currentTime + currentTime % Random.nextInt(100)
   }
 
-  override fun getOrderTotalPrice(orderItemList: List<OrderItem>): BigDecimal {
+  override fun getTotalPrice(orderItemList: List<OrderItem>): BigDecimal {
     var payment = BigDecimal.ZERO
     for (orderItem in orderItemList) {
       payment += orderItem.totalPrice!!
@@ -193,7 +142,7 @@ class OrderServiceImpl(
     return payment
   }
 
-  override fun getOrderItemByCart(userId: Int, cartList: List<Cart>): List<OrderItem> {
+  override fun listOrderItemByCartList(userId: Int, cartList: List<Cart>): List<OrderItem> {
     val orderItemList = mutableListOf<OrderItem>()
 
     if (cartList.isEmpty()) {

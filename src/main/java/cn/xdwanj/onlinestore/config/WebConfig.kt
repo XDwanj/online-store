@@ -3,7 +3,6 @@ package cn.xdwanj.onlinestore.config
 import cn.xdwanj.onlinestore.interceptor.CheckAdminInterceptor
 import cn.xdwanj.onlinestore.interceptor.LoginInterceptor
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.codec.json.AbstractJackson2Encoder
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
@@ -23,6 +22,7 @@ class WebConfig(
         )
         .addPathPatterns("/cart/**")
         .addPathPatterns("/shipping/**")
+        .addPathPatterns("/order/**")
 
         .addPathPatterns("/manage/**")
         .excludePathPatterns("/manage/login")

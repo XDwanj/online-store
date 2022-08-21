@@ -8,7 +8,8 @@
 2. kotlin v1.6.21
 3. logback + SLF4J 日志系统
 4. Maven 构建工具
-5. Swagger3 API文档(springdoc v1.6.9)
+5. Swagger3 API文档(springDoc v1.6.9)
+6. 借入 Alipay 接口
 
 ## 架构
 

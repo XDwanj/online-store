@@ -1,9 +1,5 @@
 package cn.xdwanj.onlinestore.advice
 
-/**
- * 统一包装实体切面
- *
- */
 //@Slf4j
 //@ControllerAdvice
 //class ControllerResponseAdvice(
