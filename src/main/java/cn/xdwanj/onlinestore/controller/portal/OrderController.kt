@@ -2,7 +2,9 @@ package cn.xdwanj.onlinestore.controller.portal;
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.common.CURRENT_USER
+import cn.xdwanj.onlinestore.common.CartConst
 import cn.xdwanj.onlinestore.common.CommonResponse
+import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.AlipayService
 import cn.xdwanj.onlinestore.service.CartService
@@ -41,12 +43,36 @@ class OrderController(
     user: User,
     shippingId: Int
   ): CommonResponse<OrderVo> {
-    val orderVo = orderService.createOrder(user.id!!, shippingId)
+    val errorResponse = CommonResponse.error<OrderVo>("订单生成失败")
 
-    return if (orderVo != null) {
-      CommonResponse.success(data = orderVo)
-    } else {
-      CommonResponse.error("订单生成失败")
+    val cartList = cartService.ktQuery()
+      .eq(Cart::userId, user.id)
+      .eq(Cart::checked, CartConst.CHECKED)
+      .list()
+
+    val orderItemList = orderService.getOrderItemByCart(user.id!!, cartList)
+    if (orderItemList.isEmpty()) {
+      return errorResponse
     }
+
+    val totalPrice = orderService.getOrderTotalPrice(orderItemList)
+
+    val order = orderService.assembleOrder(user.id!!, shippingId, totalPrice)
+
+    // 保存订单
+    if (orderService.save(order)) {
+      return errorResponse
+    }
+
+    // 清理库存
+    orderService.reduceProductStock(orderItemList)
+
+    // 清理购物车
+    cartService.removeBatchByIds(cartList)
+
+    // 转换 OrderVo
+    val orderVo = orderService.assembleOrderVo(order, orderItemList)
+
+    return CommonResponse.success(data = orderVo)
   }
 }

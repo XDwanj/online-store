@@ -54,39 +54,40 @@ class OrderServiceImpl(
     }
   }
 
-  override fun createOrder(userId: Int, shippingId: Int): OrderVo? {
-    val cartList = cartService.ktQuery()
-      .eq(Cart::userId, userId)
-      .eq(Cart::checked, CartConst.CHECKED)
-      .list()
+//  override fun createOrder(userId: Int, shippingId: Int): OrderVo? {
+//    val cartList = cartService.ktQuery()
+//      .eq(Cart::userId, userId)
+//      .eq(Cart::checked, CartConst.CHECKED)
+//      .list()
+//
+//    val orderItemList = getOrderItemByCart(userId, cartList)
+//    if (orderItemList.isEmpty()) {
+//      return null
+//    }
+//
+//    val totalPrice = getOrderTotalPrice(orderItemList)
+//
+//    val order = assembleOrder(userId, shippingId, totalPrice)
+//      ?: throw BusinessException("生成订单错误")
+//
+//    for (orderItem in orderItemList) {
+//      orderItem.orderNo = order.orderNo
+//    }
+//
+//    // 保存订单
+//    orderItemService.saveBatch(orderItemList)
+//
+//    // 减少库存
+//    reduceProductStock(orderItemList)
+//
+//    // 清理购物车
+//    cartService.removeBatchByIds(cartList)
+//
+//    // 返回订单
+//    return assembleOrderVo(order, orderItemList)
+//  }
 
-    val orderItemList = getCartOrderItem(userId, cartList)
-    if (orderItemList.isEmpty()) {
-      return null
-    }
-
-    val totalPrice = getOrderTotalPrice(orderItemList)
-
-    val order = assembleOrder(userId, shippingId, totalPrice)
-      ?: throw BusinessException("生成订单错误")
-
-    for (orderItem in orderItemList) {
-      orderItem.orderNo = order.orderNo
-    }
-
-    // 保存订单
-    orderItemService.saveBatch(orderItemList)
-
-    // 减少库存
-    reduceProductStock(orderItemList)
-
-    // 清理购物车
-    cartService.removeBatchByIds(cartList)
-
-    return assembleOrderVo(order, orderItemList)
-  }
-
-  private fun assembleOrderVo(order: Order, orderItemList: List<OrderItem>): OrderVo {
+  override fun assembleOrderVo(order: Order, orderItemList: List<OrderItem>): OrderVo {
 
     val orderVo = OrderVo().apply {
       orderNo = order.orderNo
@@ -121,7 +122,7 @@ class OrderServiceImpl(
     return orderVo
   }
 
-  private fun assembleOrderItemVo(orderItem: OrderItem): OrderItemVo {
+  override fun assembleOrderItemVo(orderItem: OrderItem): OrderItemVo {
     return OrderItemVo().apply {
       orderNo = orderItem.orderNo
       productId = orderItem.productId
@@ -134,7 +135,7 @@ class OrderServiceImpl(
     }
   }
 
-  private fun assembleShippingVo(shipping: Shipping): ShippingVo {
+  override fun assembleShippingVo(shipping: Shipping): ShippingVo {
     return ShippingVo().apply {
       receiverName = shipping.receiverName
       receiverAddress = shipping.receiverAddress
@@ -147,17 +148,28 @@ class OrderServiceImpl(
     }
   }
 
-  private fun reduceProductStock(orderItemList: List<OrderItem>) {
+  override fun reduceProductStock(orderItemList: List<OrderItem>) {
     for (orderItem in orderItemList) {
+      val product = productService.ktQuery()
+        .eq(Product::id, orderItem.productId)
+        .select(Product::stock)
+        .one()
+
+      product.stock = if (product.stock!! >= orderItem.quantity!!) {
+        product.stock!! - orderItem.quantity!!
+      } else {
+        throw BusinessException("库存不足无法生成订单")
+      }
+
       productService.ktUpdate()
         .eq(Product::id, orderItem.productId)
-        .set(Product::stock, orderItem.quantity)
+        .set(Product::stock, product.stock)
         .update()
     }
   }
 
-  private fun assembleOrder(userId: Int, shippingId: Int, payment: BigDecimal): Order? {
-    val order = Order().apply {
+  override fun assembleOrder(userId: Int, shippingId: Int, payment: BigDecimal): Order {
+    return Order().apply {
       orderNo = generateOrderNo()
       status = OrderStatusEnum.NO_PAY.code
       postage = 0 // TODO：暂时不考虑运费
@@ -165,22 +177,15 @@ class OrderServiceImpl(
       this.payment = payment
       this.shippingId = shippingId
     }
-
-    val isSave = save(order)
-    return if (isSave) {
-      order
-    } else {
-      null
-    }
   }
 
   // TODO: 待优化
-  private fun generateOrderNo(): Long {
+  override fun generateOrderNo(): Long {
     val currentTime = System.currentTimeMillis()
     return currentTime + currentTime % Random.nextInt(100)
   }
 
-  private fun getOrderTotalPrice(orderItemList: List<OrderItem>): BigDecimal {
+  override fun getOrderTotalPrice(orderItemList: List<OrderItem>): BigDecimal {
     var payment = BigDecimal.ZERO
     for (orderItem in orderItemList) {
       payment += orderItem.totalPrice!!
@@ -189,7 +194,7 @@ class OrderServiceImpl(
     return payment
   }
 
-  private fun getCartOrderItem(userId: Int, cartList: List<Cart>): List<OrderItem> {
+  override fun getOrderItemByCart(userId: Int, cartList: List<Cart>): List<OrderItem> {
     val orderItemList = mutableListOf<OrderItem>()
 
     if (cartList.isEmpty()) {
