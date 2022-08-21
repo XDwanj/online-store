@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.controller.portal
 
-import cn.xdwanj.onlinestore.common.ResponseCode
-import cn.xdwanj.onlinestore.common.CommonResponse
+import cn.xdwanj.onlinestore.response.ResponseCode
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.vo.ProductDetailVo

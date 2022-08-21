@@ -1,6 +1,6 @@
 package cn.xdwanj.onlinestore.exception
 
-import cn.xdwanj.onlinestore.common.ResponseCode
+import cn.xdwanj.onlinestore.response.ResponseCode
 
 /**
  * 业务异常类

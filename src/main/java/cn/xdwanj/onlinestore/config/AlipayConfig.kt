@@ -25,7 +25,8 @@ class AlipayConfig(
       notifyUrl = properties.notifyUrl
     }
 
-    logger.info("alipay config is: {}", properties)
+    logger.info("支付宝属性构建中: {}",
+      properties.apply { this.merchantPrivateKey = "略" })
 
     Factory.setOptions(config)
   }
@@ -35,11 +36,11 @@ class AlipayConfig(
 @Component
 @ConfigurationProperties(prefix = "alipay.config")
 data class AlipayConfigProperties(
-  var protocol: String? = null,
-  var gatewayHost: String? = null,
-  var signType: String? = null,
-  var appId: String? = null,
-  var merchantPrivateKey: String? = null,
-  var alipayPublicKey: String? = null,
-  var notifyUrl: String? = null
+  var protocol: String = "",
+  var gatewayHost: String = "",
+  var signType: String = "",
+  var appId: String = "",
+  var merchantPrivateKey: String = "",
+  var alipayPublicKey: String = "",
+  var notifyUrl: String = ""
 )

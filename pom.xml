@@ -139,6 +139,12 @@
             <version>2.2.0</version>
         </dependency>
 
+        <!-- ftp net -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.1</version>
+        </dependency>
     </dependencies>
 
     <build>

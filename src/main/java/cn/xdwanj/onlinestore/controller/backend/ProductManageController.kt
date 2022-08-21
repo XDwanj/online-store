@@ -1,20 +1,23 @@
 package cn.xdwanj.onlinestore.controller.backend
 
+import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.common.FTP_HOST
-import cn.xdwanj.onlinestore.common.ResponseCode
-import cn.xdwanj.onlinestore.common.CommonResponse
 import cn.xdwanj.onlinestore.common.UPLOAD_PATH
 import cn.xdwanj.onlinestore.entity.Product
+import cn.xdwanj.onlinestore.response.CommonResponse
+import cn.xdwanj.onlinestore.response.ResponseCode
+import cn.xdwanj.onlinestore.response.WangEditor
 import cn.xdwanj.onlinestore.service.FileService
 import cn.xdwanj.onlinestore.service.ProductService
-import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.vo.ProductListVo
 import com.baomidou.mybatisplus.core.metadata.IPage
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import javax.servlet.http.HttpServletRequest
 
 /**
  * <p>
@@ -37,7 +40,7 @@ class ProductManageController(
   @PostMapping
   fun save(product: Product): CommonResponse<String> {
     val isSuccess = productService.save(product)
-    
+
     if (isSuccess) {
       return CommonResponse.success("保存成功")
     }
@@ -112,7 +115,19 @@ class ProductManageController(
 
   @Operation(summary = "富文本上传")
   @PostMapping("/upload/rich-text")
-  fun uploadRichText(): CommonResponse<String> {
-    TODO("回头实现富文本上传，这里要考虑当今最流行的富文本框架有什么")
+  fun uploadRichText(
+    @RequestParam(value = "upload_file", required = false)
+    file: MultipartFile,
+    @Parameter(hidden = true)
+    request: HttpServletRequest
+  ): WangEditor {
+    val path = request.servletContext.getRealPath(UPLOAD_PATH)
+    val targetFileName = fileService.upload(file, path)
+    if (targetFileName.isBlank()) {
+      return WangEditor.error()
+    }
+
+    val url = "$FTP_HOST/$targetFileName"
+    return WangEditor.success(listOf(url))
   }
 }
