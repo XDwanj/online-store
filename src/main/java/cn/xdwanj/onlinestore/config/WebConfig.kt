@@ -24,6 +24,9 @@ class WebConfig(
         .addPathPatterns("/shipping/**")
         .addPathPatterns("/order/**")
 
+        .addPathPatterns("/pay/**")
+        .excludePathPatterns("/pay/alipay/callback")
+
         .addPathPatterns("/manage/**")
         .excludePathPatterns("/manage/login")
 
