@@ -41,10 +41,11 @@ class ProductManageController(
   fun save(product: Product): CommonResponse<String> {
     val isSuccess = productService.save(product)
 
-    if (isSuccess) {
-      return CommonResponse.success("保存成功")
+    return if (isSuccess) {
+      CommonResponse.success("保存成功")
+    } else {
+      CommonResponse.error("保存失败")
     }
-    return CommonResponse.error("保存失败")
   }
 
   @Operation(summary = "商品更新")
@@ -88,7 +89,6 @@ class ProductManageController(
   @GetMapping("/list", "/search")
   fun listProduct(
     // 这里有一个问题，使用 defaultValue="" 还是使用 required=false
-    // 我的建议是使用 kotlin 特性，这样在 swagger 不会有多余的介绍
     // kotlin默认值是没有 springdoc 功能的
     keyword: String = "",
     @RequestParam(defaultValue = "1") pageNum: Int,

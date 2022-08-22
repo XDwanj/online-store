@@ -12,21 +12,25 @@ import java.io.IOException
 
 @Slf4j
 @Configuration
-class FtpConfig(
+class FtpServerConfig(
   private val properties: FtpConfigProperties
 ) {
+  companion object {
+    private const val FTP_WORK_DIR = "img"
+  }
+
   @Bean
   fun ftpClient(): FTPClient = FTPClient().apply {
     logger.info("ftp服务器初始化: {}", properties)
 
     // TODO：暂时不开启
-//    connect(properties.ip)
-//    login(properties.username, properties.password)
-//    bufferSize = 1024
-//    controlEncoding = "UTF-8"
-//    changeWorkingDirectory("img")
-//    setFileType(FTPClient.BINARY_FILE_TYPE)
-//    enterLocalPassiveMode()
+    // connect(properties.ip)
+    // login(properties.username, properties.password)
+    // bufferSize = 1024
+    // controlEncoding = "UTF-8"
+    // changeWorkingDirectory(FTP_WORK_DIR)
+    // setFileType(FTPClient.BINARY_FILE_TYPE)
+    // enterLocalPassiveMode()
   }
 }
 
