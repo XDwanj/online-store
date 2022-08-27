@@ -4,7 +4,7 @@
 
 ## 技术栈
 
-1. springboot v2.7.1
+1. springboot v2.7.3
 2. kotlin v1.6.21
 3. logback + SLF4J 日志系统
 4. Maven 构建工具

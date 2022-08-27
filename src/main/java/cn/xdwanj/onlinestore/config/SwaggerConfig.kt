@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class SwaggerConfig { // http://localhost/swagger-ui/index.html
+class SwaggerConfig { // http://localhost:8080/swagger-ui/index.html
   @Bean
   fun openApi() = OpenAPI().apply {
     info = Info().title("online-store")

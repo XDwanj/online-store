@@ -94,8 +94,9 @@ class ProductManageController(
     @RequestParam(defaultValue = "1") pageNum: Int,
     @RequestParam(defaultValue = "5") pageSize: Int
   ): CommonResponse<IPage<ProductListVo>> {
-    if (pageNum < 1 || pageSize < 1)
+    if (pageNum < 1 || pageSize < 1) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
+    }
 
     val page = productService.listProductByManage(pageNum, pageSize, keyword)
     return CommonResponse.success(data = page)

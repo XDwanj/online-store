@@ -1,16 +1,19 @@
 package cn.xdwanj.onlinestore.controller.portal
 
-import cn.xdwanj.onlinestore.response.ResponseCode
-import cn.xdwanj.onlinestore.response.CommonResponse
-import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.annotation.Slf4j
+import cn.xdwanj.onlinestore.response.CommonResponse
+import cn.xdwanj.onlinestore.response.ResponseCode
+import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.vo.ProductListVo
 import com.baomidou.mybatisplus.core.metadata.IPage
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 /**
  * <p>
@@ -46,8 +49,9 @@ class ProductController(
     categoryId: Int,
     @Parameter(description = "格式：'排序规则_排序字段'，默认不排序") orderBy: String = ""
   ): CommonResponse<IPage<ProductListVo>> {
-    if (pageNum < 1 || pageSize < 1 || categoryId < 0)
+    if (pageNum < 1 || pageSize < 1 || categoryId < 0) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
+    }
 
     val page = productService.listProduct(pageNum, pageSize, keyword, categoryId, orderBy)
     return CommonResponse.success(data = page)
