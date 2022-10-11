@@ -17,7 +17,6 @@
     <properties>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <mybatis-plus.generator.version>3.5.3</mybatis-plus.generator.version>
-        <log4j.version>2.17.2</log4j.version>
         <springdoc.version>1.6.9</springdoc.version>
         <kotlin.version>1.6.21</kotlin.version>
     </properties>
