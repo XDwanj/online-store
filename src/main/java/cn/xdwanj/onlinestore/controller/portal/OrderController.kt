@@ -2,11 +2,15 @@ package cn.xdwanj.onlinestore.controller.portal;
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.*
+import cn.xdwanj.onlinestore.common.CartConst
+import cn.xdwanj.onlinestore.common.FTP_HOST
+import cn.xdwanj.onlinestore.common.OrderStatusEnum
+import cn.xdwanj.onlinestore.common.USER_SESSION
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.Order
 import cn.xdwanj.onlinestore.entity.OrderItem
 import cn.xdwanj.onlinestore.entity.User
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.CartService
 import cn.xdwanj.onlinestore.service.OrderItemService
 import cn.xdwanj.onlinestore.service.OrderService
@@ -41,7 +45,7 @@ class OrderController(
   @PostMapping("/create")
   fun create(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     shippingId: Int
   ): CommonResponse<OrderVo> {
@@ -89,7 +93,7 @@ class OrderController(
   @GetMapping("/cancel")
   fun cancel(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     orderNo: Long
   ): CommonResponse<Any> {
@@ -121,7 +125,7 @@ class OrderController(
   @GetMapping("/pre-create")
   fun getOrderCartProduct(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User
   ): CommonResponse<OrderProductVo> {
     val cartList = cartService.ktQuery()
@@ -154,7 +158,7 @@ class OrderController(
   @GetMapping("/{orderNo}")
   fun get(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @PathVariable orderNo: Long
   ): CommonResponse<OrderVo> {
@@ -181,7 +185,7 @@ class OrderController(
   @GetMapping("/list")
   fun list(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @RequestParam(defaultValue = "1") pageNum: Long,
     @RequestParam(defaultValue = "10") pageSize: Long

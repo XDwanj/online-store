@@ -1,26 +1,26 @@
 package cn.xdwanj.onlinestore.common
 
+import cn.xdwanj.onlinestore.config.FtpConfigProperties
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import javax.servlet.ServletContext
 
-const val CURRENT_USER = "currentUser"
+const val USER_SESSION = "userSession"
 const val USERNAME = "username"
 const val EMAIL = "email"
-const val UPLOAD_PATH = "./"
+const val UPLOAD_PATH = "./upload"
 
 @Component
 class Const(
-  @Value("\${ftp.server.http.prefix}")
-  private val _ftpHost: String,
+  ftpConfigProperties: FtpConfigProperties,
   @Value("\${password.salt}")
-  private val _salt: String,
-  private val servletContext: ServletContext
+  _salt: String,
+  servletContext: ServletContext
 ) {
   init {
-    FTP_HOST = _ftpHost
+    FTP_HOST = ftpConfigProperties.serverPrefix
     PASSWORD_SALT = _salt
     SERVER_HOST = servletContext.contextPath
   }

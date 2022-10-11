@@ -2,7 +2,7 @@ package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.CommonResponse
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.service.CategoryService
 import io.swagger.v3.oas.annotations.Operation

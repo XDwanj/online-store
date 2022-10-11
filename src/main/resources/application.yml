@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api/v1
 spring:
   profiles:
     active: dev
@@ -41,10 +43,10 @@ password:
   # 通过对 “online-store” 进行 md5 摘要 并全大写
   salt: A428DC27C09FBE613F60D10C87DC78A3
 ftp:
-  server:
-    http:
-      prefix: ftp://1234.com
-
+  ip: 123.123.123.123
+  username: XDwanj
+  password: 123456
+  server-prefix: localhost:8080
 alipay:
   config:
     protocol: https

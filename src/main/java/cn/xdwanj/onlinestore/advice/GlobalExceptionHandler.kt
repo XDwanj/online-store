@@ -2,7 +2,7 @@ package cn.xdwanj.onlinestore.advice
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.CommonResponse
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import org.springframework.web.bind.MethodArgumentNotValidException

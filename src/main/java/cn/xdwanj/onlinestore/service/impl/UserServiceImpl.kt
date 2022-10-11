@@ -3,6 +3,7 @@ package cn.xdwanj.onlinestore.service.impl
 import cn.xdwanj.onlinestore.common.*
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.mapper.UserMapper
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.util.encodeByMD5
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl

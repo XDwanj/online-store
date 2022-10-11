@@ -1,8 +1,12 @@
 package cn.xdwanj.onlinestore.controller.portal
 
-import cn.xdwanj.onlinestore.common.*
+import cn.xdwanj.onlinestore.common.RoleEnum
+import cn.xdwanj.onlinestore.common.TOKEN_PREFIX
+import cn.xdwanj.onlinestore.common.TokenCache
+import cn.xdwanj.onlinestore.common.USER_SESSION
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.util.encodeByMD5
 import io.swagger.v3.oas.annotations.Operation
@@ -43,7 +47,7 @@ class UserController(
     ) return CommonResponse.error("数据不可为空")
 
     val user = userService.login(username, password)?.apply {
-      session.setAttribute(CURRENT_USER, this)
+      session.setAttribute(USER_SESSION, this)
     }
 
     return if (user == null) {
@@ -56,7 +60,7 @@ class UserController(
   @Operation(summary = "注销")
   @GetMapping("/logout")
   fun logout(@Parameter(hidden = true) session: HttpSession): CommonResponse<Any> {
-    session.removeAttribute(CURRENT_USER)
+    session.removeAttribute(USER_SESSION)
     return CommonResponse.success("注销成功")
   }
 
@@ -81,10 +85,11 @@ class UserController(
       role = RoleEnum.CUSTOMER.code
       password = password?.encodeByMD5() ?: throw BusinessException("MD5编码失败")
     }
-    userService.save(user).let {
-      if (it) return CommonResponse.error("注册失败")
-    }
+    val isSuccess = userService.save(user)
 
+    if (!isSuccess) {
+      return CommonResponse.error("注册失败")
+    }
     return CommonResponse.success("注册成功")
   }
 
@@ -103,19 +108,25 @@ class UserController(
   fun question(
     username: String
   ): CommonResponse<Any> {
-    if (username.isBlank())
+    if (username.isBlank()) {
       return CommonResponse.error("用户名不可为空")
+    }
 
-    if (!userService.checkUsername(username))
+    if (!userService.checkUsername(username)) {
       return CommonResponse.error("用户名不存在")
+    }
 
-    val question = userService.ktQuery()
+    val user = userService.ktQuery()
       .eq(User::username, username)
       .select(User::question)
       .one()
-      .question
-      ?: return CommonResponse.error("找回密码的问题是空的")
+      ?: throw BusinessException("用户不存在")
 
+    val question = user.question
+
+    if (question.isNullOrBlank()) {
+      return CommonResponse.error("找回密码的问题是空的")
+    }
     return CommonResponse.success(data = question)
   }
 
@@ -186,7 +197,7 @@ class UserController(
   @PutMapping("/password/reset")
   fun resetPassword(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     passwordOld: String,
     passwordNew: String
@@ -203,14 +214,14 @@ class UserController(
       return CommonResponse.error("旧密码错误")
     }
 
-    userService.ktUpdate()
+    val isSuccess = userService.ktUpdate()
       .eq(User::id, userId)
       .set(User::password, passwordNew.encodeByMD5())
       .update()
-      .let {
-        if (!it) return CommonResponse.error("密码更新失败")
-      }
 
+    if (!isSuccess) {
+      return CommonResponse.error("密码更新失败")
+    }
     return CommonResponse.success("密码更新成功")
   }
 
@@ -218,7 +229,7 @@ class UserController(
   @PutMapping("/info")
   fun info(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     currentUser: User,
     userNew: User
   ): CommonResponse<User> {
@@ -229,7 +240,7 @@ class UserController(
     userNew.id = currentUser.id
     userNew.username = currentUser.username
 
-    userService.ktUpdate()
+    val isSuccess = userService.ktUpdate()
       .eq(User::id, userNew.id)
       .set(User::email, userNew.email)
       .set(User::phone, userNew.phone)
@@ -237,23 +248,24 @@ class UserController(
       .set(User::answer, userNew.answer)
       .set(User::updateTime, LocalDateTime.now())
       .update()
-      .let {
-        if (!it) return CommonResponse.error("更新个人信息失败")
-      }
 
-    return CommonResponse.success("更新个人信息成功", userNew)
+    return if (isSuccess) {
+      CommonResponse.success("更新个人信息成功", userNew)
+    } else {
+      CommonResponse.error("更新个人信息失败")
+    }
   }
 
   @Operation(summary = "从数据库中返回用户信息")
   @GetMapping("/info/db")
   fun info(@Parameter(hidden = true) session: HttpSession): CommonResponse<User> {
-    val currentUser = session.getAttribute(CURRENT_USER) as User
+    val currentUser = session.getAttribute(USER_SESSION) as User
 
     val user = userService.ktQuery()
       .eq(User::id, currentUser.id)
       .one()
       ?: let {
-        session.removeAttribute(CURRENT_USER)
+        session.removeAttribute(USER_SESSION)
         return CommonResponse.error("找不到当前用户")
       }
 
@@ -264,7 +276,7 @@ class UserController(
   @Operation(summary = "从Session中返回用户信息")
   @GetMapping("/info/current")
   fun currentInfo(@Parameter(hidden = true) session: HttpSession): CommonResponse<User> {
-    val user = session.getAttribute(CURRENT_USER) as User
+    val user = session.getAttribute(USER_SESSION) as User
     return CommonResponse.success(data = user)
   }
 }

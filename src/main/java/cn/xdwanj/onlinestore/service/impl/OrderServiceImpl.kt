@@ -2,19 +2,23 @@ package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.*
+import cn.xdwanj.onlinestore.common.FTP_HOST
+import cn.xdwanj.onlinestore.common.OrderStatusEnum
+import cn.xdwanj.onlinestore.common.PaymentTypeEnum
+import cn.xdwanj.onlinestore.common.ProductStatusEnum
 import cn.xdwanj.onlinestore.entity.*
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import cn.xdwanj.onlinestore.mapper.OrderMapper
-import cn.xdwanj.onlinestore.service.*
+import cn.xdwanj.onlinestore.service.OrderService
+import cn.xdwanj.onlinestore.service.ProductService
+import cn.xdwanj.onlinestore.service.ShippingService
 import cn.xdwanj.onlinestore.util.formatString
 import cn.xdwanj.onlinestore.vo.OrderItemVo
 import cn.xdwanj.onlinestore.vo.OrderVo
 import cn.xdwanj.onlinestore.vo.ShippingVo
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import kotlin.random.Random
@@ -30,7 +34,6 @@ import kotlin.random.Random
 @Slf4j
 @Service
 class OrderServiceImpl(
-  private val objectMapper: ObjectMapper,
   private val productService: ProductService,
   private val shippingService: ShippingService
 ) : ServiceImpl<OrderMapper, Order>(), OrderService {
@@ -71,29 +74,38 @@ class OrderServiceImpl(
   }
 
   override fun assembleOrderItemVo(orderItem: OrderItem): OrderItemVo {
-    return OrderItemVo().apply {
-      orderNo = orderItem.orderNo
-      productId = orderItem.productId
-      productName = orderItem.productName
-      productImage = orderItem.productImage
-      currentUnitPrice = orderItem.currentUnitPrice
-      quantity = orderItem.quantity
-      totalPrice = orderItem.totalPrice
-      createTime = orderItem.createTime.formatString()
+    return  OrderItemVo().apply {
+      BeanUtils.copyProperties(orderItem, this)
+      this.createTime = orderItem.createTime.formatString()
     }
+
+    // return OrderItemVo().apply {
+    //   orderNo = orderItem.orderNo
+    //   productId = orderItem.productId
+    //   productName = orderItem.productName
+    //   productImage = orderItem.productImage
+    //   currentUnitPrice = orderItem.currentUnitPrice
+    //   quantity = orderItem.quantity
+    //   totalPrice = orderItem.totalPrice
+    //   createTime = orderItem.createTime.formatString()
+    // }
   }
 
   override fun assembleShippingVo(shipping: Shipping): ShippingVo {
     return ShippingVo().apply {
-      receiverName = shipping.receiverName
-      receiverAddress = shipping.receiverAddress
-      receiverProvince = shipping.receiverProvince
-      receiverCity = shipping.receiverCity
-      receiverDistrict = shipping.receiverDistrict
-      receiverMobile = shipping.receiverMobile
-      receiverZip = shipping.receiverZip
-      receiverPhone = shipping.receiverPhone
+      BeanUtils.copyProperties(shipping, this)
     }
+
+    // return ShippingVo().apply {
+    //   receiverName = shipping.receiverName
+    //   receiverAddress = shipping.receiverAddress
+    //   receiverProvince = shipping.receiverProvince
+    //   receiverCity = shipping.receiverCity
+    //   receiverDistrict = shipping.receiverDistrict
+    //   receiverMobile = shipping.receiverMobile
+    //   receiverZip = shipping.receiverZip
+    //   receiverPhone = shipping.receiverPhone
+    // }
   }
 
   override fun reduceProductStock(orderItemList: List<OrderItem>) {

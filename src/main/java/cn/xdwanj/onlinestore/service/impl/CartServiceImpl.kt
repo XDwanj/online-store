@@ -1,11 +1,13 @@
 package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.*
+import cn.xdwanj.onlinestore.common.CartConst
+import cn.xdwanj.onlinestore.common.FTP_HOST
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.mapper.CartMapper
+import cn.xdwanj.onlinestore.response.ResponseCode
 import cn.xdwanj.onlinestore.service.CartService
 import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.vo.CartProductVo
@@ -52,8 +54,10 @@ class CartServiceImpl(
         .eq(Cart::userId, userId)
         .eq(Cart::productId, productId)
         .set(Cart::checked, CartConst.CHECKED)
-        .set(Cart::quantity, cartFromDB.quantity?.plus(count)
-          ?: throw BusinessException("${cartFromDB.id} 的在DB中的值为空"))
+        .set(
+          Cart::quantity, cartFromDB.quantity?.plus(count)
+            ?: throw BusinessException("${cartFromDB.id} 的在DB中的值为空")
+        )
         .update()
     }
 
@@ -87,36 +91,35 @@ class CartServiceImpl(
         productId = cartItem.productId
       )
 
-      productService.getById(cartItem.productId)?.let { product ->
-        cartProductVo.run {
-          productMainImage = product.mainImage
-          productName = product.name
-          productSubtitle = product.subtitle
-          productStatus = product.status
-          productPrice = product.price
-          productStock = product.stock
-        }
-
-        cartProductVo.quantity = if (product.stock!! >= cartItem.quantity!!) {
-          // 库存充足
-          cartProductVo.limitQuantity = CartConst.LIMIT_NUM_SUCCESS
-          cartItem.quantity
-        } else {
-          cartProductVo.limitQuantity = CartConst.LIMIT_NUM_FAIL
-          // 购物车中更新有效库存
-          ktUpdate()
-            .eq(Cart::id, cartItem.id)
-            .set(Cart::quantity, product.stock)
-            .update()
-          product.stock
-        }
-
-        // 计算总价
-        val price = product.price ?: throw BusinessException("商品无单价")
-        val quantity = cartProductVo.quantity ?: 0
-        cartProductVo.productTotalPrice = price * quantity.toBigDecimal()
-        cartProductVo.productChecked = cartItem.checked
+      val product = productService.getById(cartItem.productId)
+      cartProductVo.run {
+        productMainImage = product.mainImage
+        productName = product.name
+        productSubtitle = product.subtitle
+        productStatus = product.status
+        productPrice = product.price
+        productStock = product.stock
       }
+
+      cartProductVo.quantity = if (product.stock!! >= cartItem.quantity!!) {
+        // 库存充足
+        cartProductVo.limitQuantity = CartConst.LIMIT_NUM_SUCCESS
+        cartItem.quantity
+      } else {
+        cartProductVo.limitQuantity = CartConst.LIMIT_NUM_FAIL
+        // 购物车中更新有效库存
+        ktUpdate()
+          .eq(Cart::id, cartItem.id)
+          .set(Cart::quantity, product.stock)
+          .update()
+        product.stock
+      }
+
+      // 计算总价
+      val price = product.price ?: throw BusinessException("商品无单价")
+      val quantity = cartProductVo.quantity?.run { toBigDecimal() } ?: BigDecimal.ZERO
+      cartProductVo.productTotalPrice = price * quantity
+      cartProductVo.productChecked = cartItem.checked
 
       if (cartItem.checked == CartConst.CHECKED) {
         // 如果已经勾选了，添加到整个的购物车总价中
@@ -132,13 +135,6 @@ class CartServiceImpl(
       it.allChecked = getAllCheckedStatus(userId)
       it.imageHost = FTP_HOST
     }
-  }
-
-  override fun selectOrUnselectAll(userId: Int, checked: Int): Boolean {
-    return ktUpdate()
-      .eq(Cart::userId, userId)
-      .set(Cart::checked, checked)
-      .update()
   }
 
   private fun getAllCheckedStatus(userId: Int): Boolean = ktQuery()

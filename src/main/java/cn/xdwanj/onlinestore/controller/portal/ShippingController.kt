@@ -1,11 +1,11 @@
 package cn.xdwanj.onlinestore.controller.portal
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.CURRENT_USER
-import cn.xdwanj.onlinestore.common.CommonResponse
-import cn.xdwanj.onlinestore.common.ResponseCode
+import cn.xdwanj.onlinestore.common.USER_SESSION
 import cn.xdwanj.onlinestore.entity.Shipping
 import cn.xdwanj.onlinestore.entity.User
+import cn.xdwanj.onlinestore.response.CommonResponse
+import cn.xdwanj.onlinestore.response.ResponseCode
 import cn.xdwanj.onlinestore.service.ShippingService
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
@@ -34,7 +34,7 @@ class ShippingController(
   @PostMapping
   fun add(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     shipping: Shipping
   ): CommonResponse<Map<String, Int>> {
@@ -55,7 +55,7 @@ class ShippingController(
   @DeleteMapping("/{shippingId}")
   fun delete(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @PathVariable shippingId: Int
   ): CommonResponse<Any> {
@@ -78,7 +78,7 @@ class ShippingController(
   @PutMapping
   fun update(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     shipping: Shipping
   ): CommonResponse<Any> {
@@ -107,7 +107,7 @@ class ShippingController(
   @GetMapping("/{shippingId}")
   fun get(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @PathVariable shippingId: String
   ): CommonResponse<Shipping> {
@@ -125,13 +125,14 @@ class ShippingController(
   @GetMapping("/list")
   fun list(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @RequestParam(defaultValue = "1") pageNum: Int,
     @RequestParam(defaultValue = "10") pageSize: Int,
   ): CommonResponse<IPage<Shipping>> {
-    if (pageNum < 1 || pageSize < 1)
+    if (pageNum < 1 || pageSize < 1) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
+    }
 
     val page = shippingService.ktQuery()
       .eq(Shipping::userId, user.id)
