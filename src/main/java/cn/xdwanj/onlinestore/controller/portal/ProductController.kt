@@ -10,10 +10,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 /**
  * <p>
@@ -45,9 +42,12 @@ class ProductController(
   fun listDetail(
     pageNum: Int,
     pageSize: Int,
-    keyword: String = "",
+    @RequestParam(defaultValue = "")
+    keyword: String,
     categoryId: Int,
-    @Parameter(description = "格式：'排序规则_排序字段'，默认不排序") orderBy: String = ""
+    @Parameter(description = "格式：'排序规则_排序字段'，默认不排序")
+    @RequestParam(defaultValue = "")
+    orderBy: String
   ): CommonResponse<IPage<ProductListVo>> {
     if (pageNum < 1 || pageSize < 1 || categoryId < 0) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
