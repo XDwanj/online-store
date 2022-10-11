@@ -42,7 +42,9 @@ enum class ProductStatusEnum(
   val code: Int,
   val desc: String
 ) {
-  ON_SALE(1, "在线");
+  ON_SALE(1, "在线"),
+  TAKE_DOWN(2, "下架"),
+  DELETED(3, "删除")
 }
 
 enum class OrderStatusEnum(

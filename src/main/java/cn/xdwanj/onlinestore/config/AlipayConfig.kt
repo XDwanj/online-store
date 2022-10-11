@@ -4,6 +4,7 @@ import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import com.alipay.easysdk.factory.Factory
 import com.alipay.easysdk.kernel.Config
+import org.springframework.beans.BeanUtils
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
@@ -15,15 +16,7 @@ class AlipayConfig(
 ) {
 
   init {
-    val config = Config().apply {
-      protocol = properties.protocol
-      gatewayHost = properties.gatewayHost
-      signType = properties.signType
-      appId = properties.appId
-      merchantPrivateKey = properties.merchantPrivateKey
-      alipayPublicKey = properties.alipayPublicKey
-      notifyUrl = properties.notifyUrl
-    }
+    val config = Config().apply { BeanUtils.copyProperties(properties, this) }
 
     logger.info("支付宝属性构建中: {}", properties.apply {
       this.merchantPrivateKey = "略"

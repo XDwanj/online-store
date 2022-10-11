@@ -1,10 +1,10 @@
 package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.common.FTP_HOST
 import cn.xdwanj.onlinestore.common.ProductStatusEnum
 import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.entity.Product
+import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.mapper.CategoryMapper
 import cn.xdwanj.onlinestore.mapper.ProductMapper
 import cn.xdwanj.onlinestore.service.CategoryService
@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryChainWrapper
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
+import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Service
 
 /**
@@ -49,26 +50,20 @@ class ProductServiceImpl(
   }
 
 
-  fun assembleDetailVo(product: Product) = ProductDetailVo(
-    id = product.id,
-    subtitle = product.subtitle,
-    price = product.price,
-    mainImage = product.mainImage,
-    subImages = product.subImages,
-    categoryId = product.categoryId,
-    detail = product.detail,
-    name = product.name,
-    status = product.status,
-    stock = product.stock,
-    createTime = product.createTime?.formatString(),
-    updateTime = product.updateTime?.formatString(),
-    imageHost = FTP_HOST,
-  ).apply {
+  fun assembleDetailVo(product: Product) = ProductDetailVo().apply {
+    BeanUtils.copyProperties(product, this)
+    createTime = product.createTime.formatString()
+    updateTime = product.updateTime.formatString()
     val category: Category? = categoryMapper.selectById(product.id)
     this.categoryId = if (category == null) 0 else category.id
   }
 
-  override fun listProductByManage(pageNum: Int, pageSize: Int, productName: String, categoryId: Int): IPage<ProductListVo> {
+  override fun listProductByManage(
+    pageNum: Int,
+    pageSize: Int,
+    productName: String,
+    categoryId: Int
+  ): IPage<ProductListVo> {
     return ktQuery()
       .like(productName.isNotBlank(), Product::name, productName)
       .eq(categoryId != -1, Product::categoryId, categoryId)
@@ -76,28 +71,27 @@ class ProductServiceImpl(
       .convert { assembleProductListVo(it) }
   }
 
-  fun assembleProductListVo(product: Product) = ProductListVo(
-    id = product.id,
-    categoryId = product.categoryId,
-    name = product.name,
-    subtitle = product.subtitle,
-    mainImage = product.mainImage,
-    price = product.price,
-    status = product.status,
-    imageHost = FTP_HOST
-  )
+  fun assembleProductListVo(product: Product) = ProductListVo().apply {
+    BeanUtils.copyProperties(product, this)
+    this.imageHost = FTP_HOST
+  }
 
-  override fun listProduct(pageNum: Int, pageSize: Int, keyword: String, categoryId: Int, orderBy: String): IPage<ProductListVo> {
+  override fun listProduct(
+    pageNum: Int,
+    pageSize: Int,
+    keyword: String,
+    categoryId: Int,
+    orderBy: String
+  ): IPage<ProductListVo> {
 
-    categoryMapper.selectById(categoryId)
-      ?: let {
-        return Page.of(pageNum.toLong(), pageSize.toLong())
-      }
+    categoryMapper.selectById(categoryId) ?: let {
+      return Page.of(pageNum.toLong(), pageSize.toLong())
+    }
 
     val categoryIdList = categoryService.deepCategory(categoryId)
 
     // TODO: review?
-    var orderByRule: Triple<Boolean, Boolean, String> = Triple(false, false, "")
+    var orderByRule = Triple(false, false, "")
     if (orderBy.isNotBlank()) {
       val split = orderBy.split("_")
       if (split.size != 2) throw BusinessException("排序规则错误")
