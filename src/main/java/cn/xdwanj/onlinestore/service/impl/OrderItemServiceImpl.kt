@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2022-07-16
  */
 @Service
-open class OrderItemServiceImpl : ServiceImpl<OrderItemMapper, OrderItem>(), OrderItemService {
+class OrderItemServiceImpl : ServiceImpl<OrderItemMapper, OrderItem>(), OrderItemService {
 
 }

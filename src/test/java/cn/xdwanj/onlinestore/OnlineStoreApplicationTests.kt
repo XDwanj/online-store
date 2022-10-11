@@ -13,6 +13,6 @@ class OnlineStoreApplicationTests {
 
   @Test
   fun contextLoads() {
-
+    println(userService.login("XDwanj", "123456"))
   }
 }

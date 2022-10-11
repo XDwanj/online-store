@@ -2,12 +2,12 @@ package cn.xdwanj.onlinestore.controller.portal
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.CURRENT_USER
-import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.common.OrderStatusEnum
+import cn.xdwanj.onlinestore.common.USER_SESSION
 import cn.xdwanj.onlinestore.entity.Order
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.AlipayService
 import cn.xdwanj.onlinestore.service.OrderService
 import com.alipay.easysdk.factory.Factory
@@ -37,7 +37,7 @@ class PayController(
   @GetMapping("/alipay/pay/{orderNo}")
   fun aliPay(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @PathVariable orderNo: Long
   ): CommonResponse<String> {
@@ -63,7 +63,7 @@ class PayController(
   @GetMapping("/alipay/query/{orderNo}")
   fun aliQuery(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @PathVariable orderNo: Long
   ): CommonResponse<String> {

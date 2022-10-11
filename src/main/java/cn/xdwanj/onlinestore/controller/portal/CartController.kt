@@ -2,8 +2,8 @@ package cn.xdwanj.onlinestore.controller.portal;
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.CartConst
+import cn.xdwanj.onlinestore.common.USER_SESSION
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.response.CommonResponse
@@ -35,7 +35,7 @@ class CartController(
   @PostMapping("/add")
   fun add(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     productId: Int,
     count: Int
@@ -54,7 +54,7 @@ class CartController(
   @PutMapping
   fun update(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     productId: Int,
     count: Int
@@ -85,7 +85,7 @@ class CartController(
   @DeleteMapping
   fun delete(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @Parameter(description = "商品id数组，用','分割") productIds: String
   ): CommonResponse<CartVo> {
@@ -113,7 +113,7 @@ class CartController(
   @Operation(summary = "获取购物车列表")
   @GetMapping("/list")
   fun list(@Parameter(hidden = true) session: HttpSession): CommonResponse<CartVo> {
-    val user = session.getAttribute(CURRENT_USER) as User
+    val user = session.getAttribute(USER_SESSION) as User
 
     val cartVo = cartService.getCartVoLimit(user.id!!)
     return CommonResponse.success(data = cartVo)
@@ -123,7 +123,7 @@ class CartController(
   @PutMapping("/select-all/{checked}")
   fun selectAll(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     @Parameter(description = "${CartConst.CHECKED} 表示选中，${CartConst.UN_CHECKED} 表示未选中")
     @PathVariable
@@ -151,7 +151,7 @@ class CartController(
   @PutMapping("/select")
   fun select(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     productId: Int,
     checked: Int
@@ -179,7 +179,7 @@ class CartController(
   @GetMapping("/count")
   fun count(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User
   ): CommonResponse<Int> {
 

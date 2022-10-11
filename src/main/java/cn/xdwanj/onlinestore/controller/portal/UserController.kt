@@ -1,9 +1,9 @@
 package cn.xdwanj.onlinestore.controller.portal
 
-import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.RoleEnum
 import cn.xdwanj.onlinestore.common.TOKEN_PREFIX
 import cn.xdwanj.onlinestore.common.TokenCache
+import cn.xdwanj.onlinestore.common.USER_SESSION
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.response.CommonResponse
@@ -47,7 +47,7 @@ class UserController(
     ) return CommonResponse.error("数据不可为空")
 
     val user = userService.login(username, password)?.apply {
-      session.setAttribute(CURRENT_USER, this)
+      session.setAttribute(USER_SESSION, this)
     }
 
     return if (user == null) {
@@ -60,7 +60,7 @@ class UserController(
   @Operation(summary = "注销")
   @GetMapping("/logout")
   fun logout(@Parameter(hidden = true) session: HttpSession): CommonResponse<Any> {
-    session.removeAttribute(CURRENT_USER)
+    session.removeAttribute(USER_SESSION)
     return CommonResponse.success("注销成功")
   }
 
@@ -116,11 +116,13 @@ class UserController(
       return CommonResponse.error("用户名不存在")
     }
 
-    val question = userService.ktQuery()
+    val user = userService.ktQuery()
       .eq(User::username, username)
       .select(User::question)
       .one()
-      .question
+      ?: throw BusinessException("用户不存在")
+
+    val question = user.question
 
     if (question.isNullOrBlank()) {
       return CommonResponse.error("找回密码的问题是空的")
@@ -195,7 +197,7 @@ class UserController(
   @PutMapping("/password/reset")
   fun resetPassword(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     user: User,
     passwordOld: String,
     passwordNew: String
@@ -227,7 +229,7 @@ class UserController(
   @PutMapping("/info")
   fun info(
     @Parameter(hidden = true)
-    @SessionAttribute(CURRENT_USER)
+    @SessionAttribute(USER_SESSION)
     currentUser: User,
     userNew: User
   ): CommonResponse<User> {
@@ -257,13 +259,13 @@ class UserController(
   @Operation(summary = "从数据库中返回用户信息")
   @GetMapping("/info/db")
   fun info(@Parameter(hidden = true) session: HttpSession): CommonResponse<User> {
-    val currentUser = session.getAttribute(CURRENT_USER) as User
+    val currentUser = session.getAttribute(USER_SESSION) as User
 
     val user = userService.ktQuery()
       .eq(User::id, currentUser.id)
       .one()
       ?: let {
-        session.removeAttribute(CURRENT_USER)
+        session.removeAttribute(USER_SESSION)
         return CommonResponse.error("找不到当前用户")
       }
 
@@ -274,7 +276,7 @@ class UserController(
   @Operation(summary = "从Session中返回用户信息")
   @GetMapping("/info/current")
   fun currentInfo(@Parameter(hidden = true) session: HttpSession): CommonResponse<User> {
-    val user = session.getAttribute(CURRENT_USER) as User
+    val user = session.getAttribute(USER_SESSION) as User
     return CommonResponse.success(data = user)
   }
 }

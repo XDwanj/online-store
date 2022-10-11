@@ -1,11 +1,11 @@
 package cn.xdwanj.onlinestore.controller.backend
 
-import cn.xdwanj.onlinestore.common.CURRENT_USER
-import cn.xdwanj.onlinestore.common.RoleEnum
-import cn.xdwanj.onlinestore.response.CommonResponse
-import cn.xdwanj.onlinestore.entity.User
-import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.annotation.Slf4j
+import cn.xdwanj.onlinestore.common.RoleEnum
+import cn.xdwanj.onlinestore.common.USER_SESSION
+import cn.xdwanj.onlinestore.entity.User
+import cn.xdwanj.onlinestore.response.CommonResponse
+import cn.xdwanj.onlinestore.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -44,7 +44,7 @@ class UserManageController(
       return CommonResponse.error("登录的用户并非管理员")
     }
 
-    session.setAttribute(CURRENT_USER, user)
+    session.setAttribute(USER_SESSION, user)
     return CommonResponse.success(data = user)
   }
 

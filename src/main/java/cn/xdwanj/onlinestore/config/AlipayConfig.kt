@@ -25,8 +25,9 @@ class AlipayConfig(
       notifyUrl = properties.notifyUrl
     }
 
-    logger.info("支付宝属性构建中: {}",
-      properties.apply { this.merchantPrivateKey = "略" })
+    logger.info("支付宝属性构建中: {}", properties.apply {
+      this.merchantPrivateKey = "略"
+    })
 
     Factory.setOptions(config)
   }

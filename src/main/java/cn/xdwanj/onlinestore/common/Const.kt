@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import javax.servlet.ServletContext
 
-const val CURRENT_USER = "currentUser"
+const val USER_SESSION = "userSession"
 const val USERNAME = "username"
 const val EMAIL = "email"
 const val UPLOAD_PATH = "./upload"
