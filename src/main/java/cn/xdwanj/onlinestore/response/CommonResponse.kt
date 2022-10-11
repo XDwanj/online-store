@@ -1,4 +1,4 @@
-package cn.xdwanj.onlinestore.common
+package cn.xdwanj.onlinestore.response
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude

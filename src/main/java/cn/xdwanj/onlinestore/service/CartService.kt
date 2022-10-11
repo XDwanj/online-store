@@ -30,13 +30,4 @@ interface CartService : IService<Cart> {
    * @return
    */
   fun getCartVoLimit(userId: Int): CartVo
-
-  /**
-   * 全选商品或者反选商品
-   *
-   * @param userId
-   * @param checked
-   * @return
-   */
-  fun selectOrUnselectAll(userId: Int, checked: Int): Boolean
 }

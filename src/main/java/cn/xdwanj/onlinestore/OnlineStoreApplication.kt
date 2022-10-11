@@ -8,7 +8,7 @@ import org.springframework.boot.runApplication
 @MapperScan("cn.xdwanj.onlinestore.mapper")
 class OnlineStoreApplication
 
+// dev api is http://localhost:8080/swaggger-ui/index.html
 fun main(args: Array<String>) {
   runApplication<OnlineStoreApplication>(*args)
 }
-

@@ -1,11 +1,13 @@
 package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.*
+import cn.xdwanj.onlinestore.common.CartConst
+import cn.xdwanj.onlinestore.common.FTP_HOST
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.mapper.CartMapper
+import cn.xdwanj.onlinestore.response.ResponseCode
 import cn.xdwanj.onlinestore.service.CartService
 import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.vo.CartProductVo
@@ -132,13 +134,6 @@ class CartServiceImpl(
       it.allChecked = getAllCheckedStatus(userId)
       it.imageHost = FTP_HOST
     }
-  }
-
-  override fun selectOrUnselectAll(userId: Int, checked: Int): Boolean {
-    return ktUpdate()
-      .eq(Cart::userId, userId)
-      .set(Cart::checked, checked)
-      .update()
   }
 
   private fun getAllCheckedStatus(userId: Int): Boolean = ktQuery()

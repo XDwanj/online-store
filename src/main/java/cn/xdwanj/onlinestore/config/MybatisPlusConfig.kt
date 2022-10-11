@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class MybatisPlusConfig {
-
   @Bean
   // 添加插件
   fun interceptor(): MybatisPlusInterceptor = MybatisPlusInterceptor().apply {

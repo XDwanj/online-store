@@ -1,6 +1,6 @@
 package cn.xdwanj.onlinestore.service;
 
-import cn.xdwanj.onlinestore.common.CommonResponse
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 

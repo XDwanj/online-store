@@ -2,7 +2,7 @@ package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.common.CURRENT_USER
 import cn.xdwanj.onlinestore.common.RoleEnum
-import cn.xdwanj.onlinestore.common.CommonResponse
+import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.annotation.Slf4j
