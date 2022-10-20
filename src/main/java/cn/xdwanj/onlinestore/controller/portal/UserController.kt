@@ -1,9 +1,6 @@
 package cn.xdwanj.onlinestore.controller.portal
 
-import cn.xdwanj.onlinestore.common.RoleEnum
-import cn.xdwanj.onlinestore.common.TOKEN_PREFIX
-import cn.xdwanj.onlinestore.common.TokenCache
-import cn.xdwanj.onlinestore.common.USER_SESSION
+import cn.xdwanj.onlinestore.common.*
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.response.CommonResponse
@@ -16,7 +13,6 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 import java.util.*
-import javax.servlet.http.HttpSession
 
 /**
  * <p>
@@ -39,28 +35,31 @@ class UserController(
   fun login(
     username: String,
     password: String,
-    @Parameter(hidden = true) session: HttpSession
-  ): CommonResponse<User> {
+  ): CommonResponse<String> {
     if (
       username.isBlank() ||
       password.isBlank()
     ) return CommonResponse.error("数据不可为空")
 
-    val user = userService.login(username, password)?.apply {
-      session.setAttribute(USER_SESSION, this)
-    }
+    val user = userService.login(username, password)
+    val authorizationToken = getToken(USER_TOKEN_PREFIX)
+    tokenCache[authorizationToken] = user
 
     return if (user == null) {
       CommonResponse.error("用户登录失败")
     } else {
-      CommonResponse.success(data = user)
+      CommonResponse.success(data = authorizationToken)
     }
   }
 
   @Operation(summary = "注销")
   @GetMapping("/logout")
-  fun logout(@Parameter(hidden = true) session: HttpSession): CommonResponse<Any> {
-    session.removeAttribute(USER_SESSION)
+  fun logout(
+    @Parameter(hidden = true)
+    @RequestHeader(AUTHORIZATION_TOKEN)
+    token: String
+  ): CommonResponse<Any> {
+    tokenCache.remove(token)
     return CommonResponse.success("注销成功")
   }
 
@@ -107,7 +106,7 @@ class UserController(
   @GetMapping("/question")
   fun question(
     username: String
-  ): CommonResponse<Any> {
+  ): CommonResponse<String> {
     if (username.isBlank()) {
       return CommonResponse.error("用户名不可为空")
     }
@@ -151,7 +150,7 @@ class UserController(
 
     return if (exists) {
       val forgetToken = UUID.randomUUID().toString()
-      tokenCache[TOKEN_PREFIX + username] = forgetToken
+      tokenCache[FORGET_TOKEN_PREFIX + username] = forgetToken
       CommonResponse.success("答案正确", forgetToken)
     } else {
       CommonResponse.error("问题的答案错误")
@@ -175,7 +174,7 @@ class UserController(
       return CommonResponse.error("用户不存在")
     }
 
-    val token = tokenCache[TOKEN_PREFIX + username]
+    val token = tokenCache.get<String>(FORGET_TOKEN_PREFIX + username)
     if (token.isNullOrBlank()) {
       return CommonResponse.error("token过期或者无效")
     }
@@ -197,7 +196,7 @@ class UserController(
   @PutMapping("/password/reset")
   fun resetPassword(
     @Parameter(hidden = true)
-    @SessionAttribute(USER_SESSION)
+    @RequestAttribute(USER_REQUEST)
     user: User,
     passwordOld: String,
     passwordNew: String
@@ -229,7 +228,7 @@ class UserController(
   @PutMapping("/info")
   fun info(
     @Parameter(hidden = true)
-    @SessionAttribute(USER_SESSION)
+    @RequestAttribute(USER_REQUEST)
     currentUser: User,
     userNew: User
   ): CommonResponse<User> {
@@ -258,14 +257,18 @@ class UserController(
 
   @Operation(summary = "从数据库中返回用户信息")
   @GetMapping("/info/db")
-  fun info(@Parameter(hidden = true) session: HttpSession): CommonResponse<User> {
-    val currentUser = session.getAttribute(USER_SESSION) as User
+  fun info(
+    @Parameter(hidden = true)
+    @RequestHeader(AUTHORIZATION_TOKEN)
+    token: String
+  ): CommonResponse<User> {
+    val currentUser = tokenCache.get<User>(token)
 
     val user = userService.ktQuery()
-      .eq(User::id, currentUser.id)
+      .eq(User::id, currentUser!!.id)
       .one()
       ?: let {
-        session.removeAttribute(USER_SESSION)
+        tokenCache.remove(token)
         return CommonResponse.error("找不到当前用户")
       }
 
@@ -275,8 +278,11 @@ class UserController(
 
   @Operation(summary = "从Session中返回用户信息")
   @GetMapping("/info/current")
-  fun currentInfo(@Parameter(hidden = true) session: HttpSession): CommonResponse<User> {
-    val user = session.getAttribute(USER_SESSION) as User
+  fun currentInfo(
+    @Parameter(hidden = true)
+    @RequestAttribute(USER_REQUEST)
+    user: User
+  ): CommonResponse<User> {
     return CommonResponse.success(data = user)
   }
 }

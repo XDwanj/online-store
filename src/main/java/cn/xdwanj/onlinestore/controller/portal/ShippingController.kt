@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.controller.portal
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.USER_SESSION
+import cn.xdwanj.onlinestore.common.USER_REQUEST
 import cn.xdwanj.onlinestore.entity.Shipping
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.response.CommonResponse
@@ -34,7 +34,7 @@ class ShippingController(
   @PostMapping
   fun add(
     @Parameter(hidden = true)
-    @SessionAttribute(USER_SESSION)
+    @RequestAttribute(USER_REQUEST)
     user: User,
     shipping: Shipping
   ): CommonResponse<Map<String, Int>> {
@@ -55,7 +55,7 @@ class ShippingController(
   @DeleteMapping("/{shippingId}")
   fun delete(
     @Parameter(hidden = true)
-    @SessionAttribute(USER_SESSION)
+    @RequestAttribute(USER_REQUEST)
     user: User,
     @PathVariable shippingId: Int
   ): CommonResponse<Any> {
@@ -78,7 +78,7 @@ class ShippingController(
   @PutMapping
   fun update(
     @Parameter(hidden = true)
-    @SessionAttribute(USER_SESSION)
+    @RequestAttribute(USER_REQUEST)
     user: User,
     shipping: Shipping
   ): CommonResponse<Any> {
@@ -107,7 +107,7 @@ class ShippingController(
   @GetMapping("/{shippingId}")
   fun get(
     @Parameter(hidden = true)
-    @SessionAttribute(USER_SESSION)
+    @RequestAttribute(USER_REQUEST)
     user: User,
     @PathVariable shippingId: String
   ): CommonResponse<Shipping> {
@@ -125,7 +125,7 @@ class ShippingController(
   @GetMapping("/list")
   fun list(
     @Parameter(hidden = true)
-    @SessionAttribute(USER_SESSION)
+    @RequestAttribute(USER_REQUEST)
     user: User,
     @RequestParam(defaultValue = "1") pageNum: Int,
     @RequestParam(defaultValue = "10") pageSize: Int,

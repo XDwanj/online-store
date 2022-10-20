@@ -54,7 +54,7 @@ class ProductServiceImpl(
     BeanUtils.copyProperties(product, this)
     createTime = product.createTime.formatString()
     updateTime = product.updateTime.formatString()
-    val category: Category? = categoryMapper.selectById(product.id)
+    val category: Category? = categoryMapper.selectById(product.categoryId)
     this.categoryId = if (category == null) 0 else category.id
   }
 

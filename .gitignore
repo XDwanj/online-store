@@ -20,6 +20,9 @@ logs/
 *.iml
 *.ipr
 
+### Jetbrains Fleet ###
+.fleet
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
