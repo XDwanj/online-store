@@ -34,17 +34,15 @@ class TokenCache(
     .initialCapacity(1000)
     .maximumSize(Long.MAX_VALUE)
     .expireAfterAccess(12, TimeUnit.HOURS)
-    .build<String, String> { null }
+    .build<String, Any> { null }
 
-  operator fun plusAssign(pair: Pair<String, String>) {
+  operator fun plusAssign(pair: Pair<String, Any>) {
     cache.put(pair.first, pair.second)
   }
 
   final inline operator fun <reified T> get(key: String): T? {
     return try {
-      val json = cache.getIfPresent(key)
-        ?: return null
-      objectMapper.readValue(json)
+      cache.getIfPresent(key) as T
     } catch (e: Exception) {
       logger.error("get key=$key error")
       e.printStackTrace()
@@ -52,13 +50,12 @@ class TokenCache(
     }
   }
 
-  operator fun <T> set(k: String, v: T) {
-    val json = objectMapper.writeValueAsString(v)
-    cache.put(k, json)
+  operator fun set(k: String, v: Any) {
+    cache.put(k, v)
   }
 
   fun remove(k: String) {
-      cache.invalidate(k)
+    cache.invalidate(k)
   }
 }
 
