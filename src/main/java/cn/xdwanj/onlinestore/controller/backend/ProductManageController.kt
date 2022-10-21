@@ -51,10 +51,7 @@ class ProductManageController(
   @Operation(summary = "商品更新")
   @PutMapping
   fun update(product: Product): CommonResponse<String> {
-    val isSuccess = productService.ktUpdate()
-      .eq(Product::id, product.id)
-      .setEntity(product)
-      .update()
+    val isSuccess = productService.updateById(product)
 
     if (isSuccess) {
       return CommonResponse.success("更新成功")

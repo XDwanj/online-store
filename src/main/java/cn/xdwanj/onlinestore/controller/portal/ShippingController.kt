@@ -86,15 +86,12 @@ class ShippingController(
       .eq(Shipping::id, shipping.id)
       .eq(Shipping::userId, user.id)
       .exists()
+
     if (exists) {
       return CommonResponse.error("该地址不存在")
     }
 
-    shipping.id = null
-    shipping.userId = user.id
-
-    val isSuccess = shippingService.ktUpdate()
-      .update(shipping)
+    val isSuccess = shippingService.updateById(shipping)
 
     return if (isSuccess) {
       CommonResponse.success("更新成功")

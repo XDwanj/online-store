@@ -2,10 +2,7 @@ package cn.xdwanj.onlinestore.common
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.benmanes.caffeine.cache.Caffeine
-import org.apache.el.parser.Token
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -13,7 +10,7 @@ import java.util.concurrent.TimeUnit
 const val FORGET_TOKEN_PREFIX = "forgetToken_"
 const val USER_TOKEN_PREFIX = "userToken_"
 
-fun getToken(prefix: String): String {
+fun getTokenByPrefix(prefix: String): String {
   return prefix + UUID.randomUUID()
     .toString()
     .uppercase()
@@ -21,9 +18,7 @@ fun getToken(prefix: String): String {
 
 @Slf4j
 @Component
-class TokenCache(
-  val objectMapper: ObjectMapper
-) {
+class CacheMemory {
 
   /**
    * 这里有一个问题，key不可为空，value有没有可能是空的

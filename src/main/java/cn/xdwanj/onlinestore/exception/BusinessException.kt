@@ -11,7 +11,7 @@ import cn.xdwanj.onlinestore.response.ResponseCode
 data class BusinessException(
   val errorMsg: String,
   val errorCode: Int = ResponseCode.ERROR.code,
-  val logLevel: LogLevelEnum = LogLevelEnum.NOT_LOG
+  val logLevel: LogLevelEnum = LogLevelEnum.TRANCE
 ) : RuntimeException()
 
 /**

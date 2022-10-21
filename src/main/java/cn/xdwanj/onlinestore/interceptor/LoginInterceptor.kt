@@ -3,7 +3,7 @@ package cn.xdwanj.onlinestore.interceptor
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import cn.xdwanj.onlinestore.common.AUTHORIZATION_TOKEN
-import cn.xdwanj.onlinestore.common.TokenCache
+import cn.xdwanj.onlinestore.common.CacheMemory
 import cn.xdwanj.onlinestore.common.USER_REQUEST
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse
 @Slf4j
 @Component
 class LoginInterceptor(
-  private val tokenCache: TokenCache
+  private val cacheMemory: CacheMemory
 ) : HandlerInterceptor {
 
   override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
@@ -25,7 +25,7 @@ class LoginInterceptor(
     val header = request.getHeader(AUTHORIZATION_TOKEN)
       ?: throw BusinessException("请携带token，token请求头为空", ResponseCode.NEED_LOGIN.code)
 
-    val user = tokenCache.get<User>(header)
+    val user = cacheMemory.get<User>(header)
       ?: throw BusinessException(ResponseCode.NEED_LOGIN.msg, ResponseCode.NEED_LOGIN.code)
 
     logger.info("用户已登录, 已将 ${user.id} 放入Request域中")

@@ -1,7 +1,11 @@
 package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.common.*
+import cn.xdwanj.onlinestore.common.CacheMemory
+import cn.xdwanj.onlinestore.common.EMAIL
+import cn.xdwanj.onlinestore.common.RoleEnum
+import cn.xdwanj.onlinestore.common.USERNAME
 import cn.xdwanj.onlinestore.entity.User
+import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.mapper.UserMapper
 import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.UserService
@@ -19,7 +23,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class UserServiceImpl(
-  private val tokenCache: TokenCache
+  private val cacheMemory: CacheMemory
 ) : ServiceImpl<UserMapper, User>(), UserService {
   override fun checkValid(str: String?, type: String?): CommonResponse<User> {
     if (type.isNullOrBlank()) {
@@ -69,16 +73,16 @@ class UserServiceImpl(
       .exists()
   }
 
-  override fun login(username: String, password: String): User? {
+  override fun login(username: String, password: String): User {
     if (!checkUsername(username)) {
-      return null
+      throw BusinessException("$username 该用户不存在")
     }
 
     val user = ktQuery()
       .eq(User::username, username)
       .eq(User::password, password.encodeByMD5())
       .one()
-      ?: return null
+      ?: throw BusinessException("$username 密码错误")
 
     user.password = ""
 

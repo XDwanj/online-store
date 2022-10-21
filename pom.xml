@@ -17,7 +17,7 @@
     <properties>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <mybatis-plus.generator.version>3.5.3</mybatis-plus.generator.version>
-        <springdoc.version>1.6.9</springdoc.version>
+        <springdoc.version>1.6.12</springdoc.version>
         <kotlin.version>1.6.21</kotlin.version>
     </properties>
 
@@ -71,7 +71,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Swagger3 http://127.0.0.1:8080/swagger-ui/index.html -->
+        <!-- Swagger3 http://localhost:8080/api/v1/swagger-ui/index.html -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>

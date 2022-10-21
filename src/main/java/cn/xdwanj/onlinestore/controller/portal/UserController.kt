@@ -28,10 +28,10 @@ import java.util.*
 @RequestMapping("/user")
 class UserController(
   private val userService: UserService,
-  private val tokenCache: TokenCache
+  private val cacheMemory: CacheMemory
 ) {
   @Operation(summary = "登录")
-  @PostMapping("/login")
+  @PostMapping("/login", consumes = ["application/x-www-form-urlencoded"])
   fun login(
     username: String,
     password: String,
@@ -42,14 +42,10 @@ class UserController(
     ) return CommonResponse.error("数据不可为空")
 
     val user = userService.login(username, password)
-    val authorizationToken = getToken(USER_TOKEN_PREFIX)
-    tokenCache[authorizationToken] = user
+    val authorizationToken = getTokenByPrefix(USER_TOKEN_PREFIX)
+    cacheMemory[authorizationToken] = user
 
-    return if (user == null) {
-      CommonResponse.error("用户登录失败")
-    } else {
-      CommonResponse.success(data = authorizationToken)
-    }
+    return CommonResponse.success(data = authorizationToken)
   }
 
   @Operation(summary = "注销")
@@ -59,7 +55,7 @@ class UserController(
     @RequestHeader(AUTHORIZATION_TOKEN)
     token: String
   ): CommonResponse<Any> {
-    tokenCache.remove(token)
+    cacheMemory.remove(token)
     return CommonResponse.success("注销成功")
   }
 
@@ -150,7 +146,7 @@ class UserController(
 
     return if (exists) {
       val forgetToken = UUID.randomUUID().toString()
-      tokenCache[FORGET_TOKEN_PREFIX + username] = forgetToken
+      cacheMemory[FORGET_TOKEN_PREFIX + username] = forgetToken
       CommonResponse.success("答案正确", forgetToken)
     } else {
       CommonResponse.error("问题的答案错误")
@@ -174,7 +170,7 @@ class UserController(
       return CommonResponse.error("用户不存在")
     }
 
-    val token = tokenCache.get<String>(FORGET_TOKEN_PREFIX + username)
+    val token = cacheMemory.get<String>(FORGET_TOKEN_PREFIX + username)
     if (token.isNullOrBlank()) {
       return CommonResponse.error("token过期或者无效")
     }
@@ -238,15 +234,18 @@ class UserController(
 
     userNew.id = currentUser.id
     userNew.username = currentUser.username
+    userNew.role = currentUser.role
 
-    val isSuccess = userService.ktUpdate()
-      .eq(User::id, userNew.id)
-      .set(User::email, userNew.email)
-      .set(User::phone, userNew.phone)
-      .set(User::question, userNew.question)
-      .set(User::answer, userNew.answer)
-      .set(User::updateTime, LocalDateTime.now())
-      .update()
+    // val isSuccess = userService.ktUpdate()
+    //   .eq(User::id, userNew.id)
+    //   .set(User::email, userNew.email)
+    //   .set(User::phone, userNew.phone)
+    //   .set(User::question, userNew.question)
+    //   .set(User::answer, userNew.answer)
+    //   .set(User::updateTime, LocalDateTime.now())
+    //   .update()
+
+    val isSuccess = userService.updateById(userNew)
 
     return if (isSuccess) {
       CommonResponse.success("更新个人信息成功", userNew)
@@ -262,13 +261,13 @@ class UserController(
     @RequestHeader(AUTHORIZATION_TOKEN)
     token: String
   ): CommonResponse<User> {
-    val currentUser = tokenCache.get<User>(token)
+    val currentUser = cacheMemory.get<User>(token)
 
     val user = userService.ktQuery()
       .eq(User::id, currentUser!!.id)
       .one()
       ?: let {
-        tokenCache.remove(token)
+        cacheMemory.remove(token)
         return CommonResponse.error("找不到当前用户")
       }
 
@@ -276,7 +275,7 @@ class UserController(
     return CommonResponse.success(data = user)
   }
 
-  @Operation(summary = "从Session中返回用户信息")
+  @Operation(summary = "从缓存中返回用户信息")
   @GetMapping("/info/current")
   fun currentInfo(
     @Parameter(hidden = true)

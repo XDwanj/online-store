@@ -38,7 +38,6 @@ class UserManageController(
     @Parameter(hidden = true) session: HttpSession
   ): CommonResponse<User> {
     val user = userService.login(username, password)
-      ?: return CommonResponse.error("登录失败")
 
     if (user.role != RoleEnum.ADMIN.code) {
       return CommonResponse.error("登录的用户并非管理员")

@@ -1,8 +1,8 @@
 package cn.xdwanj.onlinestore.service;
 
+import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.response.CommonResponse
-import cn.xdwanj.onlinestore.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService
 
 /**
  * <p>
@@ -71,7 +71,7 @@ interface UserService : IService<User> {
    * @param password
    * @return
    */
-  fun login(username: String, password: String): User?
+  fun login(username: String, password: String): User
 
 
 //  /**

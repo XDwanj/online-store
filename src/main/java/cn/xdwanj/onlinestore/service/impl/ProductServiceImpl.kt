@@ -108,6 +108,7 @@ class ProductServiceImpl(
     val page = ktQuery()
       .`in`(Product::categoryId, categoryIdList)
       .orderByFromTripe(orderByRule)
+      .like(keyword.isBlank(), Product::name, keyword)
       .page(Page(pageNum.toLong(), pageSize.toLong()))
       .convert {
         assembleProductListVo(it)
