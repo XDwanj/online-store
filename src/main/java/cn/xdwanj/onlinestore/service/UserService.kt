@@ -20,7 +20,7 @@ interface UserService : IService<User> {
    * @param type
    * @return
    */
-  fun checkValid(str: String?, type: String?): CommonResponse<User>
+  fun checkValid(str: String?, type: String?): CommonResponse<String>
 
   /**
    * 校验用户名

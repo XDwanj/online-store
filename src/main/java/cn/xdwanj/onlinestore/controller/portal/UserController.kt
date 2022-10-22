@@ -54,7 +54,7 @@ class UserController(
     @Parameter(hidden = true)
     @RequestHeader(AUTHORIZATION_TOKEN)
     token: String
-  ): CommonResponse<Any> {
+  ): CommonResponse<String> {
     cacheMemory.remove(token)
     return CommonResponse.success("注销成功")
   }
@@ -90,12 +90,12 @@ class UserController(
 
   @Operation(summary = "检查数据是否存在")
   @PostMapping("/checkValid")
-  fun checkValid(value: String, type: String): CommonResponse<User> {
+  fun checkValid(value: String, type: String): CommonResponse<String> {
     if (
       value.isBlank() ||
       type.isBlank()
     ) return CommonResponse.error("数据不可为空")
-    return userService.checkValid(value, type) // TODO: recode
+    return userService.checkValid(value, type)
   }
 
   @Operation(summary = "返回密码重置问题")

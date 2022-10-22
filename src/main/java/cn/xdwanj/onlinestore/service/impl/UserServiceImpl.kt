@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service
 class UserServiceImpl(
   private val cacheMemory: CacheMemory
 ) : ServiceImpl<UserMapper, User>(), UserService {
-  override fun checkValid(str: String?, type: String?): CommonResponse<User> {
+  override fun checkValid(str: String?, type: String?): CommonResponse<String> {
     if (type.isNullOrBlank()) {
       return CommonResponse.error("参数错误")
     }
@@ -63,13 +63,10 @@ class UserServiceImpl(
       .exists()
   }
 
-  /**
-   * 并没有进行MD5编码
-   */
   override fun checkPassword(userId: Int, password: String): Boolean {
     return ktQuery()
       .eq(User::id, userId)
-      .eq(User::password, password)
+      .eq(User::password, password.encodeByMD5())
       .exists()
   }
 

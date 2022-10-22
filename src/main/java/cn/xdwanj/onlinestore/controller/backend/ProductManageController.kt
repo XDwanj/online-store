@@ -85,9 +85,7 @@ class ProductManageController(
   @Operation(summary = "获取商品列表，带搜索功能")
   @GetMapping("/list", "/search")
   fun listProduct(
-    // 这里有一个问题，使用 defaultValue="" 还是使用 required=false
-    // kotlin默认值是没有 springdoc 功能的
-    keyword: String = "",
+    @RequestParam(defaultValue = "") keyword: String,
     @RequestParam(defaultValue = "1") pageNum: Int,
     @RequestParam(defaultValue = "5") pageSize: Int
   ): CommonResponse<IPage<ProductListVo>> {
