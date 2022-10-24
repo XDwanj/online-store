@@ -38,7 +38,7 @@ class CartServiceImpl(
 
     val cartFromDB: Cart? = ktQuery()
       .eq(Cart::userId, userId)
-      .eq(Cart::productId, product)
+      .eq(Cart::productId, product.id)
       .one()
 
     if (cartFromDB == null) {

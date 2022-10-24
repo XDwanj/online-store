@@ -2,9 +2,9 @@ package cn.xdwanj.onlinestore.advice
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
+import cn.xdwanj.onlinestore.response.CommonResponse
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -17,7 +17,7 @@ class GlobalExceptionHandler {
   @ExceptionHandler(NullPointerException::class)
   fun nullPointer(e: NullPointerException): CommonResponse<String> {
     logger.error("出现 NPE 异常：", e)
-    return CommonResponse.error("数据格式错误")
+    return CommonResponse.error(e.toString())
   }
 
   /**
