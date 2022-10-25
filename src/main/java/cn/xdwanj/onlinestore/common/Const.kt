@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import javax.servlet.ServletContext
 
 const val USER_REQUEST = "userRequest"
-const val AUTHORIZATION_TOKEN = "authorization_token"
+const val AUTHORIZATION_TOKEN = "authorization-token"
 const val USER_SESSION = "userSession"
 const val USERNAME = "username"
 const val EMAIL = "email"

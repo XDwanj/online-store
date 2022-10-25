@@ -69,6 +69,7 @@ class CartController(
       ?: return CommonResponse.error("该购物车商品不存在")
 
     val isSuccess = cartService.ktUpdate()
+      .eq(Cart::id, cart.id)
       .set(Cart::quantity, count)
       .update(cart)
 
@@ -114,7 +115,7 @@ class CartController(
   fun list(
     @Parameter(hidden = true)
     @RequestAttribute(USER_REQUEST)
-    user:User
+    user: User
   ): CommonResponse<CartVo> {
     val cartVo = cartService.getCartVoLimit(user.id!!)
     return CommonResponse.success(data = cartVo)

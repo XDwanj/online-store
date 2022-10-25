@@ -28,7 +28,7 @@ class LoginInterceptor(
     val user = cacheMemory.get<User>(header)
       ?: throw BusinessException(ResponseCode.NEED_LOGIN.msg, ResponseCode.NEED_LOGIN.code)
 
-    logger.info("用户已登录, 已将 ${user.id} 放入Request域中")
+    logger.info("用户已登录, 已将 $user 放入Request域中")
     request.setAttribute(USER_REQUEST, user)
 
     return true

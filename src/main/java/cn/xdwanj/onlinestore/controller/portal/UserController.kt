@@ -31,7 +31,7 @@ class UserController(
   private val cacheMemory: CacheMemory
 ) {
   @Operation(summary = "登录")
-  @PostMapping("/login", consumes = ["application/x-www-form-urlencoded"])
+  @PostMapping("/login")
   fun login(
     username: String,
     password: String,
@@ -235,15 +235,6 @@ class UserController(
     userNew.id = currentUser.id
     userNew.username = currentUser.username
     userNew.role = currentUser.role
-
-    // val isSuccess = userService.ktUpdate()
-    //   .eq(User::id, userNew.id)
-    //   .set(User::email, userNew.email)
-    //   .set(User::phone, userNew.phone)
-    //   .set(User::question, userNew.question)
-    //   .set(User::answer, userNew.answer)
-    //   .set(User::updateTime, LocalDateTime.now())
-    //   .update()
 
     val isSuccess = userService.updateById(userNew)
 
