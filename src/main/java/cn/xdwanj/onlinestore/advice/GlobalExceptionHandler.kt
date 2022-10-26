@@ -5,10 +5,10 @@ import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import cn.xdwanj.onlinestore.response.CommonResponse
+import javax.validation.ConstraintViolationException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import javax.validation.ConstraintViolationException
 
 @Slf4j
 @RestControllerAdvice

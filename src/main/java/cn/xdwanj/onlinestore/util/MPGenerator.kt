@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.generator.FastAutoGenerator
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine
 import com.baomidou.mybatisplus.generator.fill.Column
-import com.baomidou.mybatisplus.generator.fill.Property
 import org.apache.ibatis.annotations.Mapper
 
 class MPGenerator {

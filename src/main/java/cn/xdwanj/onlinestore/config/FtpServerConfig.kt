@@ -55,9 +55,13 @@ fun FTPClient.uploadFile(fileList: List<File>): Boolean {
 
 @Component
 @ConfigurationProperties(prefix = "ftp")
-data class FtpConfigProperties(
-  var ip: String = "",
-  var username: String = "",
-  var password: String = "",
-  var serverPrefix: String = "",
-)
+class FtpConfigProperties {
+  var ip: String = ""
+  var username: String = ""
+  var password: String = ""
+  var serverPrefix: String = ""
+
+  override fun toString(): String {
+    return "FtpConfigProperties(ip='$ip', username='$username', password='$password', serverPrefix='$serverPrefix')"
+  }
+}

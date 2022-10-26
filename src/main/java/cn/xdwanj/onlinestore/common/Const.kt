@@ -3,9 +3,9 @@ package cn.xdwanj.onlinestore.common
 import cn.xdwanj.onlinestore.config.FtpConfigProperties
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
+import javax.servlet.ServletContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import javax.servlet.ServletContext
 
 const val USER_REQUEST = "userRequest"
 const val AUTHORIZATION_TOKEN = "authorization-token"

@@ -36,12 +36,16 @@ class AlipayConfig(
 @Slf4j
 @Component
 @ConfigurationProperties(prefix = "alipay.config")
-data class AlipayConfigProperties(
-  var protocol: String = "",
-  var gatewayHost: String = "",
-  var signType: String = "",
-  var appId: String = "",
-  var merchantPrivateKey: String = "",
-  var alipayPublicKey: String = "",
+class AlipayConfigProperties {
+  var protocol: String = ""
+  var gatewayHost: String = ""
+  var signType: String = ""
+  var appId: String = ""
+  var merchantPrivateKey: String = ""
+  var alipayPublicKey: String = ""
   var notifyUrl: String = ""
-)
+
+  override fun toString(): String {
+    return "AlipayConfigProperties(protocol='$protocol', gatewayHost='$gatewayHost', signType='$signType', appId='$appId', merchantPrivateKey='$merchantPrivateKey', alipayPublicKey='$alipayPublicKey', notifyUrl='$notifyUrl')"
+  }
+}

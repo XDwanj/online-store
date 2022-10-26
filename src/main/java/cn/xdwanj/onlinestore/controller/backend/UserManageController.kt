@@ -1,18 +1,14 @@
 package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.RoleEnum
-import cn.xdwanj.onlinestore.common.USER_SESSION
-import cn.xdwanj.onlinestore.entity.User
+import cn.xdwanj.onlinestore.common.*
 import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpSession
+import org.springframework.web.bind.annotation.*
 
 /**
  * <p>
@@ -27,7 +23,8 @@ import javax.servlet.http.HttpSession
 @RestController
 @RequestMapping("/manage")
 class UserManageController(
-  private val userService: UserService
+  private val userService: UserService,
+  private val cacheMemory: CacheMemory
 ) {
 
   @Operation(summary = "后台用户登录")
@@ -35,16 +32,29 @@ class UserManageController(
   fun login(
     username: String,
     password: String,
-    @Parameter(hidden = true) session: HttpSession
-  ): CommonResponse<User> {
+    @Parameter(hidden = true)
+    session: HttpSession
+  ): CommonResponse<String> {
     val user = userService.login(username, password)
 
     if (user.role != RoleEnum.ADMIN.code) {
       return CommonResponse.error("登录的用户并非管理员")
     }
 
-    session.setAttribute(USER_SESSION, user)
-    return CommonResponse.success(data = user)
+    val userToken = getTokenByPrefix(USER_TOKEN_PREFIX)
+    cacheMemory[userToken] = user
+    return CommonResponse.success(data = userToken)
+  }
+
+  @Operation(summary = "后台用户注销")
+  @GetMapping("/logout")
+  fun logout(
+    @Parameter(hidden = true)
+    @RequestHeader(AUTHORIZATION_TOKEN)
+    authorizationToken: String
+  ): CommonResponse<String> {
+    cacheMemory.remove(authorizationToken)
+    return CommonResponse.success("注销成功")
   }
 
 }
