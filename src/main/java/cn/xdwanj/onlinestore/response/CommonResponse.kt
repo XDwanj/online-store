@@ -13,7 +13,7 @@ class CommonResponse<T> private constructor(
   fun isSuccess() = run { this.code == ResponseCode.SUCCESS.code }
 
   override fun toString(): String {
-    return "ServerResponse(code=$code, msg=$msg, data=$data)"
+    return "CommonResponse(code=$code, msg=$msg, data=$data)"
   }
 
   companion object { // 工厂方法

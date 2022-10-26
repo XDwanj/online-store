@@ -82,12 +82,15 @@ class CartController(
   }
 
   @Operation(summary = "删除购物车列表")
+  // @DeleteMapping("/{productIds}")
   @DeleteMapping
   fun delete(
     @Parameter(hidden = true)
     @RequestAttribute(USER_REQUEST)
     user: User,
-    @Parameter(description = "商品id数组，用','分割") productIds: String
+    @Parameter(description = "商品id数组，用','分割")
+    @RequestParam(defaultValue = "")
+    productIds: String
   ): CommonResponse<CartVo> {
     if (productIds.isBlank()) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
@@ -102,6 +105,7 @@ class CartController(
         }
       }.forEach { productId ->
         cartService.ktUpdate()
+          .eq(Cart::userId, user.id)
           .eq(Cart::productId, productId)
           .remove()
       }

@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
-@RunWith(SpringRunner::class)
 @AutoConfigureMockMvc
 class UserControllerTest {
 
