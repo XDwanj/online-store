@@ -31,7 +31,7 @@ class CartController(
   private val cartService: CartService
 ) {
   @Operation(summary = "添加购物车")
-  @PostMapping("/add")
+  @PostMapping
   fun add(
     @Parameter(hidden = true)
     @RequestAttribute(USER_REQUEST)
