@@ -10,8 +10,8 @@ import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.response.ResponseCode
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 
 @Slf4j

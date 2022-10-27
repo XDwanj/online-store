@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.util
 
 import cn.xdwanj.onlinestore.exception.BusinessException
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
