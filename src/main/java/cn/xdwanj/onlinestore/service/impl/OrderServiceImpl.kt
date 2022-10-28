@@ -74,7 +74,7 @@ class OrderServiceImpl(
   }
 
   override fun assembleOrderItemVo(orderItem: OrderItem): OrderItemVo {
-    return  OrderItemVo().apply {
+    return OrderItemVo().apply {
       BeanUtils.copyProperties(orderItem, this)
       this.createTime = orderItem.createTime.formatString()
     }
@@ -129,13 +129,14 @@ class OrderServiceImpl(
   }
 
   override fun assembleOrder(userId: Int, shippingId: Int, payment: BigDecimal): Order {
-    return Order().apply {
-      orderNo = generateOrderNo()
-      status = OrderStatusEnum.NO_PAY.code
-      postage = 0 // TODO：暂时不考虑运费
-      paymentType = PaymentTypeEnum.ONLINE_PAY.code
-      this.payment = payment
-      this.shippingId = shippingId
+    return Order().also {
+      it.userId = userId
+      it.orderNo = generateOrderNo()
+      it.status = OrderStatusEnum.NO_PAY.code
+      it.postage = 0 // TODO：暂时不考虑运费
+      it.paymentType = PaymentTypeEnum.ONLINE_PAY.code
+      it.payment = payment
+      it.shippingId = shippingId
     }
   }
 
@@ -168,14 +169,14 @@ class OrderServiceImpl(
         return emptyList()
       }
 
-      val orderItem = OrderItem().apply {
-        this.userId = userId
-        productId = product.id
-        productName = product.name
-        productImage = product.mainImage
-        currentUnitPrice = product.price
-        quantity = cartItem.quantity
-        totalPrice = product.price!! * BigDecimal.valueOf(quantity!!.toLong())
+      val orderItem = OrderItem().also {
+        it.userId = userId
+        it.productId = product.id
+        it.productName = product.name
+        it.productImage = product.mainImage
+        it.currentUnitPrice = product.price
+        it.quantity = cartItem.quantity
+        it.totalPrice = product.price!! * BigDecimal.valueOf(it.quantity!!.toLong())
       }
 
       orderItemList += orderItem

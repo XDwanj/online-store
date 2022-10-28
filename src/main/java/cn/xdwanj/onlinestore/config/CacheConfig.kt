@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 @Configuration
 class CacheConfig {
   @Bean
-  fun caffeine() = Caffeine.newBuilder()
+  fun caffeine(): Caffeine<Any, Any> = Caffeine.newBuilder()
     .expireAfterWrite(12, TimeUnit.HOURS)
     .initialCapacity(1000)
     .maximumSize(10000)

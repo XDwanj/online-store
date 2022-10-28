@@ -47,3 +47,7 @@ class AlipayServiceImpl(
       .format(formatter)
   }
 }
+
+object Test {
+
+}

@@ -68,7 +68,7 @@ class OrderController(
     val order = orderService.assembleOrder(user.id!!, shippingId, totalPrice)
 
     // 保存订单项列表
-    if (orderItemService.saveBatch(orderItemList)) {
+    if (!orderItemService.saveBatch(orderItemList)) {
       return errorResponse
     }
 
@@ -82,7 +82,7 @@ class OrderController(
     val orderVo = orderService.assembleOrderVo(order, orderItemList)
 
     // 保存订单
-    if (orderService.save(order)) {
+    if (!orderService.save(order)) {
       return errorResponse
     }
 
