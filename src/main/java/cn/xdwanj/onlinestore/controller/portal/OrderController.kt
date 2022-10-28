@@ -67,6 +67,9 @@ class OrderController(
     // 获取订单
     val order = orderService.assembleOrder(user.id!!, shippingId, totalPrice)
 
+    // 提取订单中的orderNo，传入orderItem中
+    orderItemList.map { it.orderNo == order.orderNo }
+
     // 保存订单项列表
     if (!orderItemService.saveBatch(orderItemList)) {
       return errorResponse
