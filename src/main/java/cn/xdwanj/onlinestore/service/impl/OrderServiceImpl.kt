@@ -78,34 +78,12 @@ class OrderServiceImpl(
       BeanUtils.copyProperties(orderItem, this)
       this.createTime = orderItem.createTime.formatString()
     }
-
-    // return OrderItemVo().apply {
-    //   orderNo = orderItem.orderNo
-    //   productId = orderItem.productId
-    //   productName = orderItem.productName
-    //   productImage = orderItem.productImage
-    //   currentUnitPrice = orderItem.currentUnitPrice
-    //   quantity = orderItem.quantity
-    //   totalPrice = orderItem.totalPrice
-    //   createTime = orderItem.createTime.formatString()
-    // }
   }
 
   override fun assembleShippingVo(shipping: Shipping): ShippingVo {
     return ShippingVo().apply {
       BeanUtils.copyProperties(shipping, this)
     }
-
-    // return ShippingVo().apply {
-    //   receiverName = shipping.receiverName
-    //   receiverAddress = shipping.receiverAddress
-    //   receiverProvince = shipping.receiverProvince
-    //   receiverCity = shipping.receiverCity
-    //   receiverDistrict = shipping.receiverDistrict
-    //   receiverMobile = shipping.receiverMobile
-    //   receiverZip = shipping.receiverZip
-    //   receiverPhone = shipping.receiverPhone
-    // }
   }
 
   override fun reduceProductStock(orderItemList: List<OrderItem>) {
@@ -140,7 +118,7 @@ class OrderServiceImpl(
     }
   }
 
-  // TODO: 待优化
+  // TODO: 待优化，建议优化方向为雪花ID
   override fun generateOrderNo(): Long {
     val currentTime = System.currentTimeMillis()
     return currentTime + currentTime % Random.nextInt(100)

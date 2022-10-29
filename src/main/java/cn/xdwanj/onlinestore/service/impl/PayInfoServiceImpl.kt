@@ -15,6 +15,4 @@ import org.springframework.stereotype.Service;
  * @since 2022-07-16
  */
 @Service
-open class PayInfoServiceImpl : ServiceImpl<PayInfoMapper, PayInfo>(), PayInfoService {
-
-}
+class PayInfoServiceImpl : ServiceImpl<PayInfoMapper, PayInfo>(), PayInfoService
