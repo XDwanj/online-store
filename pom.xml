@@ -49,6 +49,13 @@
         <!--    <version>0.9.1</version>-->
         <!--</dependency>-->
 
+        <!-- springboot devtools 热部署 Ctrl + F9 [Build Project] -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
