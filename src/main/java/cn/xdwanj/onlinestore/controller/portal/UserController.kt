@@ -205,7 +205,7 @@ class UserController(
     val userId = user.id
       ?: return CommonResponse.error("用户ID不可为空")
 
-    if (!userService.checkPassword(userId, passwordOld.encodeByMD5())) {
+    if (!userService.checkPassword(userId, passwordOld)) {
       return CommonResponse.error("旧密码错误")
     }
 

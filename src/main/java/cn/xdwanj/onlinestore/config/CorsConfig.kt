@@ -31,7 +31,7 @@ class CorsConfig {
   @Bean
   fun corsConfiguration() = CorsConfiguration().apply {
     allowedOriginPatterns = listOf("*")
-    allowedMethods = listOf("GET,POST,PUT,DELETE,PATCH,OPTIONS,HEAD")
+    allowedMethods = listOf("GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD")
     allowedHeaders = listOf("*")
     allowCredentials = true
     maxAge = 1728000L
