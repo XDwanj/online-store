@@ -10,7 +10,7 @@
 4. Kotlin v1.6.21
 5. Logback + SLF4J 日志系统
 6. Maven 构建工具
-7. Swagger3 API文档 (基于Springdoc v1.6.9)
+7. Swagger3 API文档 (基于Springdoc v1.6.12)
 8. 使用 WangEditor 富文本编辑器
 9. 接入 Alipay 接口
 

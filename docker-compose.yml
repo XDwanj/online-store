@@ -1,0 +1,28 @@
+version: "0.0.1"
+services: # 第三方 Nginx + vsftpd 图片服务器，也可以自己实现
+  image-server:
+    image: jasonkay/image-server
+    container_name: image_server
+    ports:
+      - 20:20
+      - 21:21
+      - 80:80
+    volumes:
+      - ~/Environment/image-server:/home/vsftpd
+    restart: always
+    environment:
+      - FTP_USER=image
+      - FTP_PASS=123456
+      - PASV_ADDRESS=159.75.54.27
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+  # web 后台主程序
+  webapp:
+    container_name: online-store
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ~/Environment/online-store/config:$WORKDIR/config
+    ports:
+      - 8080:8080
+    restart: always

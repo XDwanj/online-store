@@ -3,7 +3,7 @@ package cn.xdwanj.onlinestore.common
 import cn.xdwanj.onlinestore.config.FtpConfigProperties
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
-import jakarta.servlet.ServletContext
+import javax.servlet.ServletContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 

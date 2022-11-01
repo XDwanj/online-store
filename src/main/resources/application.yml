@@ -1,10 +1,8 @@
 server:
-  port: 8080
+  port: 15000
   servlet:
     context-path: /api/v1
 spring:
-  profiles:
-    active: dev
   application:
     name: online-store
   datasource:
@@ -39,6 +37,8 @@ springdoc:
       group: manage,
       packages-to-scan: cn.xdwanj.onlinestore.controller.backend
     }
+  swagger-ui:
+    groups-order: desc
 password:
   # 通过对 “online-store” 进行 md5 摘要 并全大写
   salt: A428DC27C09FBE613F60D10C87DC78A3
@@ -56,4 +56,5 @@ alipay:
     merchantPrivateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCoaJZnoJVZwZABZp/HGNH0Z9mbs+LQ79fXbpIkwPolnq6N5o9jVDzHVgCjmQrq0nix1RvXu8wI/tBwsF7Jcz8ZqBiYI+OVWbiExT4taSH625GQA5b+Y2iH5yqaq+L8xthZXSEkFaCOHFfSBM/NGAuXR/B9qW/oiIRSEeQjaK1GPh/4BaIbHEYYMp3uuWnB8lQZoKXN9gyZ6F30Nbx2VOP3dTVEj6Vtz5tE8Z+FgwMgBUAegSvpUwmO7+Qja12SDyxz0IARTwUBZXezgB/cY0eoUbGKDxhOqCfEOZgDwSLNSx1fWlLvMXs1rRlZwGMRompeTpCQEyz+s3g6mQMwqdmBAgMBAAECggEBAIcjlj4F4JMr/lEBdwmfYyuLAlYtnb8oF74qXl/b81+o3E3GTB3bBQK4gr7FGrugtXWOm08cxfgZ8k3bWdSyBFqkR0ge1IuOecEhPmnWSYwyEbbNCqeMQd98ovWHJRjOv+HGF8gLCtG+8MH5Vn8v4m09L0DHbKPemL/612WKpDEOanobSJgXA/B8bMY1ntWQkhFCpiHjBrVBmWjT9W63Jx/i8MiMPE7SMWhzoY/W35mKjET86Hv+Xwe9L+pLPbE1TD3QeaEP/Z66LKQvQT9Phsv9Do4kTzMx3SkrWVfPJeH6jYVVN4VrIf7ojrhcz66gx4fErWXwLzTlSuZyfqEjSzkCgYEA+Qi9GIz03ttajrcLE/cIIcCWBGJi+CyrQFYm3tQYxx1alg1CwC0ixAcEVLsUSwR4KFYDrJU0XnZNkWEPNEWBbB46lpaOFfCJwFQILH9j3U/QnYiegNznGj9ywo0IpAEVhMeyN3MvXprIBd9juhf3sW8pb/xpM7jtSI6B7yq4f+cCgYEArR6DKYkD754fCUaQoF87MwyzUuY1msIm5UZfLJi9WtMGnKD58Xm7za2mDlgsHDy4TQKsulAQyj17jDZJeAeF2T4XAo+XAjZj7nIr2/c1EXsOkHX7R5q3exu54gRkXuXo0qWatPbojvNXRI+UC9MQB/67GZLoF3KsON0uMftSTlcCgYAvIFo4dSQ5sCT48Oalxo/BY2KAPeYgtMNLj4IXlOeDdqiX0LabC2+SzQkix6xVbekXKP/U/v9ECPsw0b9A0w5k2WuY57DHshc/UCej1A+f5+TAiwQDusn5C5y5+Fp0PshFskyldaS3MG89vUJwCu0SpMigqpF1+j7dBirMibcUbQKBgGJQ2MZm5NBZaWDYLVyWmMU2KkUjLkA0kOhWnchy+d6xx6h+F1RXARweyRaOZoamyTgbE8M/ozlnz1linzjGdPJaO7EdoPIFt5z8RAJJE19ZFn1eM5WHvTnyFg/Q1Lu8MAwpNoIdUxeUBPSP4dERTaJsvQ8aCir+2eX1Xr3N8AFDAoGAEwGHcAJNBi0fmbrsSes96ZadXEiXvyMLOBjlQxj7plI0bL/1pAQZm3SW2QH1fx2AH0kw06jnqMOHmAHscdyo/UNWL2G30NUuE3PDBOd23IeaWY6nHHBnDuHZUL0iFJkIHhws+SQC6Pj3mwIMIkZGJ7iH1eCEF673EQCs8u2mD5M=
     alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3gJ3Jkmd/vlj1BqOc/w+dVKuHWH/ZPnbIap1LC0W89ZP+MbB1heTazUJtMUlqQxnHFy9Q0doy5cYBC/H3shNjIwS8jDK9wDnNeQikatv1kyE1FLuKtxDACVvqUO4ag5+W1xkQt51VCwEAXZmxHG15wcS3JYB2BPxnHBt38pbchCtnob298etmW1I20r+DokmMABrWOBVBCsNhnpyhcl0LHBjrVh3uwqRXEmNTzFQZVujwXVTAD9DDx7c6YFNTpnwbGPzYc6J8+dUOFPbl0ayoGsQb6NiHz9Ss8M5f3rxEYd8pAfotaX9O6gMNl79KMERlso9HnVley73e3qTsp3RwIDAQAB
     notifyUrl: null
+
 

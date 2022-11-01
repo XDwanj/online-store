@@ -36,4 +36,13 @@ class WebConfig(
         .excludePathPatterns("/manage/login")
     }
   }
+
+  // 这个方式在引入 springSecurity 后会失效，由于优先级问题
+  // override fun addCorsMappings(registry: CorsRegistry) {
+  //   registry.addMapping("/**")
+  //     .allowedOrigins("*")
+  //     .allowedHeaders("*")
+  //     .allowCredentials(true)
+  //     .maxAge(10000);
+  // }
 }
