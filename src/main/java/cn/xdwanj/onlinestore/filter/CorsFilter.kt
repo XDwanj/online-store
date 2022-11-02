@@ -22,7 +22,7 @@ class CorsFilter : Filter {
     val req = request as HttpServletRequest
 
     resp.apply {
-      addHeader("Access-Control-Allow-Credentials", "true")
+      // addHeader("Access-Control-Allow-Credentials", "true")
       addHeader("Access-Control-Allow-Origin", "*")
       addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD")
       addHeader("Access-Control-Allow-Headers", "*")
