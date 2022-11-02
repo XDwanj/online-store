@@ -1,5 +1,6 @@
 version: "0.0.1"
-services: # 第三方 Nginx + vsftpd 图片服务器，也可以自己实现
+services:
+  # 第三方 Nginx + vsftpd 图片服务器，也可以自己实现
   image-server:
     image: jasonkay/image-server
     container_name: image_server
@@ -7,6 +8,7 @@ services: # 第三方 Nginx + vsftpd 图片服务器，也可以自己实现
       - 20:20
       - 21:21
       - 15001:80
+      - 21100-21110:21100-21110
     volumes:
       - ~/Environment/image-server:/home/vsftpd
     restart: always
