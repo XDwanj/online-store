@@ -6,7 +6,7 @@ services: # 第三方 Nginx + vsftpd 图片服务器，也可以自己实现
     ports:
       - 20:20
       - 21:21
-      - 80:80
+      - 15001:80
     volumes:
       - ~/Environment/image-server:/home/vsftpd
     restart: always
@@ -19,10 +19,10 @@ services: # 第三方 Nginx + vsftpd 图片服务器，也可以自己实现
   # web 后台主程序
   webapp:
     container_name: online-store
-    build:
-      dockerfile: Dockerfile
+    build: .
     volumes:
-      - ~/Environment/online-store/config:$WORKDIR/config
+      - ~/Environment/online-store/config:/workdir/config
+      - ~/Environment/online-store/logs:/workdir/logs
     ports:
-      - 8080:8080
+      - 15000:15000
     restart: always
