@@ -1,10 +1,7 @@
 package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.common.CacheMemory
 import cn.xdwanj.onlinestore.common.encodeByMD5
-import cn.xdwanj.onlinestore.constant.EMAIL
 import cn.xdwanj.onlinestore.constant.RoleEnum
-import cn.xdwanj.onlinestore.constant.USERNAME
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.mapper.UserMapper
@@ -22,19 +19,17 @@ import org.springframework.stereotype.Service
  * @since 2022-07-16
  */
 @Service
-class UserServiceImpl(
-  private val cacheMemory: CacheMemory
-) : ServiceImpl<UserMapper, User>(), UserService {
+class UserServiceImpl : ServiceImpl<UserMapper, User>(), UserService {
   override fun checkValid(str: String?, type: String?): CommonResponse<String> {
     if (type.isNullOrBlank()) {
       return CommonResponse.error("参数错误")
     }
     when (type) {
-      EMAIL -> if (checkEmail(str)) {
+      "email" -> if (checkEmail(str)) {
         return CommonResponse.error("邮箱不存在")
       }
 
-      USERNAME -> if (!checkUsername(str)) {
+      "username" -> if (!checkUsername(str)) {
         return CommonResponse.error("用户名不存在")
       }
 

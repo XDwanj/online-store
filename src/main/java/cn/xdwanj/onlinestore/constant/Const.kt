@@ -10,8 +10,6 @@ import javax.servlet.ServletContext
 const val USER_REQUEST = "userRequest"
 const val AUTHORIZATION_TOKEN = "authorization-token"
 const val USER_SESSION = "userSession"
-const val USERNAME = "username"
-const val EMAIL = "email"
 const val UPLOAD_PATH = "upload"
 
 @Component

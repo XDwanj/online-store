@@ -25,6 +25,7 @@ services:
     volumes:
       - ~/Environment/online-store/config:/workdir/config
       - ~/Environment/online-store/logs:/workdir/logs
+      - ~/Environment/online-store/upload:/wordir/upload
     ports:
       - 15000:15000
     restart: always
