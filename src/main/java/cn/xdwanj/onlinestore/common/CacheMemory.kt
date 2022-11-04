@@ -53,8 +53,3 @@ class CacheMemory {
     cache.invalidate(k)
   }
 }
-
-fun main() {
-  println(IdUtil.getSnowflakeNextId())
-}
-
