@@ -54,8 +54,6 @@
 | record  | 分页对象记录列表 |
 | total   | 总条数           |
 
-
-
 ### 用户权限
 
 | Code | Desc     |
