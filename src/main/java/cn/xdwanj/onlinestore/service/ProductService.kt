@@ -1,10 +1,10 @@
 package cn.xdwanj.onlinestore.service;
 
+import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.vo.ProductDetailVo
-import cn.xdwanj.onlinestore.entity.Product;
 import cn.xdwanj.onlinestore.vo.ProductListVo
 import com.baomidou.mybatisplus.core.metadata.IPage
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService
 
 /**
  * <p>
@@ -15,30 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-07-16
  */
 interface ProductService : IService<Product> {
-//  /**
-//   * 添加产品
-//   *
-//   * @param product
-//   * @return
-//   */
-//  fun saveProduct(product: Product): ServerResponse<String>
-
-//  /**
-//   * 更新产品
-//   *
-//   * @param product
-//   * @return
-//   */
-//  fun updateProduct(product: Product): ServerResponse<String>
-
-//  /**
-//   * 更新商品销售状态
-//   *
-//   * @param productId
-//   * @param status
-//   * @return
-//   */
-//  fun setSaleStatus(productId: Int, status: Int): ServerResponse<String>
 
   /**
    * 管理员获取商品详情
@@ -63,7 +39,12 @@ interface ProductService : IService<Product> {
    * @param pageSize
    * @return
    */
-  fun listProductByManage(pageNum: Int, pageSize: Int, productName: String = "", categoryId: Int = -1): IPage<ProductListVo>
+  fun listProductByManage(
+    pageNum: Int,
+    pageSize: Int,
+    productName: String = "",
+    categoryId: Int = -1
+  ): IPage<ProductListVo>
 
   /**
    * 通过关键字和类别 排序查询商品详情列表
@@ -75,6 +56,12 @@ interface ProductService : IService<Product> {
    * @param orderBy
    * @return
    */
-  fun listProduct(pageNum: Int, pageSize: Int, keyword: String = "", categoryId: Int, orderBy: String): IPage<ProductListVo>
+  fun listProduct(
+    pageNum: Int,
+    pageSize: Int,
+    keyword: String = "",
+    categoryId: Int,
+    orderBy: String
+  ): IPage<ProductListVo>
 
 }

@@ -1,7 +1,9 @@
 package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.*
+import cn.xdwanj.onlinestore.common.CacheMemory
+import cn.xdwanj.onlinestore.common.USER_TOKEN_PREFIX
+import cn.xdwanj.onlinestore.common.getTokenByPrefix
 import cn.xdwanj.onlinestore.constant.AUTHORIZATION_TOKEN
 import cn.xdwanj.onlinestore.constant.RoleEnum
 import cn.xdwanj.onlinestore.response.CommonResponse
@@ -9,8 +11,8 @@ import cn.xdwanj.onlinestore.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import javax.servlet.http.HttpSession
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpSession
 
 /**
  * <p>
@@ -26,7 +28,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/manage")
 class UserManageController(
   private val userService: UserService,
-  private val cacheMemory: CacheMemory
+  private val cacheMemory: CacheMemory,
 ) {
 
   @Operation(summary = "后台用户登录")

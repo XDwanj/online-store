@@ -16,9 +16,6 @@ import java.io.IOException
 class FtpServerConfig(
   private val properties: FtpConfigProperties
 ) {
-  companion object {
-    private const val FTP_WORK_DIR = "img"
-  }
 
   @Bean
   fun ftpClient() = FTPClient().apply {
@@ -32,7 +29,6 @@ class FtpServerConfig(
     }
     bufferSize = 1024
     controlEncoding = "UTF-8"
-    changeWorkingDirectory(FTP_WORK_DIR)
     setFileType(FTPClient.BINARY_FILE_TYPE)
     enterLocalPassiveMode()
 

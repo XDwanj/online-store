@@ -12,7 +12,6 @@ const val USER_TOKEN_PREFIX = "userToken_"
 
 fun getTokenByPrefix(prefix: String): String {
   return prefix + IdUtil.fastSimpleUUID()
-    .toString()
     .uppercase()
 }
 

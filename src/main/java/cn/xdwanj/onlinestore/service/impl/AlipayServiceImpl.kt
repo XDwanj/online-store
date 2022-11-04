@@ -2,7 +2,7 @@ package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.constant.SERVER_HOST
+import cn.xdwanj.onlinestore.constant.HOME_PAGE
 import cn.xdwanj.onlinestore.service.AlipayService
 import com.alipay.easysdk.factory.Factory
 import com.alipay.easysdk.kernel.util.ResponseChecker
@@ -21,7 +21,7 @@ class AlipayServiceImpl(
   override fun toPay(outTradeNo: String, subject: String, money: BigDecimal): String {
     val pay = Factory.Payment
       .Page()
-      .pay(subject, outTradeNo, money.toString(), SERVER_HOST)
+      .pay(subject, outTradeNo, money.toString(), HOME_PAGE)
 
     if (ResponseChecker.success(pay)) {
       logger.info("交易正式开始：{}", pay.getBody())

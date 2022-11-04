@@ -5,7 +5,6 @@ import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import javax.servlet.ServletContext
 
 const val USER_REQUEST = "userRequest"
 const val AUTHORIZATION_TOKEN = "authorization-token"
@@ -17,18 +16,19 @@ class Const(
   ftpConfigProperties: FtpConfigProperties,
   @Value("\${password.salt}")
   _salt: String,
-  servletContext: ServletContext
+  @Value("\${front-desk.home-page}")
+  homePage: String
 ) {
   init {
     FTP_HOST = "${ftpConfigProperties.serverPrefix}/${ftpConfigProperties.username}"
     PASSWORD_SALT = _salt
-    SERVER_HOST = servletContext.contextPath
+    HOME_PAGE = homePage
   }
 }
 
 lateinit var FTP_HOST: String
 lateinit var PASSWORD_SALT: String
-lateinit var SERVER_HOST: String
+lateinit var HOME_PAGE: String
 
 enum class RoleEnum(
   val code: Int,

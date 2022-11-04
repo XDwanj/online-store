@@ -2,20 +2,23 @@ package cn.xdwanj.onlinestore.common
 
 import cn.hutool.core.lang.Snowflake
 import cn.hutool.core.util.IdUtil
-import cn.xdwanj.onlinestore.constant.PASSWORD_SALT
+import cn.xdwanj.onlinestore.annotation.Slf4j
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.util.DigestUtils
-import java.util.*
 
-fun String.encodeByMD5(): String = DigestUtils
-  .md5DigestAsHex("${this}$PASSWORD_SALT".toByteArray())
-  .toString()
-  .uppercase(Locale.getDefault())
-
+/**
+ * 通用注册中心，提供组件注册的场所
+ *
+ */
+@Slf4j
 @Configuration
 class CommonRegister {
 
+  /**
+   * 雪花ID工厂
+   *
+   * @return
+   */
   @Bean
   fun snowflake(): Snowflake = IdUtil.getSnowflake()
 }

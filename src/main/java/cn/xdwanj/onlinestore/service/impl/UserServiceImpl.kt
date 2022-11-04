@@ -1,6 +1,6 @@
 package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.common.encodeByMD5
+import cn.xdwanj.onlinestore.util.encodeByMD5
 import cn.xdwanj.onlinestore.constant.RoleEnum
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
