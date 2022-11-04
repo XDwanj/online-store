@@ -1,8 +1,8 @@
 package cn.xdwanj.onlinestore.controller.backend
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.FTP_HOST
-import cn.xdwanj.onlinestore.common.UPLOAD_PATH
+import cn.xdwanj.onlinestore.constant.FTP_HOST
+import cn.xdwanj.onlinestore.constant.UPLOAD_PATH
 import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.response.ResponseCode
@@ -15,9 +15,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import javax.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import javax.servlet.http.HttpServletRequest
 
 /**
  * <p>
@@ -117,8 +117,7 @@ class ProductManageController(
     @Parameter(hidden = true)
     request: HttpServletRequest
   ): WangEditor {
-    val path = request.servletContext.getRealPath(UPLOAD_PATH)
-    val targetFileName = fileService.upload(file, path)
+    val targetFileName = fileService.upload(file, UPLOAD_PATH)
     if (targetFileName.isBlank()) {
       return WangEditor.error()
     }

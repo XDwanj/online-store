@@ -2,13 +2,11 @@ package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.SERVER_HOST
+import cn.xdwanj.onlinestore.constant.SERVER_HOST
 import cn.xdwanj.onlinestore.service.AlipayService
 import com.alipay.easysdk.factory.Factory
 import com.alipay.easysdk.kernel.util.ResponseChecker
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.LocalDateTime

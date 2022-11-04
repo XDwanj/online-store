@@ -1,18 +1,18 @@
-package cn.xdwanj.onlinestore.common
+package cn.xdwanj.onlinestore.constant
 
 import cn.xdwanj.onlinestore.config.FtpConfigProperties
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
-import javax.servlet.ServletContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import javax.servlet.ServletContext
 
 const val USER_REQUEST = "userRequest"
 const val AUTHORIZATION_TOKEN = "authorization-token"
 const val USER_SESSION = "userSession"
 const val USERNAME = "username"
 const val EMAIL = "email"
-const val UPLOAD_PATH = "./upload"
+const val UPLOAD_PATH = "upload"
 
 @Component
 class Const(
@@ -22,7 +22,7 @@ class Const(
   servletContext: ServletContext
 ) {
   init {
-    FTP_HOST = ftpConfigProperties.serverPrefix
+    FTP_HOST = "${ftpConfigProperties.serverPrefix}/${ftpConfigProperties.username}"
     PASSWORD_SALT = _salt
     SERVER_HOST = servletContext.contextPath
   }

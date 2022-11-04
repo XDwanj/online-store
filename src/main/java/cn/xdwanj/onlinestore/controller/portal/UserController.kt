@@ -1,11 +1,13 @@
 package cn.xdwanj.onlinestore.controller.portal
 
 import cn.xdwanj.onlinestore.common.*
+import cn.xdwanj.onlinestore.constant.AUTHORIZATION_TOKEN
+import cn.xdwanj.onlinestore.constant.RoleEnum
+import cn.xdwanj.onlinestore.constant.USER_REQUEST
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.UserService
-import cn.xdwanj.onlinestore.util.encodeByMD5
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag

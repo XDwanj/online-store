@@ -2,7 +2,7 @@ package cn.xdwanj.onlinestore.interceptor
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.USER_REQUEST
+import cn.xdwanj.onlinestore.constant.USER_REQUEST
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.response.ResponseCode

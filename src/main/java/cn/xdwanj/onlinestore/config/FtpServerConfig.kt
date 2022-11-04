@@ -1,13 +1,14 @@
 package cn.xdwanj.onlinestore.config
 
+import cn.hutool.extra.ftp.Ftp
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import org.apache.commons.net.ftp.FTPClient
+import org.apache.commons.net.ftp.FTPReply
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
-import java.io.File
 import java.io.IOException
 
 @Slf4j
@@ -20,37 +21,36 @@ class FtpServerConfig(
   }
 
   @Bean
-  fun ftpClient(): FTPClient = FTPClient().apply {
+  fun ftpClient() = FTPClient().apply {
     logger.info("ftp服务器初始化: {}", properties)
 
-    // TODO：暂时不开启
-    // connect(properties.ip)
-    // login(properties.username, properties.password)
-    // bufferSize = 1024
-    // controlEncoding = "UTF-8"
-    // changeWorkingDirectory(FTP_WORK_DIR)
-    // setFileType(FTPClient.BINARY_FILE_TYPE)
-    // enterLocalPassiveMode()
-  }
-}
+    connect(properties.ip)
+    val isLoginSuccess = login(properties.username, properties.password)
 
-fun FTPClient.uploadFile(fileList: List<File>): Boolean {
-  logger.info("开始上传文件", fileList)
-  try {
-    for (file in fileList) {
-      file.inputStream().use {
-        this.storeFile(file.name, it)
-      }
+    if (isLoginSuccess) {
+      logger.info("ftp服务器连接成功")
     }
-  } catch (e: IOException) {
-    logger.error("上传文件异常", e)
-    e.printStackTrace()
-    return false
-  } finally {
-    this.disconnect()
+    bufferSize = 1024
+    controlEncoding = "UTF-8"
+    changeWorkingDirectory(FTP_WORK_DIR)
+    setFileType(FTPClient.BINARY_FILE_TYPE)
+    enterLocalPassiveMode()
+
+    if (!FTPReply.isPositiveCompletion(this.replyCode)) {
+      try {
+        disconnect()
+      } catch (e: IOException) {
+        logger.error("关闭ftpClient失败", e)
+      }
+    } else {
+      logger.info("ftp服务器连接成功二次确定")
+    }
   }
-  logger.info("上传文件结束", fileList)
-  return true
+
+  @Bean
+  fun ftpUtil(ftpClient: FTPClient): Ftp {
+    return Ftp(ftpClient)
+  }
 }
 
 @Component

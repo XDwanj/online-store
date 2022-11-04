@@ -1,6 +1,6 @@
 package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.common.RoleEnum
+import cn.xdwanj.onlinestore.constant.RoleEnum
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
 import org.junit.Test

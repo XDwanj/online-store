@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.controller.portal
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.USER_REQUEST
+import cn.xdwanj.onlinestore.constant.USER_REQUEST
 import cn.xdwanj.onlinestore.entity.Shipping
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.response.CommonResponse

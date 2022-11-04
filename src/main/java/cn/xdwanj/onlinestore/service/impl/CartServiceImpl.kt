@@ -1,8 +1,8 @@
 package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.CartConst
-import cn.xdwanj.onlinestore.common.FTP_HOST
+import cn.xdwanj.onlinestore.constant.CartConst
+import cn.xdwanj.onlinestore.constant.FTP_HOST
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.exception.BusinessException

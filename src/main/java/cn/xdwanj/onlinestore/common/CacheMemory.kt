@@ -1,17 +1,17 @@
 package cn.xdwanj.onlinestore.common
 
+import cn.hutool.core.util.IdUtil
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.springframework.stereotype.Component
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 const val FORGET_TOKEN_PREFIX = "forgetToken_"
 const val USER_TOKEN_PREFIX = "userToken_"
 
 fun getTokenByPrefix(prefix: String): String {
-  return prefix + UUID.randomUUID()
+  return prefix + IdUtil.fastSimpleUUID()
     .toString()
     .uppercase()
 }
@@ -52,5 +52,9 @@ class CacheMemory {
   fun remove(k: String) {
     cache.invalidate(k)
   }
+}
+
+fun main() {
+  println(IdUtil.getSnowflakeNextId())
 }
 

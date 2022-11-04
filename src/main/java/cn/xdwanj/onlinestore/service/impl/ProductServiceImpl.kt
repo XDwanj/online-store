@@ -1,7 +1,7 @@
 package cn.xdwanj.onlinestore.service.impl
 
-import cn.xdwanj.onlinestore.common.FTP_HOST
-import cn.xdwanj.onlinestore.common.ProductStatusEnum
+import cn.xdwanj.onlinestore.constant.FTP_HOST
+import cn.xdwanj.onlinestore.constant.ProductStatusEnum
 import cn.xdwanj.onlinestore.entity.Category
 import cn.xdwanj.onlinestore.entity.Product
 import cn.xdwanj.onlinestore.exception.BusinessException

@@ -1,11 +1,12 @@
 package cn.xdwanj.onlinestore.service.impl
 
+import cn.hutool.core.lang.Snowflake
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.common.FTP_HOST
-import cn.xdwanj.onlinestore.common.OrderStatusEnum
-import cn.xdwanj.onlinestore.common.PaymentTypeEnum
-import cn.xdwanj.onlinestore.common.ProductStatusEnum
+import cn.xdwanj.onlinestore.constant.FTP_HOST
+import cn.xdwanj.onlinestore.constant.OrderStatusEnum
+import cn.xdwanj.onlinestore.constant.PaymentTypeEnum
+import cn.xdwanj.onlinestore.constant.ProductStatusEnum
 import cn.xdwanj.onlinestore.entity.*
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
@@ -21,7 +22,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import kotlin.random.Random
 
 /**
  * <p>
@@ -35,7 +35,8 @@ import kotlin.random.Random
 @Service
 class OrderServiceImpl(
   private val productService: ProductService,
-  private val shippingService: ShippingService
+  private val shippingService: ShippingService,
+  private val snowflake: Snowflake
 ) : ServiceImpl<OrderMapper, Order>(), OrderService {
 
   override fun assembleOrderVo(order: Order, orderItemList: List<OrderItem>): OrderVo {
@@ -118,11 +119,7 @@ class OrderServiceImpl(
     }
   }
 
-  // TODO: 待优化，建议优化方向为雪花ID
-  override fun generateOrderNo(): Long {
-    val currentTime = System.currentTimeMillis()
-    return currentTime + currentTime % Random.nextInt(100)
-  }
+  override fun generateOrderNo() = snowflake.nextId()
 
   override fun getTotalPrice(orderItemList: List<OrderItem>): BigDecimal {
     var payment = BigDecimal.ZERO

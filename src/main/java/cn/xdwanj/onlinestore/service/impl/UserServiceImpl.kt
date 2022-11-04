@@ -1,15 +1,15 @@
 package cn.xdwanj.onlinestore.service.impl
 
 import cn.xdwanj.onlinestore.common.CacheMemory
-import cn.xdwanj.onlinestore.common.EMAIL
-import cn.xdwanj.onlinestore.common.RoleEnum
-import cn.xdwanj.onlinestore.common.USERNAME
+import cn.xdwanj.onlinestore.common.encodeByMD5
+import cn.xdwanj.onlinestore.constant.EMAIL
+import cn.xdwanj.onlinestore.constant.RoleEnum
+import cn.xdwanj.onlinestore.constant.USERNAME
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.mapper.UserMapper
 import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.UserService
-import cn.xdwanj.onlinestore.util.encodeByMD5
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import org.springframework.stereotype.Service
 
