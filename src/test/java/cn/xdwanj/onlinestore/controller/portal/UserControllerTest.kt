@@ -1,10 +1,17 @@
 package cn.xdwanj.onlinestore.controller.portal
 
+import cn.xdwanj.onlinestore.annotation.Slf4j
+import org.junit.runner.RunWith
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit4.SpringRunner
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
+@RunWith(SpringRunner::class)
+@WebMvcTest(UserController::class)
 class UserControllerTest {
   //
   // @Autowired
@@ -13,39 +20,76 @@ class UserControllerTest {
   // @Autowired
   // private lateinit var objectMapper: ObjectMapper
   //
+  // @Autowired
+  // private lateinit var userService: UserService
+  //
+  // companion object {
+  //   private lateinit var authorizationToken: String
+  // }
+  //
   // @Before
   // fun setUp() {
-  //   println("----------start-------------")
-  //   println("-----------end-------------")
+  //   logger.info("setUp")
+  //
+  //   val un = "__test__"
+  //   val pw = "__123456__"
+  //   val user = User().apply {
+  //     username = un
+  //     password = pw.encodeByMD5()
+  //     email = "____@qq.com"
+  //     phone = "123____1234"
+  //     question = "question"
+  //     answer = "answer"
+  //     role = RoleEnum.CUSTOMER.code
+  //   }
+  //   val loginIsSuccess = userService.save(user)
+  //
+  //   assert(loginIsSuccess)
+  //
+  //   val requestBuilder = MockMvcRequestBuilders.post("/user/login")
+  //     .assembleRequest()
+  //     .param("username", un)
+  //     .param("password", pw)
+  //
+  //   val data = mockMvc.perform(requestBuilder)
+  //     .checkIsSuccessToCommonResponse<String>(objectMapper).data!!
+  //   logger.info(data)
+  //   authorizationToken = data
+  // }
+  //
+  // private fun MockHttpServletRequestBuilder.assembleRequest(): MockHttpServletRequestBuilder {
+  //   return this.apply {
+  //     contentType(MediaType.APPLICATION_FORM_URLENCODED)
+  //     accept(MediaType.APPLICATION_JSON)
+  //   }
+  // }
+  //
+  // private fun <T> ResultActions.checkIsSuccessToCommonResponse(om: ObjectMapper): CommonResponse<T> {
+  //   var response: CommonResponse<T> = CommonResponse.error()
+  //   andExpect(MockMvcResultMatchers.status().isOk)
+  //   andDo {
+  //     response = om.readValue(it.response.contentAsString)
+  //   }
+  //   assert(response.isSuccess())
+  //   return response
   // }
   //
   // @Test
-  // @Transactional
-  // @Rollback
-  // fun loginTest() {
-  //   val url = "/user/login"
-  //
-  //   val requestBuilder = MockMvcRequestBuilders.post(url)
-  //     // 客户端发送的数据类型 必要
-  //     .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  //     // 客户端希望获取的数据类型 非必要
-  //     .accept(MediaType.APPLICATION_JSON)
-  //     // 设置请求头
-  //     // .header(AUTHORIZATION_TOKEN, "")
-  //     .param("username", "XDwanj")
-  //     .param("password", "123456")
-  //
-  //   mockMvc.perform(requestBuilder)
-  //     // 执行完成后的断言，响应码并非 200，则测试不通过
-  //     .andExpect(MockMvcResultMatchers.status().isOk)
-  //     .andDo {
-  //       val code = objectMapper.readValue<CommonResponse<String>>(it.response.contentAsString).code
-  //       assert(code == ResponseCode.SUCCESS.code)
-  //     }
-  //
+  // fun checkValidTest() {
+  //   mockMvc.perform {
+  //     MockMvcRequestBuilders.post("/user/checkValid")
+  //       .assembleRequest()
+  //       .header(AUTHORIZATION_TOKEN, authorizationToken)
+  //       .param("type", "email")
+  //       .param("value", "____@qq.com")
+  //       .buildRequest(it)
+  //   }.checkIsSuccessToCommonResponse<String>(objectMapper)
   // }
-
-  // @Test
+  //
+  // @After
   // fun logout() {
+  //   userService.ktUpdate()
+  //     .eq(User::username, "__test__")
+  //     .remove()
   // }
 }

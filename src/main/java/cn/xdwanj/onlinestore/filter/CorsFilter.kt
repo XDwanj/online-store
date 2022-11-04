@@ -9,6 +9,10 @@ import javax.servlet.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * 这个过滤器的优先级最高，且过滤所有请求
+ *
+ */
 @Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -22,6 +26,7 @@ class CorsFilter : Filter {
     val req = request as HttpServletRequest
 
     resp.apply {
+      // 添加 Access-Control-Allow-Credentials 后 Access-Control-Allow-Origin 就不可为 true
       // addHeader("Access-Control-Allow-Credentials", "true")
       addHeader("Access-Control-Allow-Origin", "*")
       addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD")

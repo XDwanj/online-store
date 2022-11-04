@@ -44,6 +44,18 @@
 | 10   | NEED_LOGIN       | 尚未登录             |
 | 2    | ILLEGAL_ARGUMENT | 传入参数非法         |
 
+### 分页数据
+
+| Code    | Desc             |
+| ------- | ---------------- |
+| size    | 每页显示条数     |
+| current | 当前页           |
+| pages   | 当前分页总页数   |
+| record  | 分页对象记录列表 |
+| total   | 总条数           |
+
+
+
 ### 用户权限
 
 | Code | Desc     |
