@@ -29,14 +29,8 @@ springdoc:
       enabled: true
   paths-to-match: /**
   group-configs:
-    - {
-      group: portal,
-      packages-to-scan: cn.xdwanj.onlinestore.controller.portal
-    }
-    - {
-      group: manage,
-      packages-to-scan: cn.xdwanj.onlinestore.controller.backend
-    }
+    - { group: portal, packages-to-scan: cn.xdwanj.onlinestore.controller.portal }
+    - { group: manage, packages-to-scan: cn.xdwanj.onlinestore.controller.backend }
   swagger-ui:
     groups-order: desc
 password:

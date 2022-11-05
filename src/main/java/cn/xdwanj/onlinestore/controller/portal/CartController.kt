@@ -13,6 +13,7 @@ import cn.xdwanj.onlinestore.vo.CartVo
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*
 @Slf4j
 @Tag(name = "购物车模块")
 @RestController
+@Transactional
 @RequestMapping("/cart")
 class CartController(
   private val cartService: CartService

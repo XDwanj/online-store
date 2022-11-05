@@ -14,6 +14,7 @@ import com.alipay.easysdk.factory.Factory
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest
  */
 @Slf4j
 @Tag(name = "支付控制器")
+@Transactional
 @RestController
 @RequestMapping("/pay")
 class PayController(

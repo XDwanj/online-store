@@ -22,6 +22,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.*
  */
 @Slf4j
 @Tag(name = "订单模块")
+@Transactional
 @RestController
 @RequestMapping("/order")
 class OrderController(

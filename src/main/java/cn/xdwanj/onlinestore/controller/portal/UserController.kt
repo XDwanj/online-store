@@ -15,6 +15,7 @@ import cn.xdwanj.onlinestore.util.encodeByMD5
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
@@ -30,6 +31,7 @@ import java.util.*
  */
 @Tag(name = "用户模块")
 @Validated
+@Transactional
 @RestController
 @RequestMapping("/user")
 class UserController(

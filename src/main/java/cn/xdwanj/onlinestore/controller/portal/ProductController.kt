@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*
  */
 @Slf4j
 @Tag(name = "商品管理")
+@Transactional
 @RestController
 @RequestMapping("/product")
 class ProductController(
