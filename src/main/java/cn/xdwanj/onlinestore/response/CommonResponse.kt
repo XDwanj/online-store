@@ -2,11 +2,16 @@ package cn.xdwanj.onlinestore.response
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
+import io.swagger.v3.oas.annotations.media.Schema
 
+@Schema(description = "通用返回对象")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 class CommonResponse<T> private constructor(
+  @Schema(description = "状态码")
   val code: Int? = null,
+  @Schema(description = "状态消息")
   val msg: String? = null,
+  @Schema(description = "数据")
   val data: T? = null
 ) {
   @JsonIgnore

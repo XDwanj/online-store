@@ -2,8 +2,8 @@ package cn.xdwanj.onlinestore.interceptor
 
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
-import cn.xdwanj.onlinestore.constant.AUTHORIZATION_TOKEN
 import cn.xdwanj.onlinestore.common.CacheMemory
+import cn.xdwanj.onlinestore.constant.AUTHORIZATION_TOKEN
 import cn.xdwanj.onlinestore.constant.USER_REQUEST
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
@@ -33,4 +33,13 @@ class LoginInterceptor(
 
     return true
   }
+
+  // TODO：如已启用SaToken，请取消注释
+  // override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
+  //   val user = StpUtil.getSession()[USER_SESSION] as User
+  //   request.setAttribute(USER_REQUEST, user)
+  //   logger.info("用户已登录, 已将 $user 放入Request域中")
+  //
+  //   return true
+  // }
 }

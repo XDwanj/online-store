@@ -7,7 +7,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.5</version>
-        <!--<version>3.0.0-RC1</version>-->
+        <!--<version>3.0.0</version>-->
     </parent>
 
     <groupId>cn.xdwanj.onlinestore</groupId>
@@ -21,6 +21,7 @@
         <mybatis-plus.generator.version>3.5.3</mybatis-plus.generator.version>
         <springdoc.version>1.6.12</springdoc.version>
         <kotlin.version>1.6.21</kotlin.version>
+        <sa-token.version>1.32.0</sa-token.version>
     </properties>
 
     <dependencies>
@@ -88,9 +89,14 @@
         </dependency>
 
         <!-- Swagger3 http://localhost:8080/api/v1/swagger-ui/index.html -->
+        <!--<dependency>-->
+        <!--    <groupId>org.springdoc</groupId>-->
+        <!--    <artifactId>springdoc-openapi-ui</artifactId>-->
+        <!--    <version>${springdoc.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
+            <artifactId>springdoc-openapi</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
         <dependency>
@@ -99,16 +105,12 @@
             <version>${springdoc.version}</version>
         </dependency>
 
-        <!-- security -->
-        <!--<dependency>-->
-        <!--    <groupId>org.springframework.boot</groupId>-->
-        <!--    <artifactId>spring-boot-starter-security</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--    <groupId>org.springframework.security</groupId>-->
-        <!--    <artifactId>spring-security-test</artifactId>-->
-        <!--    <scope>test</scope>-->
-        <!--</dependency>-->
+        <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
 
         <!-- mybatis-plus -->
         <dependency>

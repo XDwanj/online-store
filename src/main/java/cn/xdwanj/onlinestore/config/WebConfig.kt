@@ -1,5 +1,6 @@
 package cn.xdwanj.onlinestore.config
 
+import cn.dev33.satoken.interceptor.SaInterceptor
 import cn.xdwanj.onlinestore.interceptor.CheckAdminInterceptor
 import cn.xdwanj.onlinestore.interceptor.LoginInterceptor
 import org.springframework.context.annotation.Configuration
@@ -9,10 +10,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebConfig(
   private val loginInterceptor: LoginInterceptor,
-  private val checkAdminInterceptor: CheckAdminInterceptor
+  private val checkAdminInterceptor: CheckAdminInterceptor,
+  private val saInterceptor: SaInterceptor
 ) : WebMvcConfigurer {
   override fun addInterceptors(registry: InterceptorRegistry) {
     registry.apply {
+      // addInterceptor(saInterceptor)
+
       // 登录拦截器
       addInterceptor(loginInterceptor)
         .addPathPatterns(
