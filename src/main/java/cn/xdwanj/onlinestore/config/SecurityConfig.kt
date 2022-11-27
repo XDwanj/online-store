@@ -35,28 +35,26 @@ class SecurityConfig(
   }
 
   @Bean
-  fun saTokenSecurityInterceptor(): SaInterceptor {
-    return SaInterceptor {
-      SaRouter.match(
-        "/user/info/**",
-        "/user/logout",
-        "/user/password/reset",
-      ).match("/cart/**")
-        .match("/shipping/**")
-        .match("/order/**")
-        .match("/pay/**")
-        .notMatch("/pay/alipay/callback")
-        .match("/manage/**")
-        .notMatch("/manage/login")
-        .check { _ ->
-          StpUtil.checkLogin()
-        }
+  fun saTokenSecurityInterceptor(): SaInterceptor = SaInterceptor {
+    SaRouter.match(
+      "/user/info",
+      "/user/info/**",
+      "/user/logout",
+      "/user/password/reset",
+      "/cart/**",
+      "/shipping/**",
+      "/order/**",
+      "/pay/**",
+      "/manage/**"
+    ).notMatch(
+      "/pay/alipay/callback",
+      "/manage/login"
+    ).check { _ -> StpUtil.checkLogin() }
 
-      SaRouter.match("/manage/**")
-        .notMatch("/manage/login")
-        .check { _ ->
-          StpUtil.checkRole(RoleEnum.ADMIN.desc)
-        }
-    }.isAnnotation(false)
-  }
+    SaRouter.match("/manage/**")
+      .notMatch("/manage/login")
+      .check { _ -> StpUtil.checkRole(RoleEnum.ADMIN.desc) }
+
+  }.isAnnotation(false)
+
 }

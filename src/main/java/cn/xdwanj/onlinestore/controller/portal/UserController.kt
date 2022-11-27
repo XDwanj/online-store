@@ -1,19 +1,16 @@
 package cn.xdwanj.onlinestore.controller.portal
 
+import cn.dev33.satoken.stp.StpUtil
 import cn.xdwanj.onlinestore.common.CacheMemory
 import cn.xdwanj.onlinestore.common.FORGET_TOKEN_PREFIX
-import cn.xdwanj.onlinestore.common.USER_TOKEN_PREFIX
-import cn.xdwanj.onlinestore.common.getTokenByPrefix
-import cn.xdwanj.onlinestore.constant.AUTHORIZATION_TOKEN
 import cn.xdwanj.onlinestore.constant.RoleEnum
-import cn.xdwanj.onlinestore.constant.USER_REQUEST
+import cn.xdwanj.onlinestore.constant.USER_SESSION
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.UserService
 import cn.xdwanj.onlinestore.util.encodeByMD5
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.validation.annotation.Validated
@@ -50,20 +47,17 @@ class UserController(
     ) return CommonResponse.error("数据不可为空")
 
     val user = userService.login(username, password)
-    val authorizationToken = getTokenByPrefix(USER_TOKEN_PREFIX)
-    cacheMemory[authorizationToken] = user
+    StpUtil.login(user.id)
+    StpUtil.getSession()[USER_SESSION] = user
+    val token = StpUtil.getTokenValue()
 
-    return CommonResponse.success(data = authorizationToken)
+    return CommonResponse.success(data = token)
   }
 
   @Operation(summary = "注销")
   @GetMapping("/logout")
-  fun logout(
-    @Parameter(hidden = true)
-    @RequestHeader(AUTHORIZATION_TOKEN)
-    token: String
-  ): CommonResponse<String> {
-    cacheMemory.remove(token)
+  fun logout(): CommonResponse<String> {
+    StpUtil.logout()
     return CommonResponse.success("注销成功")
   }
 
@@ -108,9 +102,7 @@ class UserController(
 
   @Operation(summary = "返回密码重置问题")
   @GetMapping("/question")
-  fun question(
-    username: String
-  ): CommonResponse<String> {
+  fun question(username: String): CommonResponse<String> {
     if (username.isBlank()) {
       return CommonResponse.error("用户名不可为空")
     }
@@ -199,12 +191,10 @@ class UserController(
   @Operation(summary = "登录状态下重置密码")
   @PutMapping("/password/reset")
   fun resetPassword(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     passwordOld: String,
     passwordNew: String
   ): CommonResponse<Any> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     if (
       passwordNew.isBlank() ||
       passwordOld.isBlank()
@@ -230,12 +220,8 @@ class UserController(
 
   @Operation(summary = "更新用户信息")
   @PutMapping("/info")
-  fun info(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    currentUser: User,
-    userNew: User
-  ): CommonResponse<User> {
+  fun info(userNew: User): CommonResponse<User> {
+    val currentUser = StpUtil.getSession()[USER_SESSION] as User
     if (userService.checkUsername(userNew.email)) {
       return CommonResponse.error("email已存在，请更换email")
     }
@@ -255,32 +241,22 @@ class UserController(
 
   @Operation(summary = "从数据库中返回用户信息")
   @GetMapping("/info/db")
-  fun info(
-    @Parameter(hidden = true)
-    @RequestHeader(AUTHORIZATION_TOKEN)
-    token: String
-  ): CommonResponse<User> {
-    val currentUser = cacheMemory.get<User>(token)
+  fun info(): CommonResponse<User> {
+    val currentUser = StpUtil.getSession()[USER_SESSION] as User
 
     val user = userService.ktQuery()
-      .eq(User::id, currentUser!!.id)
+      .eq(User::id, currentUser.id)
       .one()
-      ?: let {
-        cacheMemory.remove(token)
-        return CommonResponse.error("找不到当前用户")
-      }
+      ?: return CommonResponse.error("找不到当前用户")
 
     user.password = ""
     return CommonResponse.success(data = user)
   }
 
   @Operation(summary = "从缓存中返回用户信息")
-  @GetMapping("/info/current")
-  fun currentInfo(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User
-  ): CommonResponse<User> {
+  @GetMapping("/info/current", "/info")
+  fun currentInfo(): CommonResponse<User> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     return CommonResponse.success(data = user)
   }
 }

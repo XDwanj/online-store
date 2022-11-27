@@ -1,18 +1,18 @@
 package cn.xdwanj.onlinestore.controller.backend
 
+import cn.dev33.satoken.stp.StpUtil
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.common.CacheMemory
-import cn.xdwanj.onlinestore.common.USER_TOKEN_PREFIX
-import cn.xdwanj.onlinestore.common.getTokenByPrefix
-import cn.xdwanj.onlinestore.constant.AUTHORIZATION_TOKEN
-import cn.xdwanj.onlinestore.constant.RoleEnum
+import cn.xdwanj.onlinestore.constant.USER_SESSION
 import cn.xdwanj.onlinestore.response.CommonResponse
 import cn.xdwanj.onlinestore.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpSession
-import org.springframework.web.bind.annotation.*
 
 /**
  * <p>
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/manage")
 class UserManageController(
   private val userService: UserService,
-  private val cacheMemory: CacheMemory,
 ) {
 
   @Operation(summary = "后台用户登录")
@@ -41,23 +40,18 @@ class UserManageController(
   ): CommonResponse<String> {
     val user = userService.login(username, password)
 
-    if (user.role != RoleEnum.ADMIN.code) {
-      return CommonResponse.error("登录的用户并非管理员")
-    }
+    StpUtil.login(user.id)
+    StpUtil.getSession()[USER_SESSION] = user
+    val token = StpUtil.getTokenValue()
 
-    val userToken = getTokenByPrefix(USER_TOKEN_PREFIX)
-    cacheMemory[userToken] = user
-    return CommonResponse.success(data = userToken)
+    return CommonResponse.success(data = token)
   }
 
   @Operation(summary = "后台用户注销")
   @GetMapping("/logout")
   fun logout(
-    @Parameter(hidden = true)
-    @RequestHeader(AUTHORIZATION_TOKEN)
-    authorizationToken: String
   ): CommonResponse<String> {
-    cacheMemory.remove(authorizationToken)
+    StpUtil.logout()
     return CommonResponse.success("注销成功")
   }
 

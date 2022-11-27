@@ -1,34 +1,28 @@
 package cn.xdwanj.onlinestore.constant
 
-import cn.xdwanj.onlinestore.config.FtpConfigProperties
+import cn.dev33.satoken.SaManager
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.env.Environment
+import org.springframework.core.env.get
 import org.springframework.stereotype.Component
 
-const val USER_REQUEST = "userRequest"
-const val AUTHORIZATION_TOKEN = "authorization-token"
+// const val USER_REQUEST = "userRequest"
 const val USER_SESSION = "userSession"
 const val UPLOAD_PATH = "upload"
 
 @Component
-class Const(
-  ftpConfigProperties: FtpConfigProperties,
-  @Value("\${password.salt}")
-  _salt: String,
-  @Value("\${front-desk.home-page}")
-  homePage: String
-) {
+class Const(environment: Environment) {
   init {
-    FTP_HOST = "${ftpConfigProperties.serverPrefix}/${ftpConfigProperties.username}"
-    PASSWORD_SALT = _salt
-    HOME_PAGE = homePage
+    en = environment
   }
 }
 
-lateinit var FTP_HOST: String
-lateinit var PASSWORD_SALT: String
-lateinit var HOME_PAGE: String
+private lateinit var en: Environment
+val FTP_HOST by lazy { "${en["serverPrefix"]}/${en["ftp.username"]}" }
+val PASSWORD_SALT by lazy { en["password.salt"]!! }
+val HOME_PAGE by lazy { en["front-desk.home-page"]!! }
+val AUTHORIZATION_TOKEN_NAME by lazy { SaManager.config.tokenName!! }
 
 enum class RoleEnum(
   val code: Int,

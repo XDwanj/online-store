@@ -1,9 +1,10 @@
 package cn.xdwanj.onlinestore.controller.portal
 
+import cn.dev33.satoken.stp.StpUtil
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import cn.xdwanj.onlinestore.constant.OrderStatusEnum
-import cn.xdwanj.onlinestore.constant.USER_REQUEST
+import cn.xdwanj.onlinestore.constant.USER_SESSION
 import cn.xdwanj.onlinestore.entity.Order
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.exception.BusinessException
@@ -14,9 +15,12 @@ import com.alipay.easysdk.factory.Factory
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import javax.servlet.http.HttpServletRequest
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import javax.servlet.http.HttpServletRequest
 
 /**
  * <p>
@@ -38,11 +42,9 @@ class PayController(
   @Operation(summary = "alipay 付款，返回 alipay 网页内容")
   @GetMapping("/alipay/pay/{orderNo}")
   fun aliPay(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @PathVariable orderNo: Long
   ): CommonResponse<String> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val order = orderService.ktQuery()
       .eq(Order::orderNo, orderNo)
       .one()
@@ -64,11 +66,9 @@ class PayController(
   @Operation(summary = "查询是否付款成功")
   @GetMapping("/alipay/query/{orderNo}")
   fun aliQuery(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @PathVariable orderNo: Long
   ): CommonResponse<String> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val order = orderService.ktQuery()
       .eq(Order::orderNo, orderNo)
       .one()

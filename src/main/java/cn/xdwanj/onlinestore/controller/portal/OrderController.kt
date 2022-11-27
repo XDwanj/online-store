@@ -1,11 +1,12 @@
 package cn.xdwanj.onlinestore.controller.portal;
 
+import cn.dev33.satoken.stp.StpUtil
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import cn.xdwanj.onlinestore.constant.CartConst
 import cn.xdwanj.onlinestore.constant.FTP_HOST
 import cn.xdwanj.onlinestore.constant.OrderStatusEnum
-import cn.xdwanj.onlinestore.constant.USER_REQUEST
+import cn.xdwanj.onlinestore.constant.USER_SESSION
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.Order
 import cn.xdwanj.onlinestore.entity.OrderItem
@@ -20,7 +21,6 @@ import cn.xdwanj.onlinestore.vo.OrderVo
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
@@ -46,11 +46,9 @@ class OrderController(
   @Operation(summary = "创建订单")
   @PostMapping("/create")
   fun create(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     shippingId: Int
   ): CommonResponse<OrderVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val errorResponse = CommonResponse.error<OrderVo>("订单生成失败")
 
     val cartList = cartService.ktQuery()
@@ -97,11 +95,9 @@ class OrderController(
   @Operation(summary = "取消订单，仅支持在未付款的情况下")
   @GetMapping("/cancel")
   fun cancel(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     orderNo: Long
   ): CommonResponse<Any> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val order = orderService.ktQuery()
       .eq(Order::orderNo, orderNo)
       .eq(Order::userId, user.id)
@@ -129,10 +125,8 @@ class OrderController(
   @Operation(summary = "获取未被持久化的订单")
   @GetMapping("/pre-create")
   fun getOrderCartProduct(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User
   ): CommonResponse<OrderProductVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val cartList = cartService.ktQuery()
       .eq(Cart::checked, CartConst.CHECKED)
       .eq(Cart::userId, user.id)
@@ -162,11 +156,9 @@ class OrderController(
   @Operation(summary = "获取订单详情")
   @GetMapping("/{orderNo}")
   fun get(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @PathVariable orderNo: Long
   ): CommonResponse<OrderVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val order = orderService.ktQuery()
       .eq(Order::userId, user.id)
       .eq(Order::orderNo, orderNo)
@@ -189,12 +181,10 @@ class OrderController(
   @Operation(summary = "获取订单列表")
   @GetMapping("/list")
   fun list(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @RequestParam(defaultValue = "1") pageNum: Long,
     @RequestParam(defaultValue = "10") pageSize: Long
   ): CommonResponse<IPage<OrderVo>> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val page = orderService.ktQuery()
       .eq(Order::userId, user.id)
       .page(Page(pageNum, pageSize))

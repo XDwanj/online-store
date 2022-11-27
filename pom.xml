@@ -89,14 +89,9 @@
         </dependency>
 
         <!-- Swagger3 http://localhost:8080/api/v1/swagger-ui/index.html -->
-        <!--<dependency>-->
-        <!--    <groupId>org.springdoc</groupId>-->
-        <!--    <artifactId>springdoc-openapi-ui</artifactId>-->
-        <!--    <version>${springdoc.version}</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi</artifactId>
+            <artifactId>springdoc-openapi-ui</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
         <dependency>

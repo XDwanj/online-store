@@ -1,7 +1,8 @@
 package cn.xdwanj.onlinestore.controller.portal
 
+import cn.dev33.satoken.stp.StpUtil
 import cn.xdwanj.onlinestore.annotation.Slf4j
-import cn.xdwanj.onlinestore.constant.USER_REQUEST
+import cn.xdwanj.onlinestore.constant.USER_SESSION
 import cn.xdwanj.onlinestore.entity.Shipping
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.response.CommonResponse
@@ -10,7 +11,6 @@ import cn.xdwanj.onlinestore.service.ShippingService
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
@@ -35,11 +35,9 @@ class ShippingController(
   @Operation(summary = "添加地址")
   @PostMapping
   fun add(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     shipping: Shipping
   ): CommonResponse<Map<String, Int>> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     shipping.id = null
     shipping.userId = user.id
 
@@ -56,13 +54,12 @@ class ShippingController(
   @Operation(summary = "删除地址")
   @DeleteMapping("/{shippingId}")
   fun delete(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @PathVariable shippingId: Int
   ): CommonResponse<Any> {
-    if (shippingId < 1)
+    val user = StpUtil.getSession()[USER_SESSION] as User
+    if (shippingId < 1) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
+    }
 
     val isSuccess = shippingService.ktUpdate()
       .eq(Shipping::userId, user.id)
@@ -79,11 +76,9 @@ class ShippingController(
   @Operation(summary = "更新地址")
   @PutMapping
   fun update(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     shipping: Shipping
   ): CommonResponse<Any> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val exists = shippingService.ktQuery()
       .eq(Shipping::id, shipping.id)
       .eq(Shipping::userId, user.id)
@@ -105,11 +100,9 @@ class ShippingController(
   @Operation(summary = "查询地址")
   @GetMapping("/{shippingId}")
   fun get(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @PathVariable shippingId: String
   ): CommonResponse<Shipping> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
 
     val shipping = shippingService.ktQuery()
       .eq(Shipping::userId, user.id)
@@ -123,12 +116,10 @@ class ShippingController(
   @Operation(summary = "地址列表")
   @GetMapping("/list")
   fun list(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @RequestParam(defaultValue = "1") pageNum: Int,
     @RequestParam(defaultValue = "10") pageSize: Int,
   ): CommonResponse<IPage<Shipping>> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     if (pageNum < 1 || pageSize < 1) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
     }

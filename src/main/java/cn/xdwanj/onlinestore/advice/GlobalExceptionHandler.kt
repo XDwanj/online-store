@@ -1,14 +1,18 @@
 package cn.xdwanj.onlinestore.advice
 
+import cn.dev33.satoken.exception.NotLoginException
+import cn.dev33.satoken.exception.NotPermissionException
+import cn.dev33.satoken.exception.NotRoleException
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import cn.xdwanj.onlinestore.exception.BusinessException
 import cn.xdwanj.onlinestore.exception.LogLevelEnum
 import cn.xdwanj.onlinestore.response.CommonResponse
-import javax.validation.ConstraintViolationException
+import cn.xdwanj.onlinestore.response.ResponseCode
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import javax.validation.ConstraintViolationException
 
 @Slf4j
 @RestControllerAdvice
@@ -64,6 +68,24 @@ class GlobalExceptionHandler {
       LogLevelEnum.ERROR -> logger.error("出现业务异常，原因是：{}", e.errorMsg)
     }
     return CommonResponse.error(e.errorMsg, e.errorCode)
+  }
+
+  @ExceptionHandler(NotLoginException::class)
+  fun notLogin(e: NotLoginException): CommonResponse<String> {
+    logger.warn("用户未登录", e)
+    return CommonResponse.error(e.message, ResponseCode.NEED_LOGIN.code)
+  }
+
+  @ExceptionHandler(NotPermissionException::class)
+  fun notPermission(e: NotPermissionException): CommonResponse<String> {
+    logger.warn("缺少权限", e)
+    return CommonResponse.error("缺少权限: ${e.permission}")
+  }
+
+  @ExceptionHandler(NotRoleException::class)
+  fun notRole(e :NotRoleException): CommonResponse<String> {
+    logger.warn("缺少角色", e)
+    return CommonResponse.error("缺少角色 ${e.role}")
   }
 
   @ExceptionHandler(Exception::class)

@@ -1,9 +1,10 @@
 package cn.xdwanj.onlinestore.controller.portal;
 
+import cn.dev33.satoken.stp.StpUtil
 import cn.xdwanj.onlinestore.annotation.Slf4j
 import cn.xdwanj.onlinestore.annotation.Slf4j.Companion.logger
 import cn.xdwanj.onlinestore.constant.CartConst
-import cn.xdwanj.onlinestore.constant.USER_REQUEST
+import cn.xdwanj.onlinestore.constant.USER_SESSION
 import cn.xdwanj.onlinestore.entity.Cart
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.response.CommonResponse
@@ -35,12 +36,10 @@ class CartController(
   @Operation(summary = "添加购物车")
   @PostMapping
   fun add(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     productId: Int,
     count: Int
   ): CommonResponse<CartVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     if (productId < 1 || count < 1) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
     }
@@ -54,12 +53,10 @@ class CartController(
   @Operation(summary = "更新购物车")
   @PutMapping
   fun update(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     productId: Int,
     count: Int
   ): CommonResponse<CartVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     if (productId < 1 || count < 1) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
     }
@@ -87,13 +84,11 @@ class CartController(
   // @DeleteMapping("/{productIds}")
   @DeleteMapping
   fun delete(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @Parameter(description = "商品id数组，用','分割")
     @RequestParam(defaultValue = "")
     productIds: String
   ): CommonResponse<CartVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     if (productIds.isBlank()) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
     }
@@ -119,10 +114,8 @@ class CartController(
   @Operation(summary = "获取购物车列表")
   @GetMapping("/list")
   fun list(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User
   ): CommonResponse<CartVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val cartVo = cartService.getCartVoLimit(user.id!!)
     return CommonResponse.success(data = cartVo)
   }
@@ -130,13 +123,11 @@ class CartController(
   @Operation(summary = "购物车全选或者全反选")
   @PutMapping("/select-all/{checked}")
   fun selectAll(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     @Parameter(description = "${CartConst.CHECKED} 表示选中，${CartConst.UN_CHECKED} 表示未选中")
     @PathVariable
     checked: Int
   ): CommonResponse<CartVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val exists = listOf(CartConst.CHECKED, CartConst.UN_CHECKED).contains(checked)
     if (!exists) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
@@ -158,12 +149,10 @@ class CartController(
   @Operation(summary = "选中商品或者反选商品")
   @PutMapping("/select")
   fun select(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User,
     productId: Int,
     checked: Int
   ): CommonResponse<CartVo> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
     val exists = listOf(CartConst.CHECKED, CartConst.UN_CHECKED).contains(checked)
     if (!exists) {
       return CommonResponse.error(ResponseCode.ILLEGAL_ARGUMENT.msg, ResponseCode.ILLEGAL_ARGUMENT.code)
@@ -186,10 +175,8 @@ class CartController(
   @Operation(summary = "获得购物车项的数量")
   @GetMapping("/count")
   fun count(
-    @Parameter(hidden = true)
-    @RequestAttribute(USER_REQUEST)
-    user: User
   ): CommonResponse<Int> {
+    val user = StpUtil.getSession()[USER_SESSION] as User
 
     val count = cartService.ktQuery()
       .eq(Cart::userId, user.id)
