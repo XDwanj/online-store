@@ -12,7 +12,7 @@ class OnlineStoreApplication
 val application by lazy { _application }
 private lateinit var _application: ApplicationContext
 
-// dev api is http://localhost:15000/api/v1/swagger-ui/index.html
+// swagger doc is http://localhost:8080/api/v1/swagger-ui/index.html
 fun main(args: Array<String>) {
   _application = runApplication<OnlineStoreApplication>(*args)
   val logger = LogFactory.get(OnlineStoreApplication::class.java)
