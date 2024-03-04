@@ -13,7 +13,6 @@ import cn.xdwanj.onlinestore.util.formatString
 import cn.xdwanj.onlinestore.vo.ProductDetailVo
 import cn.xdwanj.onlinestore.vo.ProductListVo
 import com.baomidou.mybatisplus.core.metadata.IPage
-import com.baomidou.mybatisplus.extension.kotlin.KtQueryChainWrapper
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import org.springframework.beans.BeanUtils
@@ -107,7 +106,21 @@ class ProductServiceImpl(
 
     val page = ktQuery()
       .`in`(Product::categoryId, categoryIdList)
-      .orderByFromTripe(orderByRule)
+      // .orderByFromTripe(orderByRule)
+      .apply {
+        if (!orderByRule.first) {
+          return@apply
+        }
+        when (orderByRule.third) {
+          // "id" -> orderBy(true, orderByRule.second, Product::id)
+          "id" -> orderBy(true, orderByRule.second, Product::id)
+          "categoryId" -> orderBy(true, orderByRule.second, Product::categoryId)
+          "name" -> orderBy(true, orderByRule.second, Product::name)
+          "price" -> orderBy(true, orderByRule.second, Product::price)
+          "stock" -> orderBy(true, orderByRule.second, Product::stock)
+          else -> throw BusinessException("排序规则错误")
+        }
+      }
       .like(keyword.isBlank(), Product::name, keyword)
       .page(Page(pageNum.toLong(), pageSize.toLong()))
       .convert {
@@ -117,24 +130,27 @@ class ProductServiceImpl(
     return page
   }
 
-  /**
-   * 排序规则转换，TODO：可能还有优化空间
-   *
-   * @param T 排序实体
-   * @param orderByRule 排序规则：1.是否排序，2.是否是升序.排序字段
-   * @return
-   */
-  private fun <T : Any> KtQueryChainWrapper<T>.orderByFromTripe(
-    orderByRule: Triple<Boolean, Boolean, String>
-  ): KtQueryChainWrapper<T> = this.apply {
-    if (orderByRule.first)
-      when (orderByRule.third) {
-        "id" -> orderBy(true, orderByRule.second, Product::id)
-        "categoryId" -> orderBy(true, orderByRule.second, Product::categoryId)
-        "name" -> orderBy(true, orderByRule.second, Product::name)
-        "price" -> orderBy(true, orderByRule.second, Product::price)
-        "stock" -> orderBy(true, orderByRule.second, Product::stock)
-        else -> throw BusinessException("排序规则错误")
-      }
-  }
+  // /**
+  //  * 排序规则转换，TODO：可能还有优化空间
+  //  *
+  //  * @param T 排序实体
+  //  * @param orderByRule 排序规则：1.是否排序，2.是否是升序.排序字段
+  //  * @return
+  //  */
+  // private fun <T : Any> KtQueryChainWrapper<T>.orderByFromTripe(
+  //   orderByRule: Triple<Boolean, Boolean, String>
+  // ): KtQueryChainWrapper<T> = this.apply {
+  //   if (!orderByRule.first) {
+  //     return@apply
+  //   }
+  //   when (orderByRule.third) {
+  //     // "id" -> orderBy(true, orderByRule.second, Product::id)
+  //     "id" -> orderBy(true, orderByRule.second, Product::id)
+  //     "categoryId" -> orderBy(true, orderByRule.second, Product::categoryId)
+  //     "name" -> orderBy(true, orderByRule.second, Product::name)
+  //     "price" -> orderBy(true, orderByRule.second, Product::price)
+  //     "stock" -> orderBy(true, orderByRule.second, Product::stock)
+  //     else -> throw BusinessException("排序规则错误")
+  //   }
+  // }
 }

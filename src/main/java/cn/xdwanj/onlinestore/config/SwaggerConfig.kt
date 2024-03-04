@@ -10,7 +10,7 @@ class SwaggerConfig { // http://localhost:8080/swagger-ui/index.html
   @Bean
   fun openApi() = OpenAPI().apply {
     info = Info().title("online-store")
-      .description("一个简单网上商城")
+      .description("基于 Springboot Kotlin 的 网上商城后台API系统")
       .version("1.0.0")
   }
 

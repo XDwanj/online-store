@@ -1,13 +1,23 @@
 # 网上商城
 
-> 基于 Springboot Kotlin 的简单网上商城项目
+> 基于 Springboot Kotlin 的 网上商城后台API系统
+
+## Api示例图
+
+### 前台api
+
+![image-20240304190214601](README.assets/image-20240304190214601.png)
+
+### 后台api
+
+![image-20240304190232385](README.assets/image-20240304190232385.png)
 
 ## 技术栈
 
-1. OpenJDK-17 (SpringBoot v3 最低支持JDK17)
-2. SpringBoot v3.0.0-RC1
-3. MyBatis-Plus v3.5.2.6-SNAPSHOT
-4. Kotlin v1.6.21
+1. OpenJDK-17
+2. SpringBoot v2.7.7
+3. MyBatis-Plus v3.5.5
+4. Kotlin v1.9.22
 5. Logback + SLF4J 日志系统
 6. Maven 构建工具
 7. Swagger3 API文档 (基于Springdoc v1.6.12)

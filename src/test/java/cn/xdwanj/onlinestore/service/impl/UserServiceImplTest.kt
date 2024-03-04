@@ -3,6 +3,7 @@ package cn.xdwanj.onlinestore.service.impl
 import cn.xdwanj.onlinestore.constant.RoleEnum
 import cn.xdwanj.onlinestore.entity.User
 import cn.xdwanj.onlinestore.service.UserService
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,5 +39,7 @@ class UserServiceImplTest {
     assert(userService.updateById(user)) { "update userInfo is error" }
 
     userService.updateById(currentUser)
+
+    userService.page(Page<User>())
   }
 }

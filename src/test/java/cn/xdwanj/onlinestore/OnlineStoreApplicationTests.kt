@@ -1,14 +1,14 @@
 package cn.xdwanj.onlinestore
 
+import cn.hutool.core.date.LocalDateTimeUtil
 import cn.xdwanj.onlinestore.service.ProductService
 import cn.xdwanj.onlinestore.service.UserService
-import org.junit.runner.RunWith
+import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit4.SpringRunner
+import java.time.LocalDateTime
 
 @SpringBootTest
-@RunWith(SpringRunner::class)
 class OnlineStoreApplicationTests {
 
   @Autowired
@@ -16,6 +16,12 @@ class OnlineStoreApplicationTests {
 
   @Autowired
   private lateinit var productService: ProductService
+
+  @Test
+  fun contextLoad() {
+    val str = LocalDateTimeUtil.formatNormal(LocalDateTime.now())
+    println(str)
+  }
 
   // @Test
   // fun insertProduct() {

@@ -38,3 +38,5 @@ build/
 
 # Docker Resource
 /*.jar
+
+doc

@@ -11,8 +11,7 @@ class WebConfig(
 ) : WebMvcConfigurer {
   override fun addInterceptors(registry: InterceptorRegistry) {
     registry.apply {
-      addInterceptor(saInterceptor)
-        .addPathPatterns("/**")
+      addInterceptor(saInterceptor).addPathPatterns("/**")
     }
   }
 }

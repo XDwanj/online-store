@@ -9,8 +9,8 @@ import org.springframework.context.ApplicationContext
 @SpringBootApplication
 class OnlineStoreApplication
 
-private lateinit var _application: ApplicationContext
 val application by lazy { _application }
+private lateinit var _application: ApplicationContext
 
 // dev api is http://localhost:15000/api/v1/swagger-ui/index.html
 fun main(args: Array<String>) {

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import com.baomidou.mybatisplus.generator.FastAutoGenerator
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine
+import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine
 import com.baomidou.mybatisplus.generator.fill.Column
 import org.apache.ibatis.annotations.Mapper
 
@@ -45,7 +45,7 @@ class MPGenerator {
         .controllerBuilder()
         .formatFileName("%sController")
         .enableRestStyle()
-    }.templateEngine(FreemarkerTemplateEngine())
+    }.templateEngine(VelocityTemplateEngine())
       .execute()
   }
 }

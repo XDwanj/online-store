@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 @Slf4j
 @Configuration
 class AlipayConfig(
-  private val properties: AlipayConfigProperties
+  properties: AlipayConfigProperties
 ) {
 
   init {

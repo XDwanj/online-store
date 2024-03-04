@@ -19,7 +19,7 @@ class SecurityConfig(
 ) : StpInterface {
 
   override fun getPermissionList(loginId: Any?, loginType: String?): MutableList<String> {
-    var user = StpUtil.getSession()[USER_SESSION] as User
+    val user = StpUtil.getSession()[USER_SESSION] as User
     return mutableListOf("*")
   }
 
@@ -37,18 +37,17 @@ class SecurityConfig(
   @Bean
   fun saTokenSecurityInterceptor(): SaInterceptor = SaInterceptor {
     SaRouter.match(
-      "/user/info",
-      "/user/info/**",
+      "/user/info*",
       "/user/logout",
       "/user/password/reset",
       "/cart/**",
       "/shipping/**",
       "/order/**",
       "/pay/**",
-      "/manage/**"
+      "/manage/**",
     ).notMatch(
       "/pay/alipay/callback",
-      "/manage/login"
+      "/manage/login",
     ).check { _ -> StpUtil.checkLogin() }
 
     SaRouter.match("/manage/**")
