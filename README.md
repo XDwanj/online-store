@@ -20,9 +20,10 @@
 4. Kotlin v1.9.22
 5. Logback + SLF4J 日志系统
 6. Maven 构建工具
-7. Swagger3 API文档 (基于Springdoc v1.6.12)
-8. 使用 WangEditor 富文本编辑器
-9. 接入 Alipay 接口
+7. SaToken 权限控制
+8. Swagger3 API文档 (基于Springdoc v1.6.12)
+9. 使用 WangEditor 富文本编辑器
+10. 接入 Alipay 接口
 
 ## 架构
 
@@ -35,7 +36,7 @@
 
 > 未实现
 
-1. MapStruct 作为模型的映射器实现
+- [ ] MapStruct 作为模型的映射器实现
 
 ## 约定
 
