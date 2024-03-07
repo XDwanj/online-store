@@ -2,6 +2,18 @@
 
 > 基于 Springboot Kotlin 的 网上商城后台API系统
 
+## 简介
+
+网上商城后台 API 系统
+
+基于 SpringBoot + Caffeine/Redis + MyBatisPlus 的商城前后台API系统。
+
+1. 全局控制器异常捕获：防止存在漏网之鱼，方便后期 Bug 排查和解决。
+2. SaToken 权限控制：用户登录生成 UUID 保存至 Caffine 缓存中，设置缓存的失效时间来实现用户的登录在线控制，缓存组件已抽象出来，支持无痛切换至 Redis 以提升性能。
+3. 支持 Swagger 文档：使用 SpringDoc 框架支持 Swagger 文档网页的展示。
+4. 设置通用返回格式：规范调用者返回格式。
+5. 接入 Alipay 沙箱，实现付款等功能的需要。
+
 ## Api示例图
 
 ### 前台api
